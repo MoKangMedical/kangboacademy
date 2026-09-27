@@ -1,0 +1,211 @@
+<!-- 首页 -->
+<view class="page-container">
+ <!-- Hero -->
+ <view class="hero">
+ <view class="hero-bg"></view>
+ <view class="hero-content">
+ <text class="hero-badge">KANGBO ACADEMY</text>
+ <text class="hero-title">掌握50年<text class="text-gold">财富周期</text></text>
+ <text class="hero-desc">从理论到实战，65门主干课程 + 500门精读书目，构建你的投资世界观</text>
+ <view class="hero-actions">
+ <navigator open-type="switchTab" url="/pages/courses/courses" class="btn btn-primary">开始学习</navigator>
+ <navigator url="/pages/books/books?utm_source=wechat_home&utm_campaign=book_entry" class="btn btn-outline">500本书单</navigator>
+ <button open-type="share" class="btn btn-share">微信转发</button>
+ </view>
+ </view>
+ </view>
+
+ <!-- 互动微课程 -->
+ <view class="section px micro-course-entry">
+  <view class="section-heading">
+   <view class="gold-mark"></view>
+   <view class="section-title">互动微课程</view>
+  </view>
+  <text class="section-subtitle">把康波知识从“看过”变成一条能走的决策路径</text>
+  <navigator url="/pages/micro-course/micro-course?utm_source=miniapp_home&utm_campaign=micro_course" class="micro-course-card">
+   <view class="micro-course-topline">
+    <text class="micro-course-kicker">KANGBO FIELD NOTE · 01</text>
+    <text class="micro-course-time">约 18 分钟</text>
+   </view>
+   <view class="micro-course-title">波动中的决策</view>
+   <text class="micro-course-desc">用“识别、定位、推演、复盘”四步，把周期变化转成自己的学习与配置框架。</text>
+   <view class="micro-course-bottom">
+    <view class="micro-course-tags">
+     <text>周期识别</text>
+     <text>资产配置</text>
+     <text>即时判断</text>
+    </view>
+    <text class="micro-course-arrow">进入 →</text>
+   </view>
+  </navigator>
+ </view>
+
+ <!-- 微信推广首发 -->
+ <view class="section px wechat-launch">
+ <view class="section-heading">
+ <view class="gold-mark"></view>
+ <view class="section-title">微信推广首发</view>
+ </view>
+ <text class="section-subtitle">先用小程序承接试学、书单和购买意向，支付与数字人后续补齐</text>
+ <view class="launch-grid">
+ <navigator open-type="switchTab" url="/pages/courses/courses" class="launch-card">
+ <text class="launch-num">65</text>
+ <text class="launch-title">主干课程试学</text>
+ <text class="launch-desc">先听一节课，建立周期框架</text>
+ </navigator>
+ <navigator url="/pages/books/books?utm_source=wechat_home&utm_campaign=book_entry" class="launch-card strong">
+ <text class="launch-num">500</text>
+ <text class="launch-title">书目购买入口</text>
+ <text class="launch-desc">真实购买入口先上线，分成链接后续替换</text>
+ </navigator>
+ <button open-type="share" class="launch-card share-card">
+ <text class="launch-num">转发</text>
+ <text class="launch-title">微信好友和群</text>
+ <text class="launch-desc">直接把试学路径推出去</text>
+ </button>
+ </view>
+ </view>
+
+ <!-- 连续听课 -->
+ <view class="section px audio-marathon">
+ <view class="section-heading">
+ <view class="gold-mark"></view>
+ <view class="section-title">连续听课</view>
+ </view>
+ <text class="section-subtitle">主干课程 + 书目课程 · 自动连播</text>
+
+ <view class="audio-shell">
+ <view class="audio-tabs">
+ <view
+ class="audio-tab {{audioScope === item.key ? 'active' : ''}}"
+ wx:for="{{audioScopeTabs}}"
+ wx:key="key"
+ data-scope="{{item.key}}"
+ bindtap="switchAudioScope"
+ >{{item.label}}</view>
+ </view>
+
+ <view class="audio-loading" wx:if="{{audioListLoading}}">正在加载音频清单...</view>
+ <view class="audio-error" wx:elif="{{audioError && !currentAudio}}">{{audioError}}</view>
+
+ <view wx:else>
+ <view class="audio-now" wx:if="{{currentAudio}}">
+ <view class="audio-now-head">
+ <view class="audio-now-main">
+ <text class="audio-kicker">{{currentAudio.typeBadge}} · {{currentAudio.displayNo}} / {{audioTotal}}</text>
+ <text class="audio-title">{{currentAudio.title}}</text>
+ <text class="audio-subtitle">{{currentAudio.subtitle}}</text>
+ </view>
+ <view class="audio-play {{audioPlaying ? 'playing' : ''}}" bindtap="toggleHomeAudio">
+ <text>{{audioPlaying ? '暂停' : '播放'}}</text>
+ </view>
+ </view>
+
+ <view class="audio-progress-row">
+ <text>{{audioCurrentText}}</text>
+ <slider
+ class="audio-slider"
+ min="0"
+ max="100"
+ step="1"
+ value="{{audioProgress}}"
+ activeColor="#e2b64f"
+ backgroundColor="#2c2c38"
+ block-size="14"
+ block-color="#f0d478"
+ bindchanging="onHomeAudioSliderChanging"
+ bindchange="onHomeAudioSliderChange"
+ />
+ <text>{{audioDurationText}}</text>
+ </view>
+
+ <view class="audio-controls">
+ <view class="audio-control" bindtap="prevAudio">上一课</view>
+ <view class="audio-state">{{audioLoading ? '加载中...' : (audioPlaying ? '正在连续播放' : '点击播放后自动连播')}}</view>
+ <view class="audio-control" bindtap="nextAudio">下一课</view>
+ </view>
+ <view class="audio-inline-error" wx:if="{{audioError}}">{{audioError}}</view>
+ </view>
+
+ <view class="audio-counts">
+ <text>主干 {{audioCounts.core || 0}}</text>
+ <text>书目 {{audioCounts.book || 0}}</text>
+ <text>{{audioScopeLabel}}</text>
+ </view>
+
+ <view class="audio-queue">
+ <view
+ class="queue-row {{item.active ? 'active' : ''}}"
+ wx:for="{{audioPreviewTracks}}"
+ wx:key="id"
+ data-index="{{item.index}}"
+ bindtap="selectAudioTrack"
+ >
+ <text class="queue-num">{{item.displayNo}}</text>
+ <view class="queue-main">
+ <text class="queue-title">{{item.title}}</text>
+ <text class="queue-sub">{{item.subtitle}}</text>
+ </view>
+ <text class="queue-type">{{item.typeBadge}}</text>
+ </view>
+ </view>
+ </view>
+ </view>
+ </view>
+
+ <!-- 主干课程预览 -->
+ <view class="section px">
+ <view class="section-heading">
+ <view class="gold-mark"></view>
+ <view class="section-title">主干课程</view>
+ </view>
+ <text class="section-subtitle">{{catalogLoading ? '正在同步课程目录...' : catalogError ? catalogError : phases.length + '大阶段 · ' + catalogTotal + '门主干课程'}}</text>
+ <button wx:if="{{catalogError}}" class="btn btn-ghost" bindtap="loadCatalog">重新同步</button>
+ <view class="phase-list">
+ <view class="phase-row" wx:for="{{phases}}" wx:key="title" bindtap="onPhaseTap" data-index="{{index}}">
+ <text class="phase-range">{{item.range}}</text>
+ <view class="phase-main">
+ <view class="phase-head">
+ <text class="phase-name">{{item.title}}</text>
+ <text class="phase-count">{{item.count}}课</text>
+ </view>
+ <text class="phase-desc">{{item.desc}}</text>
+ </view>
+ </view>
+ </view>
+ <navigator open-type="switchTab" url="/pages/courses/courses" class="btn btn-ghost full-width">查看全部主干课程</navigator>
+ </view>
+
+ <!-- 推荐书目 -->
+ <view class="section px">
+ <view class="section-heading">
+ <view class="gold-mark"></view>
+ <view class="section-title">推荐书目课程</view>
+ </view>
+ <text class="section-subtitle">500本经典深度解读 · 17波系统精读</text>
+ <view class="book-stats">
+ <view class="stat-item">
+ <text class="stat-num">500</text>
+ <text class="stat-label">精读书目</text>
+ </view>
+ <view class="stat-item">
+ <text class="stat-num">17</text>
+ <text class="stat-label">波次递进</text>
+ </view>
+ <view class="stat-item">
+ <text class="stat-num">19</text>
+ <text class="stat-label">知识领域</text>
+ </view>
+ </view>
+ <navigator open-type="switchTab" url="/pages/book-courses/book-courses" class="btn btn-ghost full-width">浏览全部书目课程</navigator>
+ </view>
+
+ <!-- 底部 -->
+ <view class="footer text-center text-muted text-sm px">
+ <text>康波研究院 © 2026</text>
+ <text class="text-dim">| 微信小程序版 v1.0</text>
+ </view>
+
+ <!-- 安全区 -->
+ <view class="safe-bottom" style="height: 30rpx;"></view>
+</view>

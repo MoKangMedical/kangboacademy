@@ -1,0 +1,117 @@
+<view class="page-container">
+ <view class="member-hero px">
+ <text class="member-title">会员订阅</text>
+ <text class="member-subtitle">主干课程、书目课程可单独订阅，也可升级全库打包。</text>
+ </view>
+
+ <view class="mode-grid px">
+ <view class="mode-card">
+ <view class="mode-icon gold-line-icon"></view>
+ <view class="mode-body">
+ <text class="mode-title">课程订阅</text>
+ <text class="mode-desc">主干课程与推荐书目课程分层收费</text>
+ </view>
+ </view>
+ <view class="mode-card" bindtap="showPurchasedBooks">
+ <view class="mode-icon gold-line-icon"></view>
+ <view class="mode-body">
+ <text class="mode-title">图书访问记录</text>
+ <text class="mode-desc">本站访问意向与商家已核验记录分开显示</text>
+ </view>
+ </view>
+ </view>
+
+ <view class="purchase-section px" wx:if="{{purchasesLoaded}}">
+ <view class="purchase-card">
+ <view class="purchase-head">
+ <view>
+ <text class="purchase-title">图书访问与成交核验</text>
+ <text class="purchase-sub">付款已核验 {{purchaseSummary ? purchaseSummary.paid : 0}} 本 · 访问意向 {{purchaseSummary ? purchaseSummary.pending : 0}} 本
+ </text>
+ </view>
+ <view class="refresh-link" bindtap="loadPurchasedBooks">刷新</view>
+ </view>
+
+ <view class="purchase-error" wx:if="{{purchaseError}}">
+ <text>{{purchaseError}}</text>
+ </view>
+
+ <view class="purchase-loading" wx:if="{{purchaseLoading}}">
+ <text class="text-muted">正在加载图书明细...</text>
+ </view>
+
+ <view class="purchase-list" wx:elif="{{purchasedBooks.length}}">
+ <view class="purchase-item" wx:for="{{purchasedBooks}}" wx:key="bookId">
+ <view class="purchase-cover">
+ <view class="book-cover-mark"></view>
+ </view>
+ <view class="purchase-body">
+ <view class="purchase-line">
+ <text class="purchase-name">{{item.title}}</text>
+ <text class="purchase-status {{item.status === 'paid' ? 'paid' : 'pending'}}">{{item.statusLabel}}</text>
+ </view>
+ <text class="purchase-meta">{{item.author || '作者待同步'}} · {{item.priceText}}</text>
+ <text class="purchase-time" wx:if="{{item.purchasedAtText}}">{{item.purchasedAtText}}</text>
+ <text class="purchase-order" wx:if="{{item.orderNo || item.order_no}}">订单：{{item.orderNo || item.order_no}}</text>
+ </view>
+ </view>
+ </view>
+
+ <view class="purchase-empty" wx:else>
+ <text class="empty-title">暂无图书记录</text>
+ <text class="empty-desc">访问或复制链接不代表购买成功。实际订单、发货和退款请在成交商家的订单页查看；本站尚未接入商家订单回传。</text>
+ <view class="btn btn-outline empty-btn" bindtap="goBooks">去康波书店</view>
+ </view>
+ </view>
+ </view>
+
+ <view class="payment-state px" wx:if="{{!loading && (!payment || !payment.ready)}}">
+ <text class="state-title">订阅暂未开放，先免费试学</text>
+ <text class="state-desc">当前不创建订单、不收取费用。部分课程免费开放，完整课程订阅将在交易服务就绪后开放。</text>
+ <view class="btn btn-outline" bindtap="loadPlans">刷新服务状态</view>
+ </view>
+
+ <view class="plans px" wx:if="{{!loading && freePlan}}">
+ <view class="plan-card">
+ <text class="plan-name">免费体验</text>
+ <view class="feature-list">
+ <text class="feature" wx:for="{{freePlan.features}}" wx:key="*this">{{item}}</text>
+ </view>
+ <view class="btn btn-primary plan-btn" wx:if="{{freePlan.courses.length}}" bindtap="startFreeLesson" data-scope="core">开始主干课程试学</view>
+ <view class="btn btn-outline plan-btn" wx:if="{{freePlan.bookCourses.length}}" bindtap="startFreeLesson" data-scope="books">开始书目课程试学</view>
+ </view>
+ </view>
+
+ <view class="plans px" wx:if="{{!loading}}">
+ <view
+ class="plan-card {{item.highlight || item.recommended ? 'plan-hot' : ''}}"
+ wx:for="{{plans}}"
+ wx:key="id"
+ >
+ <view class="plan-head">
+ <view>
+ <text class="plan-name">{{item.name}}</text>
+ <text class="plan-scope">{{item.scopeLabel}}</text>
+ </view>
+ <view class="plan-badge" wx:if="{{item.highlight || item.recommended}}">推荐</view>
+ </view>
+ <view class="plan-price">{{item.priceLabel}}</view>
+ <view class="feature-list">
+ <text class="feature" wx:for="{{item.features}}" wx:for-item="feature" wx:key="*this">{{feature}}</text>
+ </view>
+ <view class="btn btn-primary plan-btn" wx:if="{{payment && payment.ready}}" bindtap="buyPlan" data-plan="{{item.id}}">
+ 微信支付订阅
+ </view>
+ <view class="state-desc" wx:else>
+ 订阅暂未开放，请先选择上方免费体验
+ </view>
+ </view>
+ </view>
+
+ <view class="loading-wrap" wx:if="{{loading}}">
+ <text class="text-muted">加载会员方案中...</text>
+ </view>
+
+ <view class="safe-bottom" style="height: 30rpx;"></view>
+ <app-tabbar />
+</view>

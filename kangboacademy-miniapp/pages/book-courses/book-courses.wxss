@@ -1,0 +1,80 @@
+/* 书目课程 */
+
+.cat-scroll, .wave-scroll {
+ white-space: nowrap;
+ margin-bottom: 16rpx;
+}
+
+.cat-tabs, .wave-tabs {
+ display: inline-flex;
+ gap: 12rpx;
+ padding: 10rpx 0;
+}
+
+.cat-tab, .wave-tab {
+ display: inline-block;
+ padding: 10rpx 24rpx;
+ border-radius: 10rpx;
+ font-size: 24rpx;
+ color: var(--text3);
+ background: var(--card);
+ border: 1rpx solid var(--border);
+ white-space: nowrap;
+}
+
+.cat-tab.active, .wave-tab.active {
+ color: var(--gold);
+ background: rgba(226,182,79,0.1);
+ border-color: rgba(226,182,79,0.3);
+}
+
+.book-list {
+ display: flex;
+ flex-direction: column;
+ gap: 12rpx;
+}
+
+.book-card {
+ display: flex;
+ align-items: center;
+ padding: 22rpx 24rpx;
+ background: var(--card);
+ border: 1rpx solid var(--border);
+ border-radius: var(--radius);
+ gap: 16rpx;
+}
+
+.book-card:active {
+ border-color: var(--gold);
+ background: var(--card2);
+}
+
+.bc-num {
+ width: 56rpx;
+ height: 56rpx;
+ border-radius: 12rpx;
+ background: rgba(226,182,79,0.08);
+ color: var(--gold);
+ font-size: 24rpx;
+ font-weight: 700;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ flex-shrink: 0;
+}
+
+.bc-body { flex: 1; min-width: 0; }
+.bc-title { font-size: 26rpx; font-weight: 600; color: var(--text); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bc-author { font-size: 22rpx; color: var(--text3); display: block; margin: 4rpx 0 8rpx; }
+.bc-tags { display: flex; gap: 8rpx; }
+.bc-arrow { font-size: 36rpx; color: var(--text3); flex-shrink: 0; }
+
+.empty {
+ display: flex;
+ justify-content: center;
+ padding: 100rpx 0;
+}
+
+.section { padding: 30rpx; }
+.stats-bar { padding: 8rpx 30rpx 20rpx; }
+.book-search { margin-top: 24rpx; padding: 20rpx 24rpx; border: 1rpx solid #3c3526; border-radius: 14rpx; color: #eee; background: #17171d; }

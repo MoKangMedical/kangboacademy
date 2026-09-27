@@ -1,0 +1,53 @@
+<!-- 主干课程列表 -->
+<view class="page-container">
+ <!-- 搜索 -->
+ <view class="search-bar px">
+ <input class="search-input" placeholder="搜索课程名称、关键词..." bindinput="onSearch" value="{{keyword}}" />
+ <view class="search-icon" wx:if="{{!keyword}}"></view>
+ <text class="search-clear" wx:if="{{keyword}}" bindtap="clearSearch"></text>
+ </view>
+
+ <!-- 统计 -->
+ <view class="stats-bar px" wx:if="{{!loading && !error && !keyword}}">
+ <text class="text-dim text-sm">共 <text class="text-gold font-bold">{{total}}</text> 门课程 · 与网站课程服务同步</text>
+ </view>
+ <view class="stats-bar px" wx:if="{{!loading && !error && keyword}}">
+ <text class="text-dim text-sm">找到 <text class="text-gold font-bold">{{filteredCount}}</text> 门课程</text>
+ </view>
+
+ <view class="px" wx:if="{{loading}}"><text class="text-muted">正在同步网站课程目录...</text></view>
+ <view class="px" wx:elif="{{error}}">
+ <text class="text-muted">{{error}}</text>
+ <button class="btn btn-ghost" bindtap="loadCourses">重新同步</button>
+ </view>
+ <view class="px" wx:elif="{{filteredCount === 0}}"><text class="text-muted">没有匹配的课程，请更换关键词。</text></view>
+ <!-- 课程分组列表 -->
+ <view class="phase-list" wx:for="{{phases}}" wx:key="title">
+ <view class="phase-header" wx:if="{{item.visible}}">
+ <view class="phase-icon"></view>
+ <view class="phase-info">
+ <text class="phase-title">{{item.title}}</text>
+ <text class="phase-sub">{{item.sub}}</text>
+ </view>
+ <text class="phase-num">{{item.courses.length}}课</text>
+ </view>
+ <view class="course-list px" wx:if="{{item.visible}}">
+ <course-card
+ wx:for="{{item.courses}}"
+ wx:for-item="c"
+ wx:key="n"
+ num="{{c.n}}"
+ title="{{c.title}}"
+ desc="{{c.desc}}"
+ diffLabel="{{c.diffLabel}}"
+ diffColor="{{c.diffColor}}"
+ time="{{c.time}}"
+ lesson="{{c.lesson}}"
+ free="{{c.free}}"
+ locked="{{c.locked}}"
+ />
+ </view>
+ </view>
+
+ <view class="safe-bottom" style="height: 30rpx;"></view>
+</view>

@@ -1,0 +1,38 @@
+{
+  "scope": "actual-ASGI-with-disposable-fixtures",
+  "productionTouched": false,
+  "fixtureContentNotProductionCourses": true,
+  "checks": [
+    {
+      "route": "/api/health",
+      "status": 200
+    },
+    {
+      "route": "/api/courses",
+      "status": 200
+    },
+    {
+      "route": "/api/book-courses",
+      "status": 200
+    },
+    {
+      "route": "/api/shop/books?limit=500",
+      "status": 200
+    },
+    {
+      "route": "/api/progress",
+      "status": 401
+    },
+    {
+      "route": "/api/shop/purchases",
+      "status": 401
+    },
+    {
+      "check": "search-not-product",
+      "passed": true,
+      "books": 500,
+      "localFixtureResponseSeconds": 0.074
+    }
+  ],
+  "passed": true
+}

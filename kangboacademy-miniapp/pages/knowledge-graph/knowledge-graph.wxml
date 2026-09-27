@@ -1,0 +1,64 @@
+<!-- 知识图谱 -->
+<view class="page-container">
+ <view class="graph-header px">
+ <view class="section-heading">
+ <view class="gold-mark"></view>
+ <view class="section-title">知识图谱</view>
+ </view>
+ <text class="section-subtitle">{{loading ? '正在同步网站图谱...' : error ? error : nodeCount + '节点 · ' + linkCount + '关联 · ' + groups.length + '大领域'}}</text>
+ <button class="btn btn-ghost" wx:if="{{error}}" bindtap="loadGraph">重新同步</button>
+ </view>
+
+ <view class="px" wx:if="{{selected}}">
+ <view class="kg-group">
+ <text class="kg-group-name">{{selected.title}}</text>
+ <button class="btn btn-primary" bindtap="openCourse" data-id="{{selected.id}}">进入这门课程</button>
+ <text class="text-muted">关联课程</text>
+ <view class="kg-node" wx:for="{{related}}" wx:key="id" bindtap="openCourse" data-id="{{item.id}}">
+ <text class="kg-node-name">{{item.title}}</text>
+ </view>
+ <text wx:if="{{!related.length}}" class="text-muted">暂未配置关联课程</text>
+ </view>
+ </view>
+
+ <!-- 图谱可视化（简化版：卡片式展示） -->
+ <view class="kg-grid px">
+ <view class="kg-group" wx:for="{{groups}}" wx:key="name">
+ <view class="kg-group-header">
+ <view class="kg-group-title">
+ <view class="kg-group-mark"></view>
+ <text class="kg-group-name">{{item.name}}</text>
+ </view>
+ <text class="kg-group-count">{{item.count}}</text>
+ </view>
+ <view class="kg-nodes">
+ <view class="kg-node" wx:for="{{item.nodes}}" wx:key="id" bindtap="onNodeTap" data-node="{{item}}">
+ <view class="kg-node-dot"></view>
+ <view class="kg-node-info">
+ <text class="kg-node-name">{{item.title}}</text>
+ <text class="kg-node-desc">{{item.desc}}</text>
+ </view>
+ </view>
+ </view>
+ </view>
+ </view>
+
+ <!-- 统计 -->
+ <view class="kg-stats px" wx:if="{{!loading && !error}}">
+ <view class="stat-card">
+ <text class="stat-num">{{nodeCount}}</text>
+ <text class="stat-label">课程节点</text>
+ </view>
+ <view class="stat-card">
+ <text class="stat-num">{{linkCount}}</text>
+ <text class="stat-label">知识关联</text>
+ </view>
+ <view class="stat-card">
+ <text class="stat-num">{{groups.length}}</text>
+ <text class="stat-label">图谱领域</text>
+ </view>
+ </view>
+
+ <view class="safe-bottom" style="height: 30rpx;"></view>
+ <app-tabbar />
+</view>

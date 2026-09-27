@@ -1,0 +1,586 @@
+/* 首页样式 */
+
+.hero {
+ position: relative;
+ padding: 80rpx 30rpx 60rpx;
+ text-align: center;
+ overflow: hidden;
+}
+
+.hero-bg {
+ position: absolute;
+ inset: 0;
+ background: linear-gradient(180deg, rgba(226,182,79,0.08), rgba(226,182,79,0) 76%);
+}
+
+.hero-content {
+ position: relative;
+ z-index: 1;
+}
+
+.hero-badge {
+ display: inline-block;
+ font-size: 22rpx;
+ font-weight: 700;
+ letter-spacing: 4rpx;
+ color: var(--gold);
+ background: rgba(226,182,79,0.08);
+ border: 1rpx solid rgba(226,182,79,0.15);
+ padding: 6rpx 20rpx;
+ border-radius: 8rpx;
+ margin-bottom: 24rpx;
+}
+
+.hero-title {
+ display: block;
+ font-size: 52rpx;
+ font-weight: 900;
+ color: var(--text);
+ line-height: 1.2;
+ margin-bottom: 16rpx;
+ letter-spacing: 2rpx;
+}
+
+.hero-desc {
+ display: block;
+ font-size: 26rpx;
+ color: var(--text2);
+ line-height: 1.6;
+ margin-bottom: 40rpx;
+ padding: 0 20rpx;
+}
+
+.hero-actions {
+ display: flex;
+ gap: 20rpx;
+ justify-content: center;
+ flex-wrap: wrap;
+}
+
+.hero-actions .btn {
+ min-width: 240rpx;
+}
+
+.hero-actions button.btn {
+ margin: 0;
+ border: 1rpx solid rgba(226,182,79,0.35);
+ background: rgba(226,182,79,0.12);
+ color: var(--gold);
+ line-height: 1.4;
+}
+
+.hero-actions button.btn::after {
+ border: 0;
+}
+
+.btn-share {
+ min-height: 72rpx;
+}
+
+/* 互动微课程入口 */
+.micro-course-entry {
+ margin-top: 6rpx;
+}
+
+.micro-course-card {
+ position: relative;
+ display: block;
+ overflow: hidden;
+ padding: 28rpx;
+ border: 1rpx solid rgba(226,182,79,0.38);
+ border-radius: var(--radius-xl);
+ color: var(--text);
+ background:
+  radial-gradient(circle at 92% 8%, rgba(226,182,79,0.24), transparent 29%),
+  linear-gradient(135deg, #1a2525, #10151b 62%, #201d18);
+ box-shadow: 0 16rpx 32rpx rgba(0,0,0,0.18);
+}
+
+.micro-course-card::before {
+ content: '';
+ position: absolute;
+ right: -28rpx;
+ bottom: -48rpx;
+ width: 220rpx;
+ height: 220rpx;
+ border: 1rpx solid rgba(226,182,79,0.22);
+ border-radius: 50%;
+ box-shadow: -48rpx -32rpx 0 -10rpx rgba(67,140,135,0.2);
+}
+
+.micro-course-card:active {
+ transform: scale(0.985);
+}
+
+.micro-course-topline,
+.micro-course-bottom {
+ position: relative;
+ z-index: 1;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 16rpx;
+}
+
+.micro-course-kicker {
+ color: var(--gold-light);
+ font-size: 19rpx;
+ font-weight: 800;
+ letter-spacing: 2rpx;
+}
+
+.micro-course-time {
+ color: rgba(245,245,247,0.64);
+ font-size: 21rpx;
+}
+
+.micro-course-title {
+ position: relative;
+ z-index: 1;
+ margin-top: 24rpx;
+ color: #f6f0df;
+ font-family: 'Songti SC', 'STSong', serif;
+ font-size: 46rpx;
+ font-weight: 800;
+ letter-spacing: 2rpx;
+}
+
+.micro-course-desc {
+ position: relative;
+ z-index: 1;
+ display: block;
+ margin-top: 12rpx;
+ color: rgba(245,245,247,0.74);
+ font-size: 24rpx;
+ line-height: 1.75;
+}
+
+.micro-course-bottom {
+ margin-top: 24rpx;
+}
+
+.micro-course-tags {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 8rpx;
+}
+
+.micro-course-tags text {
+ padding: 5rpx 12rpx;
+ border: 1rpx solid rgba(240,212,120,0.34);
+ border-radius: 999rpx;
+ color: var(--gold-light);
+ font-size: 19rpx;
+}
+
+.micro-course-arrow {
+ flex: 0 0 auto;
+ color: var(--gold-light);
+ font-size: 22rpx;
+ font-weight: 700;
+}
+
+/* 微信推广首发 */
+.wechat-launch {
+ margin-top: 16rpx;
+}
+
+.launch-grid {
+ display: flex;
+ gap: 16rpx;
+ margin-top: 22rpx;
+}
+
+.launch-card {
+ flex: 1;
+ min-width: 0;
+ min-height: 176rpx;
+ border: 1rpx solid var(--border);
+ border-radius: var(--radius);
+ background: var(--card);
+ padding: 22rpx;
+ display: flex;
+ flex-direction: column;
+ justify-content: space-between;
+ text-align: left;
+ color: var(--text);
+}
+
+.launch-card.strong {
+ border-color: rgba(226,182,79,0.34);
+ background: linear-gradient(135deg, rgba(226,182,79,0.12), var(--card));
+}
+
+button.launch-card {
+ margin: 0;
+ line-height: 1.45;
+}
+
+button.launch-card::after {
+ border: 0;
+}
+
+.launch-num {
+ color: var(--gold);
+ font-size: 34rpx;
+ font-weight: 900;
+ line-height: 1.1;
+}
+
+.launch-title {
+ display: block;
+ margin-top: 14rpx;
+ color: var(--text);
+ font-size: 25rpx;
+ font-weight: 800;
+}
+
+.launch-desc {
+ display: block;
+ margin-top: 8rpx;
+ color: var(--text3);
+ font-size: 21rpx;
+ line-height: 1.45;
+}
+
+.share-card {
+ background: rgba(255,255,255,0.04);
+}
+
+/* 连续听课 */
+.audio-marathon {
+ margin-top: 38rpx;
+}
+
+.audio-shell {
+ border: 1rpx solid rgba(226,182,79,0.18);
+ background: rgba(18,18,24,0.9);
+ border-radius: var(--radius);
+ padding: 24rpx;
+ margin-top: 20rpx;
+}
+
+.audio-tabs {
+ display: flex;
+ gap: 12rpx;
+ margin-bottom: 22rpx;
+}
+
+.audio-tab {
+ flex: 1;
+ padding: 12rpx 0;
+ text-align: center;
+ border: 1rpx solid var(--border);
+ border-radius: 8rpx;
+ background: var(--card2);
+ color: var(--text3);
+ font-size: 24rpx;
+ font-weight: 700;
+}
+
+.audio-tab.active {
+ border-color: var(--gold);
+ background: var(--gold);
+ color: #111;
+}
+
+.audio-loading,
+.audio-error {
+ padding: 34rpx 0;
+ text-align: center;
+ color: var(--text3);
+ font-size: 24rpx;
+}
+
+.audio-error,
+.audio-inline-error {
+ color: #fca5a5;
+}
+
+.audio-now-head {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 22rpx;
+}
+
+.audio-now-main {
+ flex: 1;
+ min-width: 0;
+}
+
+.audio-kicker {
+ display: block;
+ margin-bottom: 8rpx;
+ color: var(--gold);
+ font-size: 21rpx;
+ font-weight: 800;
+}
+
+.audio-title {
+ display: block;
+ color: var(--text);
+ font-size: 30rpx;
+ font-weight: 800;
+ line-height: 1.35;
+}
+
+.audio-subtitle {
+ display: block;
+ margin-top: 6rpx;
+ color: var(--text3);
+ font-size: 22rpx;
+}
+
+.audio-play {
+ width: 92rpx;
+ height: 92rpx;
+ flex: 0 0 92rpx;
+ border-radius: 50%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ border: 2rpx solid rgba(226,182,79,0.35);
+ background: rgba(226,182,79,0.12);
+ color: var(--gold);
+ font-size: 22rpx;
+ font-weight: 900;
+}
+
+.audio-play.playing {
+ background: var(--gold);
+ color: #111;
+}
+
+.audio-progress-row {
+ display: flex;
+ align-items: center;
+ gap: 12rpx;
+ margin-top: 22rpx;
+ color: var(--text3);
+ font-size: 20rpx;
+}
+
+.audio-slider {
+ flex: 1;
+}
+
+.audio-controls {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 14rpx;
+ margin-top: 10rpx;
+}
+
+.audio-control {
+ flex: 0 0 auto;
+ padding: 10rpx 18rpx;
+ border: 1rpx solid rgba(226,182,79,0.26);
+ border-radius: 8rpx;
+ color: var(--gold);
+ font-size: 22rpx;
+ font-weight: 700;
+}
+
+.audio-state {
+ flex: 1;
+ text-align: center;
+ color: var(--text3);
+ font-size: 22rpx;
+}
+
+.audio-inline-error {
+ margin-top: 10rpx;
+ text-align: center;
+ font-size: 22rpx;
+}
+
+.audio-counts {
+ display: flex;
+ justify-content: space-between;
+ gap: 12rpx;
+ margin: 22rpx 0 12rpx;
+ color: var(--text3);
+ font-size: 21rpx;
+}
+
+.audio-queue {
+ border-top: 1rpx solid var(--border);
+ padding-top: 8rpx;
+}
+
+.queue-row {
+ display: flex;
+ align-items: center;
+ gap: 14rpx;
+ min-height: 86rpx;
+ padding: 12rpx 0;
+ border-bottom: 1rpx solid rgba(255,255,255,0.04);
+}
+
+.queue-row.active .queue-title {
+ color: var(--gold);
+}
+
+.queue-num {
+ width: 54rpx;
+ color: var(--text3);
+ font-size: 21rpx;
+}
+
+.queue-main {
+ flex: 1;
+ min-width: 0;
+}
+
+.queue-title {
+ display: block;
+ color: var(--text);
+ font-size: 24rpx;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ white-space: nowrap;
+}
+
+.queue-sub {
+ display: block;
+ margin-top: 3rpx;
+ color: var(--text3);
+ font-size: 20rpx;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ white-space: nowrap;
+}
+
+.queue-type {
+ padding: 2rpx 10rpx;
+ border-radius: 8rpx;
+ background: rgba(226,182,79,0.1);
+ color: var(--gold);
+ font-size: 20rpx;
+}
+
+/* 主干课程列表 */
+.section {
+ margin-top: 60rpx;
+}
+
+.phase-list {
+ display: flex;
+ flex-direction: column;
+ border: 1rpx solid var(--border);
+ border-radius: var(--radius);
+ overflow: hidden;
+ margin-bottom: 30rpx;
+ background: var(--card);
+}
+
+.phase-row {
+ display: flex;
+ align-items: center;
+ gap: 22rpx;
+ min-height: 122rpx;
+ padding: 22rpx 24rpx;
+ border-bottom: 1rpx solid var(--border);
+ transition: all 0.2s;
+}
+
+.phase-row:last-child {
+ border-bottom: 0;
+}
+
+.phase-row:active {
+ background: var(--card2);
+}
+
+.phase-range {
+ width: 84rpx;
+ flex: 0 0 84rpx;
+ color: var(--gold);
+ font-size: 22rpx;
+ font-weight: 700;
+ line-height: 1;
+}
+
+.phase-main {
+ flex: 1;
+ min-width: 0;
+}
+
+.phase-head {
+ display: flex;
+ align-items: center;
+ gap: 14rpx;
+ margin-bottom: 6rpx;
+}
+
+.phase-name {
+ flex: 1;
+ min-width: 0;
+ font-size: 29rpx;
+ font-weight: 700;
+ color: var(--text);
+}
+
+.phase-count {
+ flex: 0 0 auto;
+ padding: 2rpx 12rpx;
+ border-radius: 8rpx;
+ background: rgba(226,182,79,0.1);
+ color: var(--gold);
+ font-size: 22rpx;
+ font-weight: 700;
+}
+
+.phase-desc {
+ display: block;
+ color: var(--text3);
+ font-size: 23rpx;
+ line-height: 1.45;
+}
+
+.phase-arrow {
+ flex: 0 0 auto;
+ color: var(--text3);
+ font-size: 42rpx;
+ line-height: 1;
+}
+
+/* 统计数字 */
+.book-stats {
+ display: flex;
+ justify-content: space-around;
+ padding: 40rpx 0;
+ margin-bottom: 20rpx;
+}
+
+.stat-item {
+ text-align: center;
+}
+
+.stat-num {
+ display: block;
+ font-size: 48rpx;
+ font-weight: 900;
+ color: var(--gold);
+ line-height: 1;
+ margin-bottom: 8rpx;
+}
+
+.stat-label {
+ font-size: 24rpx;
+ color: var(--text3);
+}
+
+/* 通用 */
+.full-width {
+ width: 100%;
+ text-align: center;
+}
+
+.footer {
+ margin-top: 80rpx;
+ padding: 40rpx 0;
+ border-top: 1rpx solid var(--border);
+}

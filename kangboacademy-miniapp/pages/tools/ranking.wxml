@@ -1,0 +1,78 @@
+<!-- 排名榜 -->
+<view class="page-container px">
+ <view class="section">
+ <view class="section-heading">
+ <view class="gold-mark"></view>
+ <view class="section-title">四维排名榜</view>
+ </view>
+ <text class="section-subtitle">综合排名 · 周期适应力</text>
+ </view>
+
+ <view class="mode-panel">
+ <text class="mode-label">选择排序目标</text>
+ <view class="mode-grid">
+ <view
+ class="mode-item {{activeMode === item.key ? 'active' : ''}}"
+ wx:for="{{modeOptions}}"
+ wx:key="key"
+ data-mode="{{item.key}}"
+ bindtap="selectMode"
+ >
+ <text class="mode-name">{{item.name}}</text>
+ <text class="mode-desc">{{item.desc}}</text>
+ </view>
+ </view>
+ </view>
+
+ <view class="ranking-list">
+ <view
+ class="rank-item rank-{{item.rank}} {{selectedIndex === index ? 'selected' : ''}}"
+ wx:for="{{displayedRankings}}"
+ wx:key="name"
+ data-index="{{index}}"
+ bindtap="selectAsset"
+ >
+ <view class="rank-num">{{item.rank}}</view>
+ <view class="rank-body">
+ <view class="flex-between">
+ <view class="rank-name"><view class="asset-mark"></view><text>{{item.name}}</text></view>
+ <text class="rank-score text-gold font-bold">{{item.score}}</text>
+ </view>
+ <view class="rank-bar-track">
+ <view class="rank-bar-fill" style="width: {{item.score * 10}}%; background: {{item.score >= 8 ? '#e2b64f' : item.score >= 7 ? '#22c55e' : item.score >= 6 ? '#3b82f6' : '#8b5cf6'}};"></view>
+ </view>
+ <text class="rank-reason text-dim text-sm">{{item.reason}}</text>
+ </view>
+ </view>
+ </view>
+
+ <view class="selected-card">
+ <text class="selected-title">当前聚焦：{{selectedAsset.name}}</text>
+ <text class="selected-desc">{{selectedAsset.reason}}</text>
+ </view>
+
+ <agent-advisor
+ title="让Agent解释排名和取舍"
+ status="{{selectedAsset.name}}"
+ intro="{{agentIntro}}"
+ prompts="{{agentPrompts}}"
+ actions="{{agentActions}}"
+ />
+
+ <!-- 相关课程 -->
+ <view class="section-heading compact-heading" style="margin-top: 30rpx;">
+ <view class="gold-mark"></view>
+ <view class="section-title text-sm">相关课程</view>
+ </view>
+ <view class="course-chips">
+ <navigator url="/pages/course-detail/course-detail?lesson=lesson1.html&title=康波理论" class="chip"><text class="chip-num">1</text><text class="chip-name">康波理论</text></navigator>
+ <navigator url="/pages/course-detail/course-detail?lesson=lesson2.html&title=周金涛" class="chip"><text class="chip-num">2</text><text class="chip-name">周金涛</text></navigator>
+ <navigator url="/pages/course-detail/course-detail?lesson=lesson6.html&title=投资手册" class="chip"><text class="chip-num">6</text><text class="chip-name">投资手册</text></navigator>
+ <navigator url="/pages/course-detail/course-detail?lesson=lesson40.html&title=黄金" class="chip"><text class="chip-num">40</text><text class="chip-name">黄金</text></navigator>
+ <navigator url="/pages/course-detail/course-detail?lesson=lesson3.html&title=第六轮康波" class="chip"><text class="chip-num">3</text><text class="chip-name">第六轮康波</text></navigator>
+ <navigator url="/pages/course-detail/course-detail?lesson=lesson19.html&title=技术奇点" class="chip"><text class="chip-num">19</text><text class="chip-name">技术奇点</text></navigator>
+ </view>
+
+ <view class="safe-bottom" style="height: 30rpx;"></view>
+ <app-tabbar />
+</view>

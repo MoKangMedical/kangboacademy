@@ -1,0 +1,9 @@
+# Versions exercised locally; not a lock of the current production environment.
+fastapi==0.135.3
+pydantic==2.12.5
+email-validator==2.3.0
+cryptography==47.0.0
+uvicorn==0.43.0
+beautifulsoup4==4.14.3
+edge-tts==7.2.8
+httpx==0.28.1

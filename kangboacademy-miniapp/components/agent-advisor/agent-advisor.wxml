@@ -1,0 +1,65 @@
+<view class="agent-panel">
+ <view class="agent-head">
+ <view class="agent-title-wrap">
+ <text class="agent-kicker">AGENT COPILOT</text>
+ <text class="agent-title">{{title}}</text>
+ </view>
+ <text class="agent-status" wx:if="{{status}}">{{status}}</text>
+ </view>
+
+ <text class="agent-intro" wx:if="{{intro}}">{{intro}}</text>
+
+ <view class="agent-actions" wx:if="{{actions.length}}">
+ <view
+ class="agent-action"
+ wx:for="{{actions}}"
+ wx:key="label"
+ data-text="{{item.text}}"
+ bindtap="copyText"
+ >
+ <text class="action-label">{{item.label}}</text>
+ <view class="action-ops">
+ <text class="action-copy">复制</text>
+ <text
+ class="action-ask"
+ wx:if="{{enableChat}}"
+ data-text="{{item.text}}"
+ catchtap="askAgent"
+ >问Agent</text>
+ </view>
+ </view>
+ </view>
+
+ <view class="prompt-list" wx:if="{{prompts.length}}">
+ <view
+ class="prompt-item"
+ wx:for="{{prompts}}"
+ wx:key="*this"
+ data-text="{{item}}"
+ bindtap="copyText"
+ >
+ <text class="prompt-index">{{index + 1}}</text>
+ <text class="prompt-text">{{item}}</text>
+ <text
+ class="prompt-ask"
+ wx:if="{{enableChat}}"
+ data-text="{{item}}"
+ catchtap="askAgent"
+ >问Agent</text>
+ </view>
+ </view>
+
+ <view class="agent-loading" wx:if="{{loading}}">
+ <text>Agent 正在分析...</text>
+ </view>
+
+ <view class="agent-error" wx:if="{{error}}">
+ <text>{{error}}</text>
+ </view>
+
+ <view class="agent-answer" wx:if="{{answer}}">
+ <text class="answer-title">Agent 返回建议</text>
+ <text class="answer-text" selectable="{{true}}">{{answer}}</text>
+ <view class="answer-copy" data-text="{{answer}}" bindtap="copyText">复制回答</view>
+ </view>
+</view>

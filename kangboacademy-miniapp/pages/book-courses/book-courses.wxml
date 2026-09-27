@@ -1,0 +1,59 @@
+<!-- 推荐书目课程 -->
+<view class="page-container">
+ <view class="section px">
+ <view class="section-heading">
+ <view class="gold-mark"></view>
+ <view class="section-title">推荐书目课程</view>
+ </view>
+ <text class="section-subtitle">{{loading ? '正在同步网站书目...' : error ? '目录同步未完成' : total + '门书目课程 · ' + categories.length + '大知识领域 · ' + waves.length + '波系统精读'}}</text>
+ <input class="book-search" placeholder="搜索书名、作者或编号" value="{{keyword}}" bindinput="onSearch" />
+ </view>
+
+ <!-- 分类筛选 -->
+ <scroll-view scroll-x class="cat-scroll px">
+ <view class="cat-tabs">
+ <text class="cat-tab {{activeCat==='all'?'active':''}}" bindtap="filterCat" data-cat="all">全部</text>
+ <text class="cat-tab {{activeCat===item.key?'active':''}}" wx:for="{{categories}}" wx:key="key" bindtap="filterCat" data-cat="{{item.key}}">{{item.label}}</text>
+ </view>
+ </scroll-view>
+
+ <!-- 波次筛选 -->
+ <scroll-view scroll-x class="wave-scroll px">
+ <view class="wave-tabs">
+ <text class="wave-tab {{activeWave===0?'active':''}}" bindtap="filterWave" data-wave="0">全部</text>
+ <text class="wave-tab {{activeWave===item.w?'active':''}}" wx:for="{{waves}}" wx:key="w" bindtap="filterWave" data-wave="{{item.w}}">第{{item.w}}波</text>
+ </view>
+ </scroll-view>
+
+ <!-- 统计 -->
+ <view class="stats-bar px" wx:if="{{!error}}">
+ <text class="text-dim text-sm">{{loading ? '加载中...' : '显示'}} <text class="text-gold font-bold">{{filteredCount}}</text> 门课程</text>
+ </view>
+
+ <view class="px" wx:if="{{error}}">
+ <text class="text-muted">{{error}}</text>
+ <button class="btn btn-ghost" bindtap="loadCourses">重新同步</button>
+ </view>
+ <!-- 课程列表 -->
+ <view class="book-list px">
+ <view class="book-card" wx:for="{{filteredCourses}}" wx:key="n" bindtap="openCourse" data-lesson="{{item.lesson}}" data-title="{{item.t}}">
+ <view class="bc-num">{{item.n}}</view>
+ <view class="bc-body">
+ <text class="bc-title">{{item.t}}</text>
+ <text class="bc-author">{{item.a}}</text>
+ <view class="bc-tags">
+ <text class="tag tag-gold">{{catLabels[item.c] || item.c}}</text>
+ <text class="tag tag-gold" wx:if="{{item.free}}">开放</text>
+ <text class="tag tag-orange" wx:elif="{{item.locked}}">会员</text>
+ </view>
+ </view>
+ </view>
+ </view>
+
+ <!-- 空状态 -->
+ <view class="empty" wx:if="{{!loading && !error && filteredCount === 0}}">
+ <text class="text-muted">没有匹配的课程</text>
+ </view>
+
+ <view class="safe-bottom" style="height: 30rpx;"></view>
+</view>

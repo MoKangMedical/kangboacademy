@@ -1,0 +1,84 @@
+<!-- 康波计算器 -->
+<view class="page-container px">
+ <view class="section">
+ <view class="section-heading">
+ <view class="gold-mark"></view>
+ <view class="section-title">康波计算器</view>
+ </view>
+ <text class="section-subtitle">定位当前周期位置 · 发现财富窗口</text>
+ </view>
+
+ <!-- 输入 -->
+ <view class="calc-card">
+ <text class="calc-label">出生年份</text>
+ <input class="calc-input" type="number" placeholder="如 1990" value="{{birthYear}}" bindinput="onBirthChange" />
+ <text class="calc-label" style="margin-top: 20rpx;">当前年份</text>
+ <input class="calc-input" type="number" placeholder="如 2026" value="{{currentYear}}" bindinput="onCurrentChange" />
+
+ <text class="calc-label" style="margin-top: 20rpx;">风险偏好</text>
+ <view class="profile-grid">
+ <view
+ class="profile-item {{activeProfile === item.key ? 'active' : ''}}"
+ wx:for="{{profileOptions}}"
+ wx:key="key"
+ data-profile="{{item.key}}"
+ bindtap="selectProfile"
+ >
+ <text class="profile-name">{{item.name}}</text>
+ <text class="profile-desc">{{item.desc}}</text>
+ </view>
+ </view>
+
+ <view class="btn btn-primary" bindtap="calculate" style="margin-top: 30rpx;">计算周期位置</view>
+ </view>
+
+ <!-- 结果 -->
+ <view class="result-section" wx:if="{{result}}">
+ <view class="result-card card-gold">
+ <text class="result-phase">{{result.phase}}</text>
+ <text class="result-desc">{{result.desc}}</text>
+ <view class="result-meta">
+ <text>{{result.age}}岁</text>
+ <text>{{result.profileName}}配置</text>
+ </view>
+ </view>
+
+ <!-- 时间线 -->
+ <view class="timeline">
+ <view class="tl-item" wx:for="{{timeline}}" wx:key="label">
+ <view class="tl-dot {{item.active ? 'active' : ''}}"></view>
+ <view class="tl-content">
+ <text class="tl-label">{{item.label}}</text>
+ <text class="tl-year">{{item.year}}</text>
+ <text class="tl-desc">{{item.desc}}</text>
+ </view>
+ </view>
+ </view>
+
+ <!-- 资产配置 -->
+ <view class="card">
+ <text class="result-label">建议资产配置</text>
+ <text class="strategy-text">{{result.strategy}}</text>
+ <view class="alloc-bar" wx:for="{{allocations}}" wx:key="name">
+ <view class="alloc-info flex-between">
+ <view class="alloc-name"><view class="alloc-mark"></view><text>{{item.name}}</text></view>
+ <text class="text-gold">{{item.pct}}%</text>
+ </view>
+ <view class="alloc-track">
+ <view class="alloc-fill" style="width: {{item.pct}}%; background: {{item.color}};"></view>
+ </view>
+ </view>
+ </view>
+
+ <agent-advisor
+ title="把计算结果拿去问Agent"
+ status="{{result.profileName}}"
+ intro="{{agentIntro}}"
+ prompts="{{agentPrompts}}"
+ actions="{{agentActions}}"
+ />
+ </view>
+
+ <view class="safe-bottom" style="height: 30rpx;"></view>
+ <app-tabbar />
+</view>

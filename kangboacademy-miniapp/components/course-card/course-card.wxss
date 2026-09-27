@@ -1,0 +1,73 @@
+.course-card {
+ display: flex;
+ align-items: center;
+ padding: 24rpx 28rpx;
+ background: var(--card);
+ border: 1rpx solid var(--border);
+ border-radius: var(--radius);
+ gap: 20rpx;
+ transition: all 0.2s;
+}
+
+.course-card:active {
+ border-color: var(--gold);
+ background: var(--card2);
+ transform: scale(0.985);
+}
+
+.cc-num {
+ width: 64rpx;
+ height: 64rpx;
+ border-radius: 14rpx;
+ background: rgba(226,182,79,0.08);
+ color: var(--gold);
+ font-size: 28rpx;
+ font-weight: 700;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ flex-shrink: 0;
+}
+
+.cc-body {
+ flex: 1;
+ min-width: 0;
+}
+
+.cc-title {
+ font-size: 28rpx;
+ font-weight: 600;
+ color: var(--text);
+ display: block;
+ margin-bottom: 6rpx;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ white-space: nowrap;
+}
+
+.cc-desc {
+ font-size: 24rpx;
+ color: var(--text3);
+ display: block;
+ margin-bottom: 10rpx;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ white-space: nowrap;
+}
+
+.cc-tags {
+ display: flex;
+ align-items: center;
+ gap: 12rpx;
+}
+
+.cc-time {
+ font-size: 22rpx;
+ color: var(--text3);
+}
+
+.cc-arrow {
+ font-size: 40rpx;
+ color: var(--text3);
+ flex-shrink: 0;
+}

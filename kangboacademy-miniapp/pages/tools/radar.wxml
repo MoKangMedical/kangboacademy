@@ -1,0 +1,88 @@
+<!-- 四维评分 -->
+<view class="page-container px">
+ <view class="section">
+ <view class="section-heading">
+ <view class="gold-mark"></view>
+ <view class="section-title">四维评分</view>
+ </view>
+ <text class="section-subtitle">确定性 · 收益性 · 流动性 · 安全性</text>
+ </view>
+
+ <view class="asset-select">
+ <text class="ps-label">选择资产</text>
+ <view class="ps-grid">
+ <view class="ps-item {{activeAsset==='gold'?'active':''}}" bindtap="selectAsset" data-asset="gold"><view class="asset-mark"></view>黄金</view>
+ <view class="ps-item {{activeAsset==='btc'?'active':''}}" bindtap="selectAsset" data-asset="btc"><view class="asset-mark"></view>比特币</view>
+ <view class="ps-item {{activeAsset==='stock'?'active':''}}" bindtap="selectAsset" data-asset="stock"><view class="asset-mark"></view>A股</view>
+ <view class="ps-item {{activeAsset==='house'?'active':''}}" bindtap="selectAsset" data-asset="house"><view class="asset-mark"></view>房产</view>
+ <view class="ps-item {{activeAsset==='bond'?'active':''}}" bindtap="selectAsset" data-asset="bond"><view class="asset-mark"></view>债券</view>
+ <view class="ps-item {{activeAsset==='oil'?'active':''}}" bindtap="selectAsset" data-asset="oil"><view class="asset-mark"></view>原油</view>
+ </view>
+ </view>
+
+ <view class="asset-select">
+ <text class="ps-label">你的主要目标</text>
+ <view class="goal-grid">
+ <view
+ class="goal-item {{activeGoal === item.key ? 'active' : ''}}"
+ wx:for="{{goalOptions}}"
+ wx:key="key"
+ data-goal="{{item.key}}"
+ bindtap="selectGoal"
+ >
+ <text class="goal-name">{{item.name}}</text>
+ <text class="goal-desc">{{item.desc}}</text>
+ </view>
+ </view>
+ </view>
+
+ <view class="result-section" wx:if="{{currentAsset}}">
+ <!-- 四维条形图 -->
+ <view class="card">
+ <text class="result-label">{{currentAsset.name}}</text>
+ <text class="result-desc" style="font-size:24rpx; margin-bottom:24rpx;">综合评分：<text class="text-gold font-bold">{{currentAsset.total}}</text>/10</text>
+
+ <view
+ class="dim-item {{activeDimension === item.name ? 'active' : ''}}"
+ wx:for="{{currentAsset.dims}}"
+ wx:key="name"
+ data-dim="{{item.name}}"
+ bindtap="selectDimension"
+ >
+ <view class="dim-header flex-between">
+ <text>{{item.name}}</text>
+ <text class="text-gold">{{item.score}}/10</text>
+ </view>
+ <view class="dim-track">
+ <view class="dim-fill" style="width: {{item.score * 10}}%; background: {{item.score >= 7 ? '#22c55e' : item.score >= 5 ? '#e2b64f' : '#ef4444'}};"></view>
+ </view>
+ <text class="dim-reason text-dim text-sm">{{item.reason}}</text>
+ </view>
+ </view>
+
+ <text class="analysis-text text-dim" style="display:block; margin-top:20rpx;font-size:26rpx;line-height:1.8;">{{currentAsset.analysis}}</text>
+
+ <agent-advisor
+ title="让Agent帮你做四维追问"
+ status="{{activeDimension}}"
+ intro="{{agentIntro}}"
+ prompts="{{agentPrompts}}"
+ actions="{{agentActions}}"
+ />
+
+ <!-- 相关课程 -->
+ <view class="section-heading compact-heading" style="margin-top: 30rpx;">
+ <view class="gold-mark"></view>
+ <view class="section-title text-sm">相关课程</view>
+ </view>
+ <view class="course-chips">
+ <navigator url="/pages/course-detail/course-detail?lesson=lesson1.html&title=康波理论基础" class="chip"><text class="chip-num">1</text><text class="chip-name">康波理论</text></navigator>
+ <navigator url="/pages/course-detail/course-detail?lesson=lesson2.html&title=周金涛" class="chip"><text class="chip-num">2</text><text class="chip-name">周金涛</text></navigator>
+ <navigator url="/pages/course-detail/course-detail?lesson=lesson40.html&title=黄金与货币" class="chip"><text class="chip-num">40</text><text class="chip-name">黄金与货币</text></navigator>
+ <navigator url="/pages/course-detail/course-detail?lesson=lesson43.html&title=加密资产" class="chip"><text class="chip-num">43</text><text class="chip-name">加密资产</text></navigator>
+ </view>
+ </view>
+
+ <view class="safe-bottom" style="height: 30rpx;"></view>
+ <app-tabbar />
+</view>

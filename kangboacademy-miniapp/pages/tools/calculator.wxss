@@ -1,0 +1,177 @@
+.calc-card {
+ background: var(--card);
+ border: 1rpx solid var(--border);
+ border-radius: var(--radius-lg);
+ padding: 30rpx;
+ margin-bottom: 30rpx;
+}
+
+.calc-label {
+ font-size: 26rpx;
+ color: var(--text2);
+ display: block;
+ margin-bottom: 8rpx;
+}
+
+.calc-input {
+ width: 100%;
+ height: 80rpx;
+ background: var(--bg2);
+ border: 1rpx solid var(--border);
+ border-radius: 12rpx;
+ padding: 0 24rpx;
+ color: var(--text);
+ font-size: 32rpx;
+}
+
+.profile-grid {
+ display: grid;
+ grid-template-columns: repeat(3, minmax(0, 1fr));
+ gap: 12rpx;
+}
+
+.profile-item {
+ min-width: 0;
+ padding: 16rpx 10rpx;
+ border-radius: 12rpx;
+ background: var(--bg2);
+ border: 1rpx solid var(--border);
+ text-align: center;
+}
+
+.profile-item.active {
+ border-color: rgba(226,182,79,0.5);
+ background: rgba(226,182,79,0.1);
+}
+
+.profile-name {
+ display: block;
+ color: var(--text);
+ font-size: 26rpx;
+ font-weight: 800;
+}
+
+.profile-desc {
+ display: block;
+ color: var(--text3);
+ font-size: 21rpx;
+ line-height: 1.35;
+ margin-top: 4rpx;
+}
+
+.result-section { margin-top: 30rpx; }
+
+.result-card {
+ padding: 30rpx;
+ text-align: center;
+ margin-bottom: 30rpx;
+}
+
+.result-phase {
+ display: block;
+ font-size: 48rpx;
+ font-weight: 900;
+ color: var(--gold);
+ margin-bottom: 8rpx;
+}
+
+.result-desc {
+ display: block;
+ font-size: 26rpx;
+ color: var(--text2);
+}
+
+.result-meta {
+ display: flex;
+ justify-content: center;
+ gap: 12rpx;
+ margin-top: 16rpx;
+}
+
+.result-meta text {
+ padding: 6rpx 14rpx;
+ border-radius: 999rpx;
+ background: rgba(226,182,79,0.12);
+ color: var(--gold);
+ font-size: 22rpx;
+}
+
+.result-label {
+ font-size: 28rpx;
+ font-weight: 600;
+ color: var(--text);
+ display: block;
+ margin-bottom: 20rpx;
+}
+
+.strategy-text {
+ display: block;
+ color: var(--text2);
+ font-size: 25rpx;
+ line-height: 1.7;
+ margin: -6rpx 0 22rpx;
+}
+
+/* 时间线 */
+.timeline {
+ padding: 0 0 30rpx;
+ position: relative;
+}
+
+.timeline::before {
+ content: '';
+ position: absolute;
+ left: 15rpx;
+ top: 0;
+ bottom: 0;
+ width: 2rpx;
+ background: var(--border);
+}
+
+.tl-item {
+ display: flex;
+ gap: 24rpx;
+ margin-bottom: 20rpx;
+ position: relative;
+}
+
+.tl-dot {
+ width: 14rpx;
+ height: 14rpx;
+ border-radius: 50%;
+ background: var(--border);
+ flex-shrink: 0;
+ margin-top: 8rpx;
+ position: relative;
+ z-index: 1;
+}
+
+.tl-dot.active {
+ background: var(--gold);
+ box-shadow: 0 0 12rpx rgba(226,182,79,0.4);
+}
+
+.tl-content { flex: 1; }
+.tl-label { font-size: 24rpx; color: var(--gold); font-weight: 600; display: block; }
+.tl-year { font-size: 22rpx; color: var(--text3); display: block; margin: 2rpx 0; }
+.tl-desc { font-size: 24rpx; color: var(--text2); display: block; }
+
+/* 配置条 */
+.alloc-bar { margin-bottom: 20rpx; }
+.alloc-info { font-size: 26rpx; margin-bottom: 8rpx; }
+.alloc-name {
+ display: flex;
+ align-items: center;
+ gap: 10rpx;
+ min-width: 0;
+ color: var(--text);
+}
+.alloc-mark {
+ width: 18rpx;
+ height: 18rpx;
+ border-radius: 6rpx;
+ background: var(--gold);
+ flex-shrink: 0;
+}
+.alloc-track { height: 12rpx; background: var(--bg2); border-radius: 6rpx; overflow: hidden; }
+.alloc-fill { height: 100%; border-radius: 6rpx; transition: width 0.5s; }

@@ -1,0 +1,53 @@
+<!-- 工具首页 -->
+<view class="page-container px">
+ <view class="section">
+ <view class="section-heading">
+ <view class="gold-mark"></view>
+ <view class="section-title">投资决策工具</view>
+ </view>
+ <text class="section-subtitle">先互动判断，再直接调用Agent生成建议</text>
+ </view>
+
+ <view class="scenario-panel">
+ <text class="panel-label">你现在想解决什么？</text>
+ <view class="scenario-grid">
+ <view
+ class="scenario-chip {{activeScenario === item.key ? 'active' : ''}}"
+ wx:for="{{scenarioOptions}}"
+ wx:key="key"
+ data-key="{{item.key}}"
+ bindtap="selectScenario"
+ >
+ {{item.name}}
+ </view>
+ </view>
+
+ <view class="step-flow">
+ <view class="step-item" wx:for="{{currentScenario.steps}}" wx:key="*this">
+ <text class="step-num">{{index + 1}}</text>
+ <text class="step-text">{{item}}</text>
+ </view>
+ </view>
+ </view>
+
+ <agent-advisor
+ title="工具使用后的Agent沟通建议"
+ status="{{currentScenario.name}}"
+ intro="{{currentScenario.desc}}"
+ prompts="{{currentScenario.prompts}}"
+ actions="{{currentScenario.actions}}"
+ />
+
+ <view class="tool-list">
+ <navigator url="{{item.url}}" class="tool-item" wx:for="{{tools}}" wx:key="url">
+ <view class="ti-icon gold-line-icon"></view>
+ <view class="ti-body">
+ <view class="ti-top">
+ <text class="ti-name">{{item.name}}</text>
+ <text class="tool-tag">{{item.tag}}</text>
+ </view>
+ <text class="ti-desc">{{item.desc}}</text>
+ </view>
+ </navigator>
+ </view>
+</view>

@@ -1,0 +1,145 @@
+.list-hero {
+ padding-top: 44rpx;
+ padding-bottom: 24rpx;
+}
+
+.list-title {
+ display: block;
+ color: var(--text);
+ font-size: 42rpx;
+ font-weight: 850;
+ line-height: 1.25;
+}
+
+.list-sub {
+ display: block;
+ margin-top: 8rpx;
+ color: var(--text3);
+ font-size: 24rpx;
+}
+
+.state-card {
+ margin-top: 18rpx;
+}
+
+.state-inner {
+ min-height: 280rpx;
+ padding: 42rpx 28rpx;
+ border: 1rpx solid var(--border);
+ border-radius: var(--radius);
+ background: var(--card);
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ gap: 22rpx;
+ text-align: center;
+}
+
+.state-mark {
+ width: 42rpx;
+ height: 42rpx;
+ border-radius: 12rpx;
+ background: var(--gold);
+ box-shadow: 0 0 18rpx rgba(226,182,79,0.28);
+}
+
+.state-title {
+ color: var(--text2);
+ font-size: 28rpx;
+ line-height: 1.55;
+}
+
+.state-btn {
+ min-width: 220rpx;
+}
+
+.favorite-list {
+ display: flex;
+ flex-direction: column;
+ gap: 18rpx;
+ padding-bottom: 34rpx;
+}
+
+.favorite-item {
+ display: flex;
+ align-items: center;
+ gap: 18rpx;
+ padding: 24rpx;
+ border-radius: var(--radius);
+ border: 1rpx solid var(--border);
+ background: var(--card);
+}
+
+.favorite-item:active {
+ background: var(--bg2);
+}
+
+.favorite-mark {
+ width: 52rpx;
+ height: 52rpx;
+ border-radius: 12rpx;
+ background: rgba(226,182,79,0.12);
+ color: var(--gold);
+ font-size: 24rpx;
+ font-weight: 850;
+ line-height: 52rpx;
+ text-align: center;
+ flex-shrink: 0;
+}
+
+.favorite-body {
+ flex: 1;
+ min-width: 0;
+}
+
+.favorite-top {
+ display: flex;
+ align-items: center;
+ gap: 12rpx;
+ margin-bottom: 8rpx;
+}
+
+.favorite-type,
+.favorite-access {
+ padding: 5rpx 10rpx;
+ border-radius: 8rpx;
+ font-size: 21rpx;
+ font-weight: 750;
+ color: var(--gold);
+ background: rgba(226,182,79,0.1);
+}
+
+.favorite-access {
+ color: var(--text3);
+ background: rgba(255,255,255,0.05);
+}
+
+.favorite-access.locked {
+ color: #f0a0a0;
+}
+
+.favorite-title {
+ display: block;
+ color: var(--text);
+ font-size: 29rpx;
+ font-weight: 800;
+ line-height: 1.42;
+}
+
+.favorite-meta {
+ display: block;
+ margin-top: 8rpx;
+ color: var(--text3);
+ font-size: 22rpx;
+}
+
+.favorite-arrow {
+ flex-shrink: 0;
+ color: var(--text3);
+ font-size: 38rpx;
+}
+
+.safe-bottom {
+ height: 150rpx;
+}

@@ -1,0 +1,91 @@
+<!-- 资产轮动 -->
+<view class="page-container px">
+ <view class="section">
+ <view class="section-heading">
+ <view class="gold-mark"></view>
+ <view class="section-title">资产轮动查询</view>
+ </view>
+ <text class="section-subtitle">按周期阶段匹配最佳资产组合</text>
+ </view>
+
+ <view class="phase-selector">
+ <text class="ps-label">选择周期阶段</text>
+ <view class="ps-grid">
+ <view class="ps-item {{activePhase==='depression_late'?'active':''}}" bindtap="selectPhase" data-phase="depression_late"><view class="ps-mark"></view>萧条末期</view>
+ <view class="ps-item {{activePhase==='recovery'?'active':''}}" bindtap="selectPhase" data-phase="recovery"><view class="ps-mark"></view>复苏期</view>
+ <view class="ps-item {{activePhase==='prosperity'?'active':''}}" bindtap="selectPhase" data-phase="prosperity"><view class="ps-mark"></view>繁荣期</view>
+ <view class="ps-item {{activePhase==='recession'?'active':''}}" bindtap="selectPhase" data-phase="recession"><view class="ps-mark"></view>衰退期</view>
+ </view>
+ </view>
+
+ <view class="phase-selector">
+ <text class="ps-label">选择投资期限</text>
+ <view class="horizon-grid">
+ <view
+ class="horizon-item {{activeHorizon === item.key ? 'active' : ''}}"
+ wx:for="{{horizonOptions}}"
+ wx:key="key"
+ data-horizon="{{item.key}}"
+ bindtap="selectHorizon"
+ >
+ <text class="horizon-name">{{item.name}}</text>
+ <text class="horizon-desc">{{item.desc}}</text>
+ </view>
+ </view>
+ </view>
+
+ <view class="result-section" wx:if="{{currentPhase}}">
+ <view class="card card-gold">
+ <text class="result-phase">{{currentPhase.name}}</text>
+ <text class="result-desc">{{currentPhase.desc}}</text>
+ </view>
+
+ <view class="section-title text-sm">推荐资产</view>
+ <view class="asset-list">
+ <view
+ class="asset-item {{activeAssetIndex === index ? 'selected' : ''}}"
+ wx:for="{{currentPhase.assets}}"
+ wx:key="name"
+ data-index="{{index}}"
+ bindtap="selectAsset"
+ >
+ <view class="ai-header flex-between">
+ <view class="ai-name"><view class="asset-mark"></view><text>{{item.name}}</text></view>
+ <text class="ai-score text-gold">{{item.score}}/5</text>
+ </view>
+ <view class="ai-bar-track">
+ <view class="ai-bar-fill" style="width: {{item.score * 20}}%; background: {{item.score >= 4 ? '#22c55e' : item.score >= 3 ? '#e2b64f' : '#ef4444'}};"></view>
+ </view>
+ <text class="ai-reason text-dim text-sm">{{item.reason}}</text>
+ </view>
+ </view>
+
+ <view class="focus-card">
+ <text class="focus-title">当前重点：{{focusedAsset.name}}</text>
+ <text class="focus-desc">点击上方任一资产，可让下面的Agent问题自动聚焦到该资产。</text>
+ </view>
+
+ <!-- 相关课程 -->
+ <view class="section-heading compact-heading" style="margin-top: 30rpx;">
+ <view class="gold-mark"></view>
+ <view class="section-title text-sm">推荐学习课程</view>
+ </view>
+ <view class="course-chips">
+ <navigator url="/pages/course-detail/course-detail?lesson={{item.lesson}}&title={{item.title}}" class="chip" wx:for="{{currentPhase.courses}}" wx:key="lesson">
+ <text class="chip-num">{{item.n}}</text>
+ <text class="chip-name">{{item.title}}</text>
+ </navigator>
+ </view>
+
+ <agent-advisor
+ title="让Agent继续推演轮动策略"
+ status="{{focusedAsset.name}}"
+ intro="{{agentIntro}}"
+ prompts="{{agentPrompts}}"
+ actions="{{agentActions}}"
+ />
+ </view>
+
+ <view class="safe-bottom" style="height: 30rpx;"></view>
+ <app-tabbar />
+</view>

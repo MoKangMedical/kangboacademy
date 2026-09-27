@@ -1,0 +1,132 @@
+<!-- 我的 -->
+<view class="page-container">
+ <!-- 用户头部 -->
+ <view class="user-hero">
+ <view class="user-avatar" wx:if="{{userInfo.avatarUrl}}">
+ <image src="{{userInfo.avatarUrl}}" mode="aspectFill" class="avatar-img" />
+ </view>
+ <view class="user-avatar-placeholder" wx:else bindtap="doLogin">
+ <view class="avatar-icon"></view>
+ </view>
+ <text class="user-name" wx:if="{{userInfo.nickName}}">{{userInfo.nickName}}</text>
+ <text class="user-name" wx:else bindtap="doLogin">点击登录</text>
+ <text class="user-desc" wx:if="{{isLogin}}">已通过微信号登录 · 康波研究院</text>
+ </view>
+
+ <!-- 学习统计 -->
+ <view class="stats-row px" wx:if="{{isLogin}}">
+ <view class="stat-item">
+ <text class="stat-num">0</text>
+ <text class="stat-label">已学课程</text>
+ </view>
+ <view class="stat-item">
+ <text class="stat-num">0</text>
+ <text class="stat-label">学习天数</text>
+ </view>
+ <view class="stat-item">
+ <text class="stat-num">0</text>
+ <text class="stat-label">获得徽章</text>
+ </view>
+ </view>
+
+ <!-- 每日精进 -->
+ <view class="refinement-section px" wx:if="{{isLogin}}">
+ <view class="refinement-card">
+ <view class="refinement-head">
+ <view>
+ <text class="refinement-title">每日精进</text>
+ <text class="refinement-sub">互动练习完成后自动记录</text>
+ </view>
+ <text class="streak-pill">{{streakDays}}天</text>
+ </view>
+ <view class="refinement-stats">
+ <view class="refinement-stat">
+ <text class="refinement-num">{{dailyRefinement ? dailyRefinement.practice_count : 0}}</text>
+ <text class="refinement-label">今日练习</text>
+ </view>
+ <view class="refinement-stat">
+ <text class="refinement-num">{{dailyRefinement ? dailyRefinement.score_total : 0}}</text>
+ <text class="refinement-label">今日得分</text>
+ </view>
+ <view class="refinement-stat">
+ <text class="refinement-num">{{badgesEarned}}</text>
+ <text class="refinement-label">已获徽章</text>
+ </view>
+ </view>
+ <view class="recent-badges" wx:if="{{recentBadges.length}}">
+ <view class="recent-badge" wx:for="{{recentBadges}}" wx:key="badge_key">
+ <view class="recent-badge-icon"></view>
+ <text class="recent-badge-name">{{item.badge_name}}</text>
+ </view>
+ </view>
+ </view>
+ </view>
+
+ <!-- 微信账号与手机号 -->
+ <view class="profile-section px" wx:if="{{isLogin}}">
+ <view class="profile-card">
+ <view class="profile-row">
+ <text class="profile-label">微信账号</text>
+ <text class="profile-value">已登录</text>
+ </view>
+ <view class="profile-row phone-row">
+ <text class="profile-label">手机号</text>
+ <input
+ class="phone-input"
+ type="number"
+ maxlength="20"
+ placeholder="填写手机号"
+ value="{{phoneDraft}}"
+ bindinput="onPhoneInput"
+ />
+ <view class="save-phone {{savingPhone ? 'disabled' : ''}}" bindtap="savePhone">保存</view>
+ </view>
+ <button
+ class="wechat-phone-btn"
+ open-type="getPhoneNumber"
+ bindgetphonenumber="bindPhoneFromWechat"
+ loading="{{savingPhone}}"
+ >使用微信手机号一键填写</button>
+ <text class="profile-hint">手机号用于订单联系、订阅权益核对和售后服务。</text>
+ </view>
+ </view>
+
+ <!-- 菜单 -->
+ <view class="menu-section px">
+ <view class="menu-item" bindtap="goPage" data-url="/pages/membership/membership">
+ <view class="menu-label"><view class="menu-icon gold-line-icon"></view><text>会员订阅</text></view>
+ </view>
+ <view class="menu-item" bindtap="goPage" data-url="/pages/courses/courses">
+ <view class="menu-label"><view class="menu-icon gold-line-icon"></view><text>我的课程</text></view>
+ </view>
+ <view class="menu-item" bindtap="goPage" data-url="/pages/book-courses/book-courses">
+ <view class="menu-label"><view class="menu-icon gold-line-icon"></view><text>书目课程</text></view>
+ </view>
+ <view class="menu-item" bindtap="goPage" data-url="/pages/books/books">
+ <view class="menu-label"><view class="menu-icon gold-line-icon"></view><text>康波书店</text></view>
+ </view>
+ </view>
+
+ <view class="menu-section px" style="margin-top: 16rpx;">
+ <view class="menu-item" bindtap="goPage" data-url="/pages/favorites/favorites">
+ <view class="menu-label"><view class="menu-icon gold-line-icon"></view><text>收藏课程</text></view>
+ </view>
+ <view class="menu-item" bindtap="goPage" data-url="/pages/notes/notes">
+ <view class="menu-label"><view class="menu-icon gold-line-icon"></view><text>学习笔记</text></view>
+ </view>
+ <view class="menu-item">
+ <view class="menu-label"><view class="menu-icon gold-line-icon"></view><text>设置</text></view>
+ </view>
+ <view class="menu-item" wx:if="{{isLogin}}" bindtap="doLogout">
+ <text style="color: #ef4444;">退出登录</text>
+ </view>
+ </view>
+
+ <!-- 版本信息 -->
+ <view class="version-info text-center text-muted text-sm">
+ <text>康波研究院 · 微信小程序</text>
+ <text>v1.0.0</text>
+ </view>
+
+ <view class="safe-bottom" style="height: 30rpx;"></view>
+</view>

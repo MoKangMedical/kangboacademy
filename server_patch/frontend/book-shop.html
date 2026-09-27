@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>推荐书目与书商入口 - 康波研究院</title>
+<meta name="description" content="推荐书目与外部书商入口。学习课程与书商交易分离，搜索不代表具体商品或购买。">
+<style>
+:root{--bg:#07070a;--panel:#11131d;--panel2:#171925;--text:#f6eedb;--muted:#b8b1a2;--gold:#e2b64f;--line:#2c2b23;--ok:#63c794;--warn:#e0a64b;--bad:#d66a5f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Noto Sans SC","PingFang SC",sans-serif;line-height:1.65}a{color:inherit;text-decoration:none}.wrap{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:34px 0 68px}.nav{border-bottom:1px solid var(--line);background:rgba(7,7,10,.9);position:sticky;top:0;z-index:20}.nav-inner{width:min(1180px,calc(100% - 32px));margin:0 auto;height:62px;display:flex;align-items:center;justify-content:space-between}.brand{font-family:"Noto Serif SC",serif;color:var(--gold);font-weight:800}.nav a{color:var(--muted);font-size:14px;margin-left:14px}.nav a:hover{color:var(--gold)}.hero{padding:42px 0 28px}.hero h1{font-size:38px;margin:0 0 10px}.hero p{margin:0;color:var(--muted);max-width:760px}.toolbar{display:grid;grid-template-columns:1fr 180px 160px;gap:10px;margin:20px 0}.toolbar input,.toolbar select{border:1px solid var(--line);border-radius:8px;background:#090a11;color:var(--text);padding:11px;font:inherit}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.stat{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px}.stat small{display:block;color:var(--muted);font-size:13px}.stat strong{display:block;color:var(--gold);font-size:30px;line-height:1.2}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px}.card h3{font-size:17px;margin:0;line-height:1.45}.meta{color:var(--muted);font-size:13px}.desc{color:var(--muted);font-size:13px}.badges{display:flex;gap:6px;flex-wrap:wrap}.badge{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:3px 8px;font-size:12px;color:var(--muted)}.badge.ok{color:var(--ok);border-color:rgba(99,199,148,.45)}.badge.warn{color:var(--warn);border-color:rgba(224,166,75,.45)}.actions{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 12px;border-radius:8px;border:1px solid rgba(226,182,79,.48);background:rgba(226,182,79,.12);color:var(--text);font-weight:700}.btn.primary{background:var(--gold);color:#171006}.btn.secondary{background:transparent;color:var(--gold)}.empty{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:26px;color:var(--muted);text-align:center}.notice{margin:14px 0;color:var(--muted);font-size:13px}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;word-break:break-all}@media(max-width:920px){.toolbar{grid-template-columns:1fr}.stats,.grid{grid-template-columns:1fr 1fr}}@media(max-width:620px){.nav-inner{height:auto;padding:12px 0;display:block}.nav a{display:inline-block;margin:8px 10px 0 0}.hero h1{font-size:30px}.stats,.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner"><a class="brand" href="index.html">康波研究院</a><div><a href="xhs.html?utm_source=book_shop&utm_campaign=week1">试学入口</a><a href="book-courses.html">书目课程</a><a href="courses.html">主干课程</a></div></div></nav>
+<main class="wrap">
+ <section class="hero">
+  <h1>推荐书目与书商入口</h1>
+  <p>学习课程与书商交易分离：课程学习不包含实体书购买。外部书商负责商品交易、支付、发货及售后，请在书商页面核实卖家、版本和交易条款。</p>
+  <div class="toolbar">
+   <input id="q" aria-label="搜索书目" placeholder="搜索书名、作者、分类或编号">
+   <select id="category" aria-label="分类"><option value="">全部分类</option></select>
+   <select id="status" aria-label="入口类型"><option value="">全部书目</option><option value="product">具体商品入口</option><option value="search">书商搜索</option><option value="miniProgram">仅限微信小程序</option><option value="none">暂无可用入口</option></select>
+  </div>
+  <div class="stats" id="stats"></div>
+  <p class="notice">本页仅标记商品入口，不据此确认合作授权或分成资格；未接入商品时，仅提供书商搜索或提示暂无可用入口。搜索结果不是具体商品；入口数量及点击不代表购书、订单、支付或分成，本页不收款，也不保证商品在售或正版。</p>
+ </section>
+ <section class="grid" id="grid"></section>
+ <div class="empty" id="empty" role="status" aria-live="polite" hidden></div>
+ <button class="btn secondary" id="retry" type="button" hidden>重新加载</button>
+</main>
+<script src="content-manifest.js"></script>
+<script>
+const state = {books: [], filtered: [], loading: false, error: ''};
+let categoryNames = Object.create(null);
+const $ = id => document.getElementById(id);
+function esc(v){return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function numericId(value){
+ return (typeof value === 'number' || typeof value === 'string') && /^[1-9]\d*$/.test(String(value)) && Number.isSafeInteger(Number(value)) ? String(value) : '';
+}
+function safeUrl(value){
+ if(typeof value !== 'string' || !/^https:\/\//i.test(value) || /[\s\\\u0000-\u001f\u007f]/.test(value)) return '';
+ try{
+  const url = new URL(value);
+  if(url.protocol !== 'https:' || url.username || url.password || !url.hostname.includes('.') || url.port) return '';
+  // Never send a supposedly external link through our lead-recording redirect.
+  if(url.pathname.startsWith('/api/') || url.hostname === location.hostname) return '';
+  return url.href;
+ }catch(e){return '';}
+}
+function entry(book){
+ if(!numericId(book.id)) return {type:'none', url:''};
+ const raw = book.externalUrl || book.affiliateUrl || book.shortUrl || book.url;
+ const url = safeUrl(raw);
+ const types = [book.entryType, book.purchaseEntryType, book.channel, book.source].map(v => String(v || '').toLowerCase());
+ if(url){
+  const target = new URL(url);
+  const search = types.some(v => v === 'search' || v === 'jd_search') || /(^|[.])search[.]/i.test(target.hostname) || /\/(search|s)(\/|\.|$)/i.test(target.pathname);
+  // Search remains usable when the backend explicitly says no purchase is ready.
+  if(search) return {type:'search', url};
+ }
+ if(!url){
+  const appId = book.miniProgramAppId || book.appId;
+  const path = book.shopPath || book.path;
+  const miniProgram = typeof appId === 'string' && /^wx[0-9a-f]{16}$/i.test(appId) &&
+   typeof path === 'string' && /^\/?[a-zA-Z0-9_-]+\/[a-zA-Z0-9_/?=&%.-]+$/.test(path) && !path.includes('..');
+  // Informational only: never fabricate an HTTPS link from a mini-program path.
+  return {type:miniProgram ? 'miniProgram' : 'none', url:''};
+ }
+ if(book.purchaseEntryReady === false) return {type:'none', url:''};
+ const type = book.entryType || book.purchaseEntryType;
+ // Legacy canBuy/commissionReady alone do not prove a concrete product entry.
+ if(book.purchaseEntryReady === true && ['configured_product','product','affiliate','wechat_shop','direct'].includes(type)) return {type:'product', url};
+ return {type:'none', url:''};
+}
+function info(value){
+ if(typeof value === 'string') return value.trim();
+ if(value && typeof value === 'object' && !Array.isArray(value)){
+  return Object.entries(value).filter(([,v]) => (typeof v === 'string' && v.trim()) || typeof v === 'number').map(([k,v]) => `${k}：${v}`).join('；');
+ }
+ return '';
+}
+function renderStats(){
+ const total = state.books.length;
+ const products = state.books.filter(b => entry(b).type === 'product').length;
+ const searches = state.books.filter(b => entry(b).type === 'search').length;
+ const shown = state.filtered.length;
+ $('stats').innerHTML = [
+  ['书目总数', total, '仅统计已加载书目'],
+  ['具体商品入口', products, '不代表在售、授权或成交'],
+  ['书商搜索', searches, '不是具体商品或购买'],
+  ['当前显示', shown, '按筛选条件']
+ ].map(x => `<div class="stat"><small>${x[0]}</small><strong>${x[1]}</strong><small>${x[2]}</small></div>`).join('');
+}
+function render(){
+ const q = $('q').value.trim().toLowerCase();
+ const cat = $('category').value;
+ const status = $('status').value;
+ state.filtered = state.books.filter(book => {
+  const hay = [book.id, book.title, book.author, book.category, categoryNames[book.category], book.channelName].join(' ').toLowerCase();
+  if(q && !hay.includes(q)) return false;
+  if(cat && book.category !== cat) return false;
+  if(status && entry(book).type !== status) return false;
+  return true;
+ });
+ renderStats();
+ $('empty').hidden = !state.loading && !state.error && state.filtered.length > 0;
+ $('empty').textContent = state.loading ? '正在加载书目…' : state.error || (state.books.length ? '没有找到匹配书目，请调整筛选条件。' : '暂无书目数据，请稍后重试。');
+ $('retry').hidden = state.loading || (!state.error && state.books.length > 0);
+ $('retry').disabled = state.loading;
+ $('grid').innerHTML = state.filtered.map(book => {
+  const target = entry(book);
+  const id = numericId(book.id);
+  const label = {product:'查看书商商品', search:'去书商搜索', miniProgram:'仅微信小程序内可打开', none:'暂无可用入口'}[target.type];
+  const course = id && (window.KANGBO_CONTENT.courses || []).some(c => c.kind === 'book' && numericId(c.number) === id);
+  return `<article class="card">
+   <h3>${esc(book.id)}. ${esc(book.title)}</h3>
+   <div class="meta">${esc(book.author || '作者待补')} · ${esc(categoryNames[book.category] || book.category || '未分类')}</div>
+   <div class="badges"><span class="badge ${target.type === 'product' ? 'ok' : 'warn'}">${esc({product:'具体商品入口',search:'书商搜索（非商品）',miniProgram:'仅微信小程序内可打开',none:'暂无可用入口'}[target.type])}</span></div>
+   <div class="desc">价格与库存未核实，以书商页面为准。${target.type === 'search' ? '搜索结果需自行核对书名、作者、版本及卖家。' : '打开链接不代表已购买或已支付。'}</div>
+   <div class="meta">书商信息：${esc(info(book.merchantName) || info(book.merchant) || '未提供，请在书商页面核实')}</div>
+   <div class="meta">售后信息：${esc(info(book.afterSales) || '未提供，请在交易前向书商确认')}</div>
+   <div class="actions">${target.url ? `<a class="btn primary" href="${esc(target.url)}" target="_blank" rel="noopener noreferrer nofollow">${label}</a>` : `<button class="btn" type="button" disabled>${label}</button>`}${course ? `<a class="btn secondary" href="book${id}.html">查看精读课（不含实体书）</a>` : ''}</div>
+  </article>`;
+ }).join('');
+}
+async function init(){
+ if(state.loading) return;
+ state.loading = true;
+ state.error = '';
+ state.books = [];
+ render();
+ const controller = new AbortController();
+ const timer = setTimeout(() => controller.abort(), 15000);
+ try{
+  const manifest = window.KANGBO_CONTENT;
+  if(!manifest || !manifest.categories || !Array.isArray(manifest.categoryOrder)) throw new Error('manifest');
+  categoryNames = Object.assign(Object.create(null), manifest.categories);
+  const selected = $('category').value;
+  $('category').innerHTML = '<option value="">全部分类</option>' + manifest.categoryOrder.map(c => `<option value="${esc(c)}">${esc(categoryNames[c] || c)}</option>`).join('');
+  $('category').value = manifest.categoryOrder.includes(selected) ? selected : '';
+  const response = await fetch('/api/shop/books?limit=500', {signal:controller.signal});
+  if(!response.ok) throw new Error('http');
+  const data = await response.json();
+  if(!data || !Array.isArray(data.books) || data.books.some(b => !b || typeof b !== 'object' || Array.isArray(b))) throw new Error('data');
+  const ids = data.books.map(b => numericId(b.id));
+  if(ids.some(id => !id) || new Set(ids).size !== ids.length) throw new Error('catalog');
+  if(data.books.length > 500 || (data.total !== undefined &&
+   (!Number.isSafeInteger(data.total) || data.total < 0 || data.total !== data.books.length)) ||
+   data.truncated === true || data.hasMore === true || data.nextCursor) throw new Error('catalog');
+  state.books = data.books;
+ }catch(err){
+  state.error = err.message === 'catalog' ? '加载失败：书目目录包含无效或重复编号，或数据不完整，未展示部分结果。请重试。' : '加载失败，暂时无法提供书目入口。请重试；若仍失败，请刷新页面。';
+ }finally{
+  clearTimeout(timer);
+  state.loading = false;
+  render();
+ }
+}
+['q','category','status'].forEach(id => $(id).addEventListener('input', render));
+$('retry').addEventListener('click', init);
+init();
+</script>
+</body>
+</html>

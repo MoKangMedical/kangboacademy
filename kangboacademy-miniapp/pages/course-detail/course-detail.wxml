@@ -1,0 +1,239 @@
+<!-- 课程详情页 -->
+<view class="page-container">
+ <!-- 课程头部 -->
+ <view class="detail-hero">
+ <view class="detail-num">{{courseNum}}</view>
+ <text class="detail-title">{{title}}</text>
+ <view class="detail-meta">
+ <text class="tag tag-gold" wx:if="{{diffLabel}}">{{diffLabel}}</text>
+ <text class="text-dim text-sm">{{time}}</text>
+ </view>
+ </view>
+
+ <!-- 音频播放器 -->
+ <view class="audio-section px" wx:if="{{audioUrl && !locked}}">
+ <view class="audio-card">
+ <view class="audio-main">
+ <view class="audio-icon {{audioPlaying ? 'playing' : ''}}" bindtap="toggleAudio">
+ <text>{{audioPlaying ? '暂停' : '播放'}}</text>
+ </view>
+ <view class="audio-info">
+ <text class="audio-label">{{isBookCourse ? '书目课程音频' : '主干课程音频'}}</text>
+ <text class="audio-title">{{audioTitle}}</text>
+ <text class="audio-state" wx:if="{{audioLoading}}">正在加载...</text>
+ <text class="audio-state error" wx:elif="{{audioError}}">{{audioError}}</text>
+ <text class="audio-state" wx:else>{{audioPlaying ? '播放中' : '点击播放'}}</text>
+ </view>
+ </view>
+ <view class="audio-progress">
+ <text class="audio-time">{{audioCurrentText}}</text>
+ <slider
+ class="audio-slider"
+ min="0"
+ max="100"
+ step="1"
+ value="{{audioProgress}}"
+ activeColor="#e2b64f"
+ backgroundColor="#2c2c38"
+ block-size="14"
+ block-color="#f0d478"
+ bindchanging="onAudioSliderChanging"
+ bindchange="onAudioSliderChange"
+ />
+ <text class="audio-time">{{audioDurationText}}</text>
+ </view>
+ </view>
+ </view>
+
+ <!-- 内容区 -->
+ <view class="detail-body px">
+ <view class="reading-tools" wx:if="{{readerContent}}">
+ <view class="read-tool {{autoReading ? 'active' : ''}}" bindtap="toggleAutoRead">
+ <text>{{autoReadLabel}}</text>
+ </view>
+ <text class="reading-hint">正文已拆成舒缓排版，练习在文末互动完成</text>
+ </view>
+ <view class="reader-card" wx:if="{{readerContent}}">
+ <rich-text class="reader-rich" nodes="{{readerContent}}"></rich-text>
+ </view>
+ <view class="recommend-card" wx:if="{{recommendedBooks.length}}">
+ <view class="recommend-head">
+ <text class="recommend-title">推荐阅读</text>
+ <text class="recommend-sub">本课延伸书目</text>
+ </view>
+ <view class="recommend-list">
+ <view class="recommend-item" wx:for="{{recommendedBooks}}" wx:for-item="book" wx:key="title">
+ <view class="recommend-index">{{index + 1}}</view>
+ <view class="recommend-info">
+ <text class="recommend-book">{{book.title}}</text>
+ <text class="recommend-meta" wx:if="{{book.author || book.difficulty}}">{{book.author}}{{book.author && book.difficulty ? ' · ' : ''}}{{book.difficulty}}
+ </text>
+ <text class="recommend-reason" wx:if="{{book.reason}}">{{book.reason}}</text>
+ </view>
+ </view>
+ </view>
+ </view>
+ <view class="locked-wrap" wx:if="{{locked}}">
+ <view class="locked-card card-gold">
+ <view class="locked-icon"></view>
+ <text class="locked-title">{{lockTitle}}</text>
+ <text class="locked-desc">{{lockMessage}}</text>
+ <view class="btn btn-primary locked-btn" bindtap="goSubscribe">查看会员方案</view>
+ </view>
+ </view>
+ <view class="loading-wrap" wx:if="{{loading}}">
+ <text class="text-muted">加载课程内容中...</text>
+ </view>
+ <view class="error-wrap" wx:if="{{error}}">
+ <text class="text-muted">{{error}}</text>
+ <view class="btn btn-ghost" bindtap="retry" style="margin-top: 20rpx;">重新加载</view>
+ </view>
+ </view>
+
+ <!-- 互动练习 -->
+ <view class="practice-section px" wx:if="{{!loading && !error && !locked && (practiceLoading || practiceQuestions.length)}}">
+ <view class="practice-card">
+ <view class="practice-head">
+ <view>
+ <text class="practice-title">互动练习</text>
+ <text class="practice-sub">阅读、练习、反思、AI分析、个性化追问</text>
+ </view>
+ <view class="score-pill" wx:if="{{practiceSubmitted}}">{{practiceScore}}分</view>
+ </view>
+
+ <view class="learning-flow">
+ <text class="flow-step done">阅读</text>
+ <text class="flow-step {{practiceSubmitted ? 'done' : ''}}">练习</text>
+ <text class="flow-step {{reflectionText ? 'done' : ''}}">反思</text>
+ <text class="flow-step {{aiAnalysisStatus === 'ready' ? 'done' : ''}}">AI反馈</text>
+ </view>
+
+ <view class="practice-loading" wx:if="{{practiceLoading}}">
+ <text class="text-muted">正在生成互动练习...</text>
+ </view>
+
+ <view class="question-card" wx:for="{{practiceQuestions}}" wx:key="id">
+ <view class="question-title">{{item.title}}</view>
+ <text class="question-prompt">{{item.prompt}}</text>
+ <textarea
+ class="answer-box"
+ value="{{item.answer}}"
+ placeholder="{{item.placeholder}}"
+ maxlength="1200"
+ disabled="{{practiceSubmitted}}"
+ data-id="{{item.id}}"
+ bindinput="onPracticeInput"
+ />
+ <view class="question-feedback" wx:if="{{item.result}}">
+ <view class="question-score">{{item.result.score}} / 100</view>
+ <text class="feedback-text">{{item.result.comment}}</text>
+ <view class="keyword-row" wx:if="{{item.result.covered.length}}">
+ <text class="keyword-label">已覆盖</text>
+ <text class="keyword-chip" wx:for="{{item.result.covered}}" wx:key="*this">{{item}}</text>
+ </view>
+ <view class="keyword-row" wx:if="{{item.result.missing.length}}">
+ <text class="keyword-label">可加强</text>
+ <text class="keyword-chip muted" wx:for="{{item.result.missing}}" wx:key="*this">{{item}}</text>
+ </view>
+ </view>
+ </view>
+
+ <view class="reflection-card" wx:if="{{practiceQuestions.length}}">
+ <view class="reflection-head">
+ <text class="reflection-title">课后反思</text>
+ <text class="reflection-count">{{reflectionText.length}}/1500</text>
+ </view>
+ <text class="reflection-guide">用自己的话写下：本课最重要的判断、你过去容易忽略的风险、下一次决策前要验证的问题。</text>
+ <textarea
+ class="reflection-box"
+ value="{{reflectionText}}"
+ placeholder="例如：我以前只看收益，现在要先看周期位置、现金流压力和最坏情况下能否坚持..."
+ maxlength="1500"
+ disabled="{{practiceSubmitted}}"
+ bindinput="onReflectionInput"
+ />
+ </view>
+
+ <view class="submit-practice btn btn-primary" wx:if="{{practiceQuestions.length && !practiceSubmitted}}" bindtap="submitPractice">
+ {{submittingPractice ? '分析中...' : '提交练习、反思并获取反馈'}}
+ </view>
+
+ <view class="agent-card" wx:if="{{practiceSubmitted}}">
+ <text class="agent-title">康波学习Agent</text>
+ <text class="agent-feedback">{{practiceFeedback}}</text>
+ </view>
+
+ <view class="ai-card" wx:if="{{practiceSubmitted}}">
+ <view class="ai-head">
+ <text class="ai-title">AI个性化分析</text>
+ <text class="ai-status {{aiAnalysisStatus}}">{{aiAnalysisStatus === 'ready' ? '已生成' : '待开通'}}</text>
+ </view>
+ <text class="ai-feedback" wx:if="{{aiAnalysis && aiAnalysis.feedback}}">{{aiAnalysis.feedback}}</text>
+ <text class="ai-feedback muted" wx:elif="{{aiAnalysisMessage}}">{{aiAnalysisMessage}}</text>
+ <view class="focus-list" wx:if="{{aiAnalysis && aiAnalysis.focusPoints && aiAnalysis.focusPoints.length}}">
+ <text class="focus-title">本课重点</text>
+ <text class="focus-chip" wx:for="{{aiAnalysis.focusPoints}}" wx:key="*this">{{item}}</text>
+ </view>
+ <view class="follow-list" wx:if="{{aiFollowUps.length}}">
+ <text class="focus-title">继续追问</text>
+ <view class="follow-item" wx:for="{{aiFollowUps}}" wx:key="*this">
+ <text class="follow-index">{{index + 1}}</text>
+ <text class="follow-text">{{item}}</text>
+ </view>
+ </view>
+ <view class="btn btn-outline ai-upgrade" wx:if="{{aiAnalysisStatus === 'locked'}}" bindtap="goSubscribe">开通AI分析权益</view>
+ </view>
+
+ <view class="badge-card" wx:if="{{badgesEarned.length}}">
+ <text class="badge-title">本次获得徽章</text>
+ <view class="badge-list">
+ <view class="badge-item" wx:for="{{badgesEarned}}" wx:key="key">
+ <view class="badge-icon"></view>
+ <view class="badge-text">
+ <text class="badge-name">{{item.name}}</text>
+ <text class="badge-desc">{{item.desc}}</text>
+ </view>
+ </view>
+ </view>
+ </view>
+
+ <view class="daily-card" wx:if="{{dailyRefinement}}">
+ <text>今日精进：{{dailyRefinement.practice_count}} 次练习 · 累计 {{dailyRefinement.score_total}} 分</text>
+ </view>
+ </view>
+ </view>
+
+ <!-- 底部操作 -->
+ <view class="detail-actions" wx:if="{{!loading && !error && !locked}}">
+ <view class="btn btn-primary" bindtap="markComplete">{{savingProgress ? '同步中...' : completed ? '已完成并同步' : '标记完成'}}</view>
+ <view class="btn btn-outline favorite-action {{favorited ? 'active' : ''}}" bindtap="toggleFavorite">
+ {{favoriteLoading ? '处理中' : (favorited ? '已收藏' : '收藏课程')}}
+ </view>
+ <view class="btn btn-outline next-action" bindtap="nextLesson" wx:if="{{nextLesson}}">
+ <text class="next-action-label">{{nextLessonLabel}}</text>
+ <text class="next-action-title">{{nextLessonTitle}}</text>
+ </view>
+ </view>
+
+ <view class="px" wx:if="{{progressError}}"><text class="text-muted">{{progressError}}</text></view>
+ <!-- 相关课程 -->
+ <view class="section px" wx:if="{{!loading && !error && !locked}}">
+ <view class="section-heading">
+ <view class="gold-mark"></view>
+ <view class="section-title">相关课程</view>
+ </view>
+ <view class="related-grid">
+ <navigator url="/pages/course-detail/course-detail?lesson=lesson1.html&title=康波理论基础" class="related-card">
+ <text class="rc-num">1</text>
+ <text class="rc-title">康波理论基础</text>
+ </navigator>
+ <navigator url="/pages/course-detail/course-detail?lesson=lesson6.html&title=投资操作手册" class="related-card">
+ <text class="rc-num">6</text>
+ <text class="rc-title">投资操作手册</text>
+ </navigator>
+ </view>
+ </view>
+
+ <view class="safe-bottom" style="height: 40rpx;"></view>
+ <app-tabbar />
+</view>

@@ -1,0 +1,74 @@
+{
+ "pages": [
+ "pages/index/index",
+ "pages/courses/courses",
+ "pages/micro-course/micro-course",
+ "pages/course-detail/course-detail",
+ "pages/membership/membership",
+ "pages/book-courses/book-courses",
+ "pages/tools/index",
+ "pages/tools/calculator",
+ "pages/tools/asset-rotation",
+ "pages/tools/radar",
+ "pages/tools/ranking",
+ "pages/knowledge-graph/knowledge-graph",
+ "pages/books/books",
+ "pages/favorites/favorites",
+ "pages/notes/notes",
+ "pages/user/user"
+ ],
+ "window": {
+ "backgroundTextStyle": "dark",
+ "navigationBarBackgroundColor": "#07070a",
+ "navigationBarTitleText": "康波研究院",
+ "navigationBarTextStyle": "white",
+ "backgroundColor": "#07070a"
+ },
+ "tabBar": {
+ "color": "#7a7a88",
+ "selectedColor": "#e2b64f",
+ "backgroundColor": "#0d0d14",
+ "borderStyle": "black",
+ "list": [
+ {
+ "pagePath": "pages/index/index",
+ "text": "首页",
+ "iconPath": "assets/icons/home.png",
+ "selectedIconPath": "assets/icons/home-active.png"
+ },
+ {
+ "pagePath": "pages/courses/courses",
+ "text": "主干课程",
+ "iconPath": "assets/icons/course.png",
+ "selectedIconPath": "assets/icons/course-active.png"
+ },
+ {
+ "pagePath": "pages/book-courses/book-courses",
+ "text": "书目课程",
+ "iconPath": "assets/icons/book.png",
+ "selectedIconPath": "assets/icons/book-active.png"
+ },
+ {
+ "pagePath": "pages/tools/index",
+ "text": "工具",
+ "iconPath": "assets/icons/tool.png",
+ "selectedIconPath": "assets/icons/tool-active.png"
+ },
+ {
+ "pagePath": "pages/user/user",
+ "text": "我的",
+ "iconPath": "assets/icons/user.png",
+ "selectedIconPath": "assets/icons/user-active.png"
+ }
+ ]
+ },
+ "networkTimeout": {
+ "request": 15000,
+ "downloadFile": 30000
+ },
+ "usingComponents": {
+ "course-card": "/components/course-card/course-card",
+ "app-tabbar": "/components/app-tabbar/app-tabbar",
+ "agent-advisor": "/components/agent-advisor/agent-advisor"
+ }
+}

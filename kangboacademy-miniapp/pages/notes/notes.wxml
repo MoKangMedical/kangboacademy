@@ -1,0 +1,77 @@
+<view class="page-container">
+ <view class="notes-hero px">
+ <text class="notes-title">学习笔记</text>
+ <text class="notes-sub">{{notes.length}} 条记录</text>
+ </view>
+
+ <view class="state-card px" wx:if="{{!isLogin}}">
+ <view class="state-inner">
+ <view class="state-mark"></view>
+ <text class="state-title">登录后查看学习笔记</text>
+ <view class="btn btn-primary state-btn" bindtap="doLogin">微信登录</view>
+ </view>
+ </view>
+
+ <view class="state-card px" wx:elif="{{loading}}">
+ <view class="state-inner">
+ <text class="state-title">正在加载学习笔记...</text>
+ </view>
+ </view>
+
+ <view class="state-card px" wx:elif="{{error}}">
+ <view class="state-inner">
+ <text class="state-title">{{error}}</text>
+ <view class="btn btn-outline state-btn" bindtap="loadNotes">重新加载</view>
+ </view>
+ </view>
+
+ <view class="notes-list px" wx:elif="{{notes.length}}">
+ <view class="note-card" wx:for="{{notes}}" wx:key="id">
+ <view class="note-head" bindtap="openCourse" data-lesson="{{item.lesson}}" data-title="{{item.title}}">
+ <view class="note-course">
+ <view class="note-type-row">
+ <text class="note-type">{{item.typeLabel}}</text>
+ <text class="note-score">{{item.scoreText}}</text>
+ </view>
+ <text class="note-title">{{item.title}}</text>
+ <text class="note-time">{{item.createdText}}</text>
+ </view>
+ </view>
+
+ <view class="note-block" wx:if="{{item.reflection}}">
+ <text class="block-title">课后反思</text>
+ <text class="block-text">{{item.reflection}}</text>
+ </view>
+
+ <view class="note-block" wx:if="{{item.agentFeedback}}">
+ <text class="block-title">Agent反馈</text>
+ <text class="block-text">{{item.agentFeedback}}</text>
+ </view>
+
+ <view class="note-block" wx:if="{{item.hasAi}}">
+ <text class="block-title">AI建议</text>
+ <text class="block-text" wx:if="{{item.aiFeedback}}">{{item.aiFeedback}}</text>
+ <view class="focus-row" wx:if="{{item.focusPoints.length}}">
+ <text class="focus-chip" wx:for="{{item.focusPoints}}" wx:key="*this">{{item}}</text>
+ </view>
+ <view class="follow-list" wx:if="{{item.followUps.length}}">
+ <view class="follow-item" wx:for="{{item.followUps}}" wx:key="*this">
+ <text class="follow-index">{{index + 1}}</text>
+ <text class="follow-text">{{item}}</text>
+ </view>
+ </view>
+ </view>
+ </view>
+ </view>
+
+ <view class="state-card px" wx:else>
+ <view class="state-inner">
+ <view class="state-mark"></view>
+ <text class="state-title">暂无学习笔记</text>
+ <view class="btn btn-outline state-btn" bindtap="goCourses">去主干课程</view>
+ </view>
+ </view>
+
+ <view class="safe-bottom"></view>
+ <app-tabbar />
+</view>

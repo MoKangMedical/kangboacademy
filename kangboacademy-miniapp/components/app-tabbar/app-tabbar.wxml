@@ -1,0 +1,19 @@
+<view class="app-tabbar-spacer"></view>
+<view class="app-tabbar">
+ <view class="app-tabbar-inner">
+ <view
+ class="tabbar-item {{activeKey === item.key ? 'active' : ''}}"
+ wx:for="{{tabs}}"
+ wx:key="key"
+ data-path="{{item.path}}"
+ bindtap="switchTab"
+ >
+ <image
+ class="tabbar-icon"
+ src="{{activeKey === item.key ? item.activeIcon : item.icon}}"
+ mode="aspectFit"
+ />
+ <text class="tabbar-label">{{item.text}}</text>
+ </view>
+ </view>
+</view>

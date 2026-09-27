@@ -1,0 +1,126 @@
+<view class="micro-page">
+  <view class="paper-orbit orbit-one"></view>
+  <view class="paper-orbit orbit-two"></view>
+
+  <view class="micro-hero px">
+    <view class="micro-topline">
+      <text class="micro-label">INTERACTIVE FIELD NOTE</text>
+      <text class="micro-issue">01 / 04</text>
+    </view>
+    <view class="micro-rule"></view>
+    <text class="micro-title">波动中的<text>决策</text></text>
+    <text class="micro-subtitle">从周期观察走向可复盘的行动</text>
+    <text class="micro-intro">这不是一套预测市场的技巧，而是一条练习路径：看见变化、定位阶段、写下假设，再让事实校正判断。</text>
+
+    <view class="hero-stats">
+      <view>
+        <text class="hero-stat-num">3</text>
+        <text class="hero-stat-label">学习单元</text>
+      </view>
+      <view>
+        <text class="hero-stat-num">4</text>
+        <text class="hero-stat-label">决策步骤</text>
+      </view>
+      <view>
+        <text class="hero-stat-num">18'</text>
+        <text class="hero-stat-label">建议时长</text>
+      </view>
+    </view>
+    <view class="begin-button" bindtap="beginCourse">从第一步开始 <text>↓</text></view>
+  </view>
+
+  <view class="dossier px">
+    <view class="dossier-side">
+      <text class="dossier-small">KANGBO</text>
+      <text class="dossier-big">WAVE</text>
+      <text class="dossier-big">MAP</text>
+      <view class="dossier-line"></view>
+      <text class="dossier-note">PERIOD · DECISION · REVIEW</text>
+    </view>
+    <view class="dossier-main">
+      <text class="dossier-kicker">课程说明</text>
+      <text class="dossier-title">把宏观变化，变成自己的观察框架</text>
+      <text class="dossier-copy">围绕康波理论、周期嵌套与投资操作手册，先完成三个关键判断，再回到 65 门主干课程继续学习。</text>
+      <view class="dossier-pills">
+        <text>周期识别</text>
+        <text>资产配置</text>
+        <text>风险边界</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="path-section px">
+    <view class="section-head">
+      <text class="section-kicker">YOUR LEARNING PATH</text>
+      <text class="section-progress">{{completedCount}} / 3 已完成</text>
+    </view>
+    <view class="progress-track"><view class="progress-fill" style="width: {{progressPercent}}%;"></view></view>
+
+    <view class="module-list">
+      <view class="module-card {{item.unlocked ? '' : 'locked'}}" wx:for="{{modules}}" wx:for-index="moduleIndex" wx:key="no">
+        <view class="module-header">
+          <text class="module-no">{{item.no}}</text>
+          <text class="module-en">{{item.english}}</text>
+          <text class="module-state" wx:if="{{item.answered}}">已判断</text>
+          <text class="module-state muted" wx:elif="{{!item.unlocked}}">下一单元</text>
+        </view>
+        <text class="module-title">{{item.title}}</text>
+        <text class="module-lead">{{item.lead}}</text>
+        <text class="module-lesson">{{item.lesson}}</text>
+
+        <view class="question-box" wx:if="{{item.unlocked}}">
+          <text class="question-label">即时判断</text>
+          <text class="question-text">{{item.prompt}}</text>
+          <view
+            class="option-row {{option.selected ? 'selected' : ''}} {{option.showCorrect ? 'correct' : ''}} {{option.showIncorrect ? 'incorrect' : ''}}"
+            wx:for="{{item.options}}"
+            wx:for-item="option"
+            wx:for-index="optionIndex"
+            wx:key="id"
+            data-module-index="{{moduleIndex}}"
+            data-option-id="{{option.id}}"
+            bindtap="answerQuestion"
+          >
+            <text class="option-mark">{{option.id}}</text>
+            <text>{{option.text}}</text>
+          </view>
+          <view class="answer-note" wx:if="{{item.answered}}">
+            <text class="answer-note-title">{{item.answerCorrect ? '判断完成' : '换一个角度看'}}</text>
+            <text>{{item.explanation}}</text>
+          </view>
+        </view>
+        <view class="locked-note" wx:else>完成上一单元后解锁</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="timeline-section px">
+    <text class="section-kicker">DECISION LOOP</text>
+    <text class="timeline-title">让观点成为可以回看的过程</text>
+    <view class="timeline">
+      <view class="timeline-row {{item.active ? 'active' : ''}}" wx:for="{{stages}}" wx:key="no">
+        <view class="timeline-node {{item.complete ? 'complete' : ''}}"><text>{{item.no}}</text></view>
+        <view class="timeline-copy">
+          <text class="timeline-name">{{item.title}}</text>
+          <text>{{item.desc}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="completion px" wx:if="{{finished}}">
+    <text class="completion-kicker">COURSE COMPLETE</text>
+    <text class="completion-title">你已经走完第一轮判断。</text>
+    <text class="completion-copy">下一步不是寻找更快的答案，而是带着这四步回到主干课程，把自己的观察表持续写下去。</text>
+    <view class="completion-actions">
+      <view class="completion-primary" bindtap="goToCoreCourses">进入 65 门主干课程</view>
+      <view class="completion-reset" bindtap="resetProgress">重新练习</view>
+    </view>
+  </view>
+
+  <view class="micro-footer px">
+    <text>康波研究院 · 互动微课程</text>
+    <text>学习进度仅保存在本机</text>
+  </view>
+  <view class="safe-bottom" style="height: 30rpx;"></view>
+</view>

@@ -1,0 +1,59 @@
+<view class="page-container">
+ <view class="list-hero px">
+ <text class="list-title">收藏课程</text>
+ <text class="list-sub">{{bookmarks.length}} 门课程</text>
+ </view>
+
+ <view class="state-card px" wx:if="{{!isLogin}}">
+ <view class="state-inner">
+ <view class="state-mark"></view>
+ <text class="state-title">登录后查看收藏课程</text>
+ <view class="btn btn-primary state-btn" bindtap="doLogin">微信登录</view>
+ </view>
+ </view>
+
+ <view class="state-card px" wx:elif="{{loading}}">
+ <view class="state-inner">
+ <text class="state-title">正在加载收藏课程...</text>
+ </view>
+ </view>
+
+ <view class="state-card px" wx:elif="{{error}}">
+ <view class="state-inner">
+ <text class="state-title">{{error}}</text>
+ <view class="btn btn-outline state-btn" bindtap="loadBookmarks">重新加载</view>
+ </view>
+ </view>
+
+ <view class="favorite-list px" wx:elif="{{bookmarks.length}}">
+ <view
+ class="favorite-item"
+ wx:for="{{bookmarks}}"
+ wx:key="id"
+ bindtap="openCourse"
+ data-lesson="{{item.lesson}}"
+ data-title="{{item.title}}"
+ >
+ <view class="favorite-mark">{{index + 1}}</view>
+ <view class="favorite-body">
+ <view class="favorite-top">
+ <text class="favorite-type">{{item.typeLabel}}</text>
+ <text class="favorite-access {{item.locked ? 'locked' : ''}}">{{item.accessText}}</text>
+ </view>
+ <text class="favorite-title">{{item.title}}</text>
+ <text class="favorite-meta">{{item.createdText ? '收藏于 ' + item.createdText : '已收藏'}}</text>
+ </view>
+ </view>
+ </view>
+
+ <view class="state-card px" wx:else>
+ <view class="state-inner">
+ <view class="state-mark"></view>
+ <text class="state-title">暂无收藏课程</text>
+ <view class="btn btn-outline state-btn" bindtap="goCourses">去主干课程</view>
+ </view>
+ </view>
+
+ <view class="safe-bottom"></view>
+ <app-tabbar />
+</view>

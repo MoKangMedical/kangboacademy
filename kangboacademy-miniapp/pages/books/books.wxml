@@ -1,0 +1,74 @@
+<!-- 书店 · 微信小店/联盟分成集成 -->
+<view class="page-container">
+ <view class="section px">
+ <view class="section-heading">
+ <view class="gold-mark"></view>
+ <view class="section-title">康波书店</view>
+ </view>
+ <text class="section-subtitle">课程配套书单 · 搜索链接不等于具体商品，价格与版本以商家为准</text>
+ </view>
+
+ <!-- 购买入口 -->
+ <view class="shop-entry px">
+ <view class="shop-card card-gold" bindtap="openShop">
+ <view class="shop-icon gold-line-icon"></view>
+ <view class="shop-info">
+ <text class="shop-title">课程配套阅读与购书</text>
+ <text class="shop-desc">{{shopSummary.modeText}}</text>
+ <view class="shop-stats">
+ <text>商品入口 {{shopSummary.purchaseEntryBooks}}/{{shopSummary.total}}</text>
+ <text>书名搜索 {{shopSummary.searches}}</text>
+ </view>
+ </view>
+ <text class="shop-arrow">说明</text>
+ </view>
+ <button open-type="share" class="shop-share">转发500本书单</button>
+ <input class="book-search" placeholder="搜索书名、作者、编号或渠道" value="{{keyword}}" bindinput="onSearchInput" />
+ </view>
+
+ <!-- 分类导航 -->
+ <scroll-view scroll-x class="cat-scroll px">
+ <view class="cat-tabs">
+ <text class="cat-tab {{activeCat==='all'?'active':''}}" bindtap="filterCat" data-cat="all">全部</text>
+ <text wx:for="{{categories}}" wx:key="key" class="cat-tab {{activeCat===item.key?'active':''}}" bindtap="filterCat" data-cat="{{item.key}}">{{item.label}}</text>
+ </view>
+ </scroll-view>
+
+ <view class="px" wx:if="{{loading}}">
+ <view class="shop-tip">正在加载 500 本图书...</view>
+ </view>
+ <view class="px" wx:if="{{error}}">
+ <view class="shop-tip warn">图书目录未同步，请重试。不会展示未经确认的书名和价格。</view>
+ <button class="btn btn-ghost" bindtap="loadShopBooks">重新同步</button>
+ </view>
+
+ <!-- 图书列表 -->
+ <view class="px shop-tip" wx:if="{{!loading && !error && !filteredBooks.length}}">没有符合条件的图书，请修改搜索或分类。</view>
+ <view class="book-grid px">
+ <view class="book-item" wx:for="{{filteredBooks}}" wx:key="id" bindtap="buyBook" data-book="{{item}}">
+ <view class="book-cover">
+ <view class="book-cover-mark"></view>
+ </view>
+ <view class="book-info">
+ <text class="book-title">{{item.title}}</text>
+ <text class="book-author">{{item.author}}</text>
+ <view class="book-channel-row">
+ <text class="book-channel">{{item.channelText}}</text>
+ <text class="status-pill {{item.entryClass}}">{{item.entryText}}</text>
+ </view>
+ <text class="book-hint">{{item.buyHint}}</text>
+ <view class="book-footer flex-between">
+ <text class="book-price text-gold">{{item.priceText}}</text>
+ <view class="btn-buy">{{item.buyText}}</view>
+ </view>
+ </view>
+ </view>
+ </view>
+
+ <!-- 查看更多 -->
+ <view class="px" style="margin-top: 20rpx; text-align: center;">
+ <view class="btn btn-outline" bindtap="showCommerceHelp">购书、订单与售后说明</view>
+ </view>
+
+ <view class="safe-bottom" style="height: 30rpx;"></view>
+</view>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全部课程 — 康波研究院</title>
+<meta name="description" content="康波研究院完整课程体系：65门主干课程，10大阶段，从理论到实战，掌握50年财富周期。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/*
+ * ═══════════════════════════════════════════
+ *  康波研究院 — 课程中心 v3.0
+ *  设计语言: 深空金 · 极简 · 沉浸
+ * ═══════════════════════════════════════════
+ */
+:root{
+ --bg:#07070a; --bg2:#0d0d14; --bg3:#12121a;
+ --card:#15151c; --card2:#1c1c24; --card3:#1e1e27;
+ --border:#2c2c38; --border2:#3a3a48;
+ --text:#f5f5f7; --text2:#b5b5c2; --text3:#7a7a88;
+ --gold:#e2b64f; --gold-light:#f0d478; --gold-dark:#b8922e;
+ --accent1:#e2b64f; --accent2:#22c55e; --accent3:#3b82f6; --accent4:#8b5cf6; --accent5:#f59e0b; --accent6:#ec4899;
+ --serif:'Noto Serif SC',serif; --sans:'Inter',-apple-system,sans-serif;
+ --radius:14px; --radius-lg:20px; --radius-xl:24px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.65;letter-spacing:.01em;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+/* ═══ NAV ═══ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(7,7,10,0.82);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid rgba(255,255,255,0.06)}
+.nav-inner{max-width:1260px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--gold);letter-spacing:.02em}
+.nav-brand svg{width:26px;height:26px;flex-shrink:0}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{font-size:0.8rem;color:var(--text3);font-weight:500;padding:8px 16px;border-radius:8px;transition:all .25s;letter-spacing:.02em}
+.nav-links a:hover,.nav-links a.active{color:var(--text);background:rgba(255,255,255,0.04)}
+.nav-links a.active{color:var(--gold)}
+
+/* ═══ HERO ═══ */
+.hero{position:relative;padding:140px 0 80px;text-align:center;overflow:hidden;background:radial-gradient(ellipse 70% 50% at 50% 25%,rgba(226,182,79,0.07) 0%,transparent 70%),radial-gradient(ellipse 60% 40% at 80% 60%,rgba(139,92,246,0.04) 0%,transparent 60%)}
+.hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:80px;background:linear-gradient(to top,var(--bg) 20%,transparent)}
+.hero-content{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 24px}
+.hero-badge{display:inline-block;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);background:rgba(226,182,79,0.08);border:1px solid rgba(226,182,79,0.15);padding:6px 20px;border-radius:40px;margin-bottom:24px}
+.hero h1{font-family:var(--serif);font-size:clamp(2.2rem,5vw,3.2rem);font-weight:900;line-height:1.25;margin-bottom:18px;letter-spacing:-.01em}
+.hero h1 .hl{background:linear-gradient(135deg,var(--gold) 20%,var(--gold-light) 60%,var(--gold-dark));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);font-size:1.05rem;line-height:1.9;max-width:560px;margin:0 auto 36px}
+.hero-stats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.hero-stat{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px 22px;text-align:center;min-width:90px;backdrop-filter:blur(8px)}
+.hero-stat-num{font-size:1.6rem;font-weight:800;color:var(--gold);font-family:var(--serif);line-height:1}
+.hero-stat-label{font-size:0.7rem;color:var(--text3);margin-top:4px;letter-spacing:.04em}
+
+/* ═══ SEARCH ═══ */
+.search-wrap{max-width:660px;margin:-20px auto 50px;padding:0 24px;position:relative;z-index:10}
+.search-box{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 20px;transition:all .3s}
+.search-box:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px rgba(226,182,79,0.08)}
+.search-icon{font-size:1.1rem;color:var(--text3);flex-shrink:0}
+.search-input{flex:1;background:none;border:none;color:var(--text);font-size:0.95rem;outline:none;font-family:var(--sans)}
+.search-input::placeholder{color:var(--text3)}
+.search-clear{display:none;background:none;border:none;color:var(--text3);cursor:pointer;font-size:1.1rem;padding:4px}
+.search-clear:hover{color:var(--text)}
+.search-hint{font-size:0.7rem;color:var(--text3);margin-top:8px;padding-left:4px}
+
+/* ═══ PHASE HEADER ═══ */
+.phase-section{margin-bottom:48px;position:relative}
+.phase-header{display:flex;align-items:center;gap:14px;padding:18px 24px;margin:0 0 16px;border-bottom:1px solid var(--border);position:sticky;top:64px;background:rgba(7,7,10,0.95);backdrop-filter:blur(20px);z-index:50}
+.phase-icon{font-size:1.6rem;flex-shrink:0;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(226,182,79,0.06);border-radius:10px}
+.phase-info{flex:1}
+.phase-title{font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--gold);letter-spacing:.01em}
+.phase-sub{font-size:0.75rem;color:var(--text3);margin-top:2px}
+.phase-count{font-size:0.72rem;color:var(--text3);background:var(--card2);padding:4px 12px;border-radius:20px;flex-shrink:0}
+
+/* ═══ COURSE CARD ═══ */
+.course-grid{display:grid;grid-template-columns:1fr;gap:10px;padding:0 24px;max-width:900px;margin:0 auto}
+
+.course-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);position:relative}
+.course-card::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .3s;border-radius:var(--radius);background:radial-gradient(600px circle at var(--mouse-x,50%) var(--mouse-y,50%),rgba(226,182,79,0.03),transparent 50%)}
+.course-card:hover::before{opacity:1}
+.course-card:hover{border-color:#333;transform:translateY(-1px);box-shadow:0 8px 30px rgba(0,0,0,0.3)}
+.course-card.open{border-color:var(--gold);box-shadow:0 4px 24px rgba(226,182,79,0.06)}
+
+.course-row{display:flex;align-items:stretch;padding:18px 22px;gap:16px}
+.course-num-wrap{flex-shrink:0;display:flex;align-items:center}
+.course-num{width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:800;color:#1a1a0a;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));font-family:var(--serif);position:relative;z-index:1}
+.course-num::after{content:'';position:absolute;inset:-2px;border-radius:14px;background:linear-gradient(135deg,var(--gold-light),transparent);opacity:0.3;z-index:-1}
+.course-info{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.course-title{font-size:1.02rem;font-weight:600;color:var(--text);letter-spacing:-.01em;line-height:1.3}
+.course-desc{font-size:0.82rem;color:var(--text3);margin-top:4px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.course-tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.course-tag{font-size:0.68rem;font-weight:500;padding:3px 10px;border-radius:6px;letter-spacing:.02em}
+.tag-diff{background:rgba(226,182,79,0.1);color:var(--gold-dark)}
+.tag-diff.beginner{background:rgba(34,197,94,0.1);color:#22c55e}
+.tag-diff.core{background:rgba(59,130,246,0.1);color:#60a5fa}
+.tag-diff.advanced{background:rgba(139,92,246,0.1);color:#a78bfa}
+.tag-diff.master{background:rgba(236,72,153,0.1);color:#f9a8d4}
+.tag-time{background:var(--card3);color:var(--text3)}
+.tag-exercise{background:rgba(34,197,94,0.08);color:#22c55e;font-size:0.65rem}
+.course-arrow-wrap{flex-shrink:0;display:flex;align-items:center}
+.course-arrow{font-size:1.3rem;color:var(--text3);transition:all .3s;line-height:1}
+.course-card.open .course-arrow{transform:rotate(90deg);color:var(--gold)}
+
+/* ═══ EXPANDED CONTENT ═══ */
+.course-body{display:none;border-top:1px solid var(--border);background:var(--bg2)}
+.course-card.open .course-body{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.course-body-inner{max-height:65vh;overflow-y:auto;padding:28px 28px 20px}
+.course-body-inner::-webkit-scrollbar{width:5px}
+.course-body-inner::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px}
+.course-body-inner::-webkit-scrollbar-track{background:transparent}
+
+/* Markdown rendered content */
+.md-content{font-size:0.92rem;line-height:1.95;color:var(--text2)}
+.md-content h1{font-family:var(--serif);font-size:1.6rem;font-weight:700;color:var(--text);margin:28px 0 14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.md-content h1:first-child{margin-top:0}
+.md-content h2{font-size:1.2rem;font-weight:700;color:var(--text);margin:24px 0 10px;display:flex;align-items:center;gap:8px;padding-left:0}
+.md-content h2::before{content:'';width:3px;height:18px;background:var(--gold);border-radius:2px;flex-shrink:0}
+.md-content h3{font-size:1.02rem;font-weight:600;color:var(--gold-light);margin:18px 0 8px}
+.md-content h4{font-size:0.95rem;font-weight:600;color:var(--text);margin:14px 0 6px}
+.md-content p{margin:8px 0}
+.md-content strong{color:var(--text);font-weight:600}
+.md-content em{color:var(--gold);font-style:italic}
+.md-content blockquote{background:linear-gradient(135deg,rgba(226,182,79,0.06),rgba(226,182,79,0.02));border-left:3px solid var(--gold);padding:14px 18px;margin:14px 0;border-radius:0 8px 8px 0;color:var(--text);font-size:0.93rem}
+.md-content blockquote p{margin:4px 0}
+.md-content ul,.md-content ol{padding-left:22px;margin:10px 0}
+.md-content li{margin:5px 0;color:var(--text2)}
+.md-content li::marker{color:var(--gold-dark)}
+.md-content code{background:var(--card3);color:var(--gold-light);padding:2px 7px;border-radius:5px;font-size:0.85rem}
+.md-content pre{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin:14px 0;overflow-x:auto}
+.md-content pre code{background:none;padding:0;color:var(--text2);font-size:0.85rem}
+.md-content hr{border:none;border-top:1px solid var(--border);margin:20px 0}
+.md-content table{width:100%;border-collapse:collapse;margin:14px 0;font-size:0.85rem;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.md-content th{background:rgba(226,182,79,0.08);color:var(--gold);font-weight:600;text-align:left;padding:10px 14px;border-bottom:2px solid rgba(226,182,79,0.2);font-size:0.8rem}
+.md-content td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text2)}
+.md-content tr:last-child td{border-bottom:none}
+.md-content tr:nth-child(even){background:rgba(255,255,255,0.015)}
+.md-content details{margin:10px 0;background:var(--card2);border-radius:8px;padding:12px 16px;border:1px solid var(--border)}
+.md-content details summary{cursor:pointer;color:var(--gold);font-weight:500;font-size:0.9rem;padding:4px 0}
+.md-content details[open] summary{margin-bottom:8px}
+.md-content details p,.md-content details li{font-size:0.85rem;color:var(--text3)}
+
+.course-body-actions{display:flex;gap:10px;padding:12px 28px 22px;border-top:1px solid rgba(255,255,255,0.03)}
+.btn-start{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;background:var(--gold);color:#1a1a0a;font-weight:600;border-radius:10px;font-size:0.85rem;transition:all .25s;letter-spacing:.01em}
+.btn-start:hover{background:var(--gold-light);transform:translateY(-1px)}
+.btn-audio{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:var(--card3);color:var(--text2);border:1px solid var(--border);border-radius:10px;font-size:0.8rem;cursor:pointer;transition:all .25s}
+.btn-audio:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ═══ BACK TO TOP ═══ */
+.back-top{position:fixed;bottom:28px;right:28px;width:44px;height:44px;background:var(--gold);color:#1a1a0a;border:none;border-radius:50%;font-size:1.2rem;cursor:pointer;z-index:99;opacity:0;transform:translateY(12px);transition:all .3s;box-shadow:0 4px 16px rgba(226,182,79,0.2);display:flex;align-items:center;justify-content:center}
+.back-top.visible{opacity:1;transform:translateY(0)}
+.back-top:hover{background:var(--gold-light);transform:translateY(-3px);box-shadow:0 6px 24px rgba(226,182,79,0.3)}
+
+/* ═══ SECTION DIVIDER ═══ */
+.divider{display:flex;align-items:center;gap:16px;margin:12px 24px 32px;max-width:900px;margin-left:auto;margin-right:auto;opacity:0.3}
+.divider-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+.divider-icon{font-size:0.8rem;color:var(--text3)}
+.divider:last-child{display:none}
+
+/* ═══ FOOTER ═══ */
+.footer{padding:40px 24px 32px;text-align:center;border-top:1px solid var(--border);margin-top:32px}
+.footer p{font-size:0.75rem;color:var(--text3);line-height:1.7}
+.footer .gold{color:var(--gold-dark)}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:1100px){
+ .nav-inner{height:auto;min-height:96px;display:block;padding:10px 20px 0}
+ .nav-brand{height:34px;white-space:nowrap}
+ .nav-links{width:100%;overflow-x:auto;white-space:nowrap;gap:4px;padding:4px 0 8px}
+ .nav-links a{flex:0 0 auto;padding:7px 12px}
+ .phase-header{top:96px}
+}
+@media(max-width:768px){
+ .hero{padding:120px 0 60px}
+ .hero h1{font-size:1.8rem}
+ .hero-stats{gap:6px}
+ .hero-stat{padding:10px 14px;min-width:70px}
+ .hero-stat-num{font-size:1.3rem}
+ .course-row{padding:14px 16px;gap:12px}
+ .course-num{width:40px;height:40px;font-size:1.1rem;border-radius:10px}
+ .course-title{font-size:0.95rem}
+ .course-body-inner{padding:20px 16px}
+ .course-body-actions{padding:10px 16px 18px}
+ .md-content table{font-size:0.7rem}
+ .md-content th,.md-content td{padding:6px 8px}
+ .phase-header{padding:12px 16px}
+ .phase-title{font-size:1rem}
+}
+@media(min-width:1200px){
+ .course-grid{padding:0}
+ .phase-header{padding:18px 0}
+ .divider{margin-left:auto;margin-right:auto;padding:0}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+ <div class="nav-inner"><a href="index.html" class="nav-brand"><svg viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="12" stroke="#e2b64f" stroke-width="1.5"/><path d="M6 18c2-6 4-8 8-10s6 2 8 6" stroke="#e2b64f" stroke-width="1.5" fill="none"/><circle cx="14" cy="12" r="2.5" fill="#e2b64f"/></svg>
+ 康波研究院
+ </a>
+ <div class="nav-links"><a href="index.html">首页</a>
+ <a href="index.html#theory">理论体系</a>
+ <a href="courses.html" class="active">主干课程</a>
+ <a href="books.html">推荐书目</a>
+ <a href="book-courses.html">推荐书目课程</a>
+ <a href="knowledge-graph.html">知识图谱</a>
+ <a href="naval-courses/index.html">纳瓦尔100课</a>
+        <a href="tools.html">工具</a>
+ <a href="index.html#pricing">定价</a>
+ <a href="3d.html">3D探索</a>
+ </div>
+ </div>
+</nav>
+
+<section class="hero">
+ <div class="hero-content"><div class="hero-badge">完整课程体系</div>
+ <h1>从理论到实战<br><span class="hl">65门主干课程</span>掌握周期投资</h1>
+ <p>10大阶段系统学习康波理论、投资大师智慧、经济史、资产配置与风险管理——每课含数据表格、案例分析与互动练习</p>
+ <div class="hero-stats"><div class="hero-stat"><div class="hero-stat-num">65</div><div class="hero-stat-label">主干课程</div></div>
+ <div class="hero-stat"><div class="hero-stat-num">10</div><div class="hero-stat-label">学习阶段</div></div>
+ <div class="hero-stat"><div class="hero-stat-num">50+</div><div class="hero-stat-label">推荐书单</div></div>
+ <div class="hero-stat"><div class="hero-stat-num">5x</div><div class="hero-stat-label">练习/课</div></div>
+ </div>
+ </div>
+</section>
+
+<div class="search-wrap"><div class="search-box"><span class="search-icon"></span>
+ <input type="text" class="search-input" id="searchInput" aria-label="搜索课程" placeholder="搜索课程名称、关键词...">
+ <button class="search-clear" id="searchClear" aria-label="清空搜索">×</button>
+ </div>
+ <div class="search-hint" id="searchHint">共 <strong>65</strong> 门课程 · 点击课程卡片查看详情</div>
+</div>
+
+<main id="coursesContainer" style="max-width:1100px;margin:0 auto;padding:0 20px"></main>
+
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<footer class="footer">
+ <p><span class="gold">康波研究院</span> © 2026 · MoKangMedical<br>本平台内容仅供学习参考，不构成投资建议</p>
+</footer>
+
+<script src="content-manifest.js"></script>
+<script src="catalog-contract.js"></script>
+<script>
+// ═════════════════════════════════════
+//  Course Data & Rendering System
+// ═════════════════════════════════════
+
+// Each phase block will be rendered from this data
+const PHASES = window.KangboCatalog.phases;
+
+// Render phases from data
+const container = document.getElementById('coursesContainer');
+let allCards = [];
+
+PHASES.forEach((phase, phaseIdx) => {
+ const section = document.createElement('div');
+ section.className = 'phase-section';
+ section.setAttribute('data-phase', phase.title);
+
+ let cardsHTML = '';
+ phase.courses.forEach(course => {
+ const c = Object.fromEntries(Object.entries(course).map(([key, value]) => [key, window.KangboCatalog.escape(value)]));
+ cardsHTML += `
+ <div class="course-card" data-course="${c.n}" data-title="${c.title}" data-diff="${c.diff}" data-time="${c.time}" data-file="${c.file}" data-lesson="${c.lesson}" data-audio="audio/lesson${c.n}.mp3" data-phase="${window.KangboCatalog.escape(phase.title)}"><div class="course-row"><div class="course-num-wrap"><div class="course-num">${c.n}</div></div>
+ <div class="course-info"><div class="course-title">${c.title}</div>
+ <div class="course-desc">${c.desc}</div>
+ <div class="course-tags"><span class="course-tag tag-diff ${c.diff}">${c.diffLabel}</span>
+ <span class="course-tag tag-time">${c.time}</span>
+ <span class="course-tag tag-exercise">含5道练习</span>
+ </div>
+ </div>
+ <div class="course-arrow-wrap"><span class="course-arrow">›</span></div>
+ </div>
+ <div class="course-body"><div class="course-body-inner"><div class="md-content" id="md-${c.n}"><p style="color:var(--text3)">加载中...</p></div>
+ </div>
+ <div class="course-body-actions"><a href="${c.lesson}" class="btn-start">开始学习</a>
+ <a href="audio/lesson${c.n}.mp3" class="btn-audio">听课</a>
+ </div>
+ </div>
+ </div>`;
+ });
+
+ section.innerHTML = `
+ <div class="phase-header"><div class="phase-icon">${window.KangboCatalog.escape(phase.icon)}</div>
+ <div class="phase-info"><div class="phase-title">${window.KangboCatalog.escape(phase.title)}</div>
+ <div class="phase-sub">${window.KangboCatalog.escape(phase.sub)}</div>
+ </div>
+ <div class="phase-count">${phase.courses.length} 课</div>
+ </div>
+ <div class="course-grid">${cardsHTML}</div>
+ ${phaseIdx < PHASES.length - 1 ? '<div class="divider"><div class="divider-line"></div><div class="divider-icon">◆</div><div class="divider-line"></div></div>' : ''}
+ `;
+ container.appendChild(section);
+});
+
+// Collect all cards for search
+allCards = document.querySelectorAll('.course-card');
+// ═══ Click Handler: Navigate to course lesson ═══
+document.getElementById("coursesContainer").addEventListener("click", function(e) {
+ // Find the closest course-card ancestor
+ var card = e.target.closest(".course-card");
+ if (!card) return;
+
+ // If click was on a button/link inside the card, let it handle its own navigation
+ if (e.target.closest("a, button, .btn-start, .btn-audio")) return;
+
+ var lesson = card.getAttribute("data-lesson");
+ if (lesson) {
+ location.href = lesson;
+ }
+});
+
+
+// ═══ Simple Markdown Parser ═══
+function parseMd(md) {
+ if (!md) return '';
+ let html = md;
+ // Headers
+ html = html.replace(/^### (.+)$/gm, '<h4>$1</h4>');
+ html = html.replace(/^## (.+)$/gm, '<h3>$1</h3>');
+ html = html.replace(/^# (.+)$/gm, '<h2>$1</h2>');
+ // Bold
+ html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+ // Italic
+ html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+ // Inline code
+ html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+ // Lists
+ html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+ html = html.replace(/(<li>[\s\S]*?<\/li>)/g, '<ul>$1</ul>');
+ // Paragraphs
+ html = html.replace(/^(?!<[hul])(.+)$/gm, '<p>$1</p>');
+ // Clean empty paragraphs
+ html = html.replace(/<p>\s*<\/p>/g, '');
+ // Remove duplicate ul tags
+ html = html.replace(/<\/ul>\s*<ul>/g, '');
+ return html;
+}
+
+function loadCourseContent(card) {
+ const file = card.getAttribute('data-file');
+ const num = card.getAttribute('data-course');
+ const mdEl = document.getElementById('md-' + num);
+ if (!mdEl || mdEl.getAttribute('data-loaded')) return;
+
+ mdEl.setAttribute('data-loaded', '1');
+ fetch(file)
+ .then(r => r.ok ? r.text() : Promise.reject())
+ .then(md => { mdEl.innerHTML = parseMd(md); })
+ .catch(() => { mdEl.innerHTML = '<p style="color:var(--text3)">内容加载失败</p>'; });
+}
+
+// ═══ Toggle Card ═══
+function goLesson(card){var x=card.getAttribute("data-lesson");if(x)location.href=x}
+function toggleCard(card) {
+ const wasOpen = card.classList.contains('open');
+ // Close all other cards
+ document.querySelectorAll('.course-card.open').forEach(c => c.classList.remove('open'));
+ if (!wasOpen) {
+ card.classList.add('open');
+ loadCourseContent(card);
+ setTimeout(() => {
+ card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+ }, 50);
+ }
+}
+
+// ═══ Search ═══
+const searchInput = document.getElementById('searchInput');
+const searchClear = document.getElementById('searchClear');
+const searchHint = document.getElementById('searchHint');
+
+searchInput.addEventListener('input', function() {
+ const term = this.value.toLowerCase().trim();
+ searchClear.style.display = term ? 'block' : 'none';
+
+ let visibleCount = 0;
+ allCards.forEach(card => {
+ const title = (card.getAttribute('data-title') || '').toLowerCase();
+ const phase = (card.getAttribute('data-phase') || '').toLowerCase();
+ const match = !term || title.includes(term) || phase.includes(term);
+ card.style.display = match ? '' : 'none';
+ if (match) visibleCount++;
+ });
+
+ // Show/hide empty phases
+ document.querySelectorAll('.phase-section').forEach(section => {
+ const visibleCards = section.querySelectorAll('.course-card[style*="display: none"]').length;
+ const totalCards = section.querySelectorAll('.course-card').length;
+ section.style.display = visibleCards === totalCards ? 'none' : '';
+ });
+
+ searchHint.textContent = term ? `找到 ${visibleCount} 门课程` : `共 ${allCards.length} 门课程 · 点击课程卡片查看详情`;
+});
+
+searchClear.addEventListener('click', function() {
+ searchInput.value = '';
+ searchInput.dispatchEvent(new Event('input'));
+ searchInput.focus();
+});
+
+// ═══ Back to Top ═══
+const backTop = document.getElementById('backTop');
+window.addEventListener('scroll', function() {
+ backTop.style.display = window.scrollY > 600 ? 'flex' : 'none';
+});
+
+</script>
+</body>
+</html>

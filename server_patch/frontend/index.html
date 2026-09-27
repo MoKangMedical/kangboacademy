@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>康波研究院 — 掌握50年财富周期</title>
+<meta name="description" content="基于康德拉季耶夫长波理论，帮你定位当前周期位置，规划2026-2040投资策略。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://d3js.org">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preload" href="https://d3js.org/d3.v7.min.js" as="script">
+
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════ RESET & VARIABLES ═══════════════ */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#09090b;--bg2:#0f0f13;--bg3:#18181b;
+  --card:#1c1c21;--card2:#222228;--card3:#2a2a32;
+  --border:#27272a;--border2:#3f3f46;
+  --text:#fafafa;--text2:#a1a1aa;--text3:#71717a;
+  --gold:#e2b64f;--gold2:#f5d98a;
+  --green:#22c55e;--blue:#3b82f6;--purple:#a78bfa;
+  --orange:#f59e0b;--red:#ef4444;
+  --serif:'Noto Serif SC',serif;
+  --sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  --radius:16px;--radius-sm:10px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+
+/* ═══════════════ TYPOGRAPHY ═══════════════ */
+.serif{font-family:var(--serif)}
+h1{font-size:clamp(2.4rem,5vw,4rem);font-weight:900;line-height:1.15;letter-spacing:-0.02em}
+h2{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:700;line-height:1.25;letter-spacing:-0.01em}
+h3{font-size:1.25rem;font-weight:600}
+.label{font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--gold)}
+.body-lg{font-size:1.125rem;color:var(--text2);line-height:1.9}
+.body-sm{font-size:0.875rem;color:var(--text3)}
+
+/* ═══════════════ LAYOUT ═══════════════ */
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.container-sm{max-width:800px;margin:0 auto;padding:0 24px}
+.section{padding:100px 0}
+.section-sm{padding:60px 0}
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:32px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+@media(max-width:768px){
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .section{padding:60px 0}
+}
+
+/* ═══════════════ NAV ═══════════════ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(9,9,11,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:all .3s}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:8px}
+.nav-logo svg{width:28px;height:28px}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{font-size:0.875rem;color:var(--text2);transition:color .2s;font-weight:500}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{background:var(--gold);color:#000;padding:8px 20px;border-radius:8px;font-weight:600;font-size:0.85rem;transition:all .2s}
+.nav-cta:hover{background:var(--gold2);transform:translateY(-1px)}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .nav-links.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--bg2);padding:20px;gap:16px;border-bottom:1px solid var(--border)}
+}
+.hamburger{display:none;cursor:pointer;padding:8px}
+@media(max-width:768px){.hamburger{display:block}}
+
+/* ═══════════════ HERO ═══════════════ */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding-top:64px}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse 80% 60% at 50% 20%,rgba(226,182,79,0.08),transparent 70%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(59,130,246,0.05),transparent 60%)}
+.hero-content{position:relative;z-index:1;text-align:center;max-width:900px;margin:0 auto;padding:0 24px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(226,182,79,0.1);border:1px solid rgba(226,182,79,0.2);padding:6px 16px;border-radius:100px;font-size:0.8rem;color:var(--gold);margin-bottom:32px}
+.hero-badge .dot{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero h1{margin-bottom:24px}
+.hero h1 .gold{color:var(--gold)}
+.hero-sub{font-size:1.2rem;color:var(--text2);max-width:600px;margin:0 auto 40px;line-height:1.7}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:var(--radius-sm);font-weight:600;font-size:0.95rem;transition:all .25s;border:none;cursor:pointer}
+.btn-primary{background:var(--gold);color:#000}
+.btn-primary:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 8px 30px rgba(226,182,79,0.3)}
+.btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border2)}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold)}
+.hero-stats{display:flex;justify-content:center;gap:48px;margin-top:64px;padding-top:40px;border-top:1px solid var(--border)}
+.hero-stat{text-align:center}
+.hero-stat .num{font-size:2rem;font-weight:800;color:var(--gold)}
+.hero-stat .desc{font-size:0.8rem;color:var(--text3);margin-top:4px}
+@media(max-width:768px){.hero-stats{gap:24px}.hero-stat .num{font-size:1.5rem}}
+
+/* ═══════════════ CONTINUOUS AUDIO ═══════════════ */
+.audio-marathon{padding-top:36px;background:linear-gradient(180deg,rgba(226,182,79,.03),transparent 65%)}
+.audio-panel{border:1px solid rgba(226,182,79,.18);background:rgba(18,18,24,.92);border-radius:var(--radius);padding:28px;box-shadow:0 22px 70px rgba(0,0,0,.24)}
+.audio-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:22px}
+.audio-head h2{font-size:1.6rem;margin-top:6px}
+.audio-head p{color:var(--text2);font-size:.95rem;margin-top:8px}
+.audio-tabs{display:flex;gap:10px;flex-shrink:0}
+.audio-tab{border:1px solid var(--border2);background:var(--card2);color:var(--text2);border-radius:9px;padding:9px 18px;font-weight:700;cursor:pointer;transition:all .2s}
+.audio-tab.active,.audio-tab:hover{border-color:var(--gold);background:var(--gold);color:#111}
+.audio-player{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:24px;align-items:start}
+.audio-now{min-width:0}
+.audio-kicker{color:var(--gold);font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.audio-title{font-family:var(--serif);font-size:1.35rem;font-weight:800;color:var(--text);line-height:1.35;margin-top:8px}
+.audio-subtitle{color:var(--text3);font-size:.9rem;margin-top:6px}
+.audio-controls{display:flex;align-items:center;gap:12px;margin-top:22px;flex-wrap:wrap}
+.audio-main-btn{width:58px;height:58px;border-radius:50%;border:1px solid rgba(226,182,79,.36);background:rgba(226,182,79,.12);color:var(--gold);font-weight:900;cursor:pointer}
+.audio-main-btn.playing{background:var(--gold);color:#111}
+.audio-step{border:1px solid rgba(226,182,79,.24);background:transparent;color:var(--gold);border-radius:9px;padding:9px 15px;font-weight:700;cursor:pointer}
+.audio-status{color:var(--text3);font-size:.86rem}
+.audio-progress{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;align-items:center;gap:12px;margin-top:20px;color:var(--text3);font-size:.82rem}
+.audio-progress input{width:100%;accent-color:var(--gold)}
+.audio-counts{display:flex;gap:14px;flex-wrap:wrap;margin-top:18px;color:var(--text3);font-size:.85rem}
+.audio-counts span{padding:4px 10px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.02)}
+.audio-queue{border-left:1px solid var(--border);padding-left:20px;max-height:360px;overflow:auto}
+.audio-queue-row{display:grid;grid-template-columns:42px minmax(0,1fr) 44px;gap:10px;align-items:center;width:100%;padding:10px 0;border:0;border-bottom:1px solid rgba(255,255,255,.05);background:transparent;color:inherit;text-align:left;font:inherit;cursor:pointer}
+.audio-queue-row.active .audio-queue-title{color:var(--gold)}
+.audio-queue-num{color:var(--text3);font-size:.78rem}
+.audio-queue-title{color:var(--text);font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.audio-queue-sub{color:var(--text3);font-size:.74rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.audio-queue-type{color:var(--gold);font-size:.72rem;text-align:right}
+.audio-error{color:#fca5a5;margin-top:12px;font-size:.86rem}
+@media(max-width:900px){.audio-head{align-items:flex-start;flex-direction:column}.audio-player{grid-template-columns:1fr}.audio-queue{border-left:0;border-top:1px solid var(--border);padding-left:0;padding-top:12px}}
+
+/* ═══════════════ CARDS ═══════════════ */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;transition:all .3s}
+.card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.card-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:20px}
+.card-icon.gold{background:rgba(226,182,79,0.1)}
+.card-icon.green{background:rgba(34,197,94,0.1)}
+.card-icon.blue{background:rgba(59,130,246,0.1)}
+.card-icon.purple{background:rgba(167,139,250,0.1)}
+.card h3{margin-bottom:10px}
+.card p{color:var(--text2);font-size:0.9rem;line-height:1.7}
+
+/* ═══════════════ SECTION HEADERS ═══════════════ */
+.section-header{text-align:center;max-width:700px;margin:0 auto 60px}
+.section-header .label{margin-bottom:12px}
+.section-header h2{margin-bottom:16px}
+.section-header p{color:var(--text2);font-size:1.05rem;line-height:1.7}
+
+/* ═══════════════ WAVE TIMELINE ═══════════════ */
+.wave-timeline{position:relative;padding:40px 0}
+.wave-line{position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--gold),var(--blue),var(--purple))}
+.wave-item{display:flex;align-items:center;margin-bottom:40px;position:relative}
+.wave-item:nth-child(odd){flex-direction:row-reverse}
+.wave-item .wave-content{width:45%;padding:24px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
+.wave-item .wave-dot{width:16px;height:16px;background:var(--gold);border-radius:50%;position:absolute;left:50%;transform:translateX(-50%);z-index:2;box-shadow:0 0 20px rgba(226,182,79,0.4)}
+.wave-item .wave-content h3{color:var(--gold);font-size:1.1rem;margin-bottom:8px}
+.wave-item .wave-content .period{font-size:0.85rem;color:var(--text3);margin-bottom:12px}
+.wave-item .wave-content .driver{color:var(--text2);font-size:0.9rem}
+.wave-item .wave-content.current{border-color:var(--gold);box-shadow:0 0 40px rgba(226,182,79,0.1)}
+@media(max-width:768px){
+  .wave-line{left:20px}
+  .wave-item,.wave-item:nth-child(odd){flex-direction:row}
+  .wave-item .wave-content{width:calc(100% - 50px);margin-left:40px}
+  .wave-item .wave-dot{left:20px}
+}
+
+/* ═══════════════ PRICING ═══════════════ */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto}
+@media(max-width:900px){.pricing-grid{grid-template-columns:1fr}}
+.price-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:36px;position:relative;transition:all .3s}
+.price-card:hover{border-color:var(--border2);transform:translateY(-4px)}
+.price-card.featured{border-color:var(--gold);background:linear-gradient(180deg,rgba(226,182,79,0.05),transparent)}
+.price-card.featured::before{content:'最受欢迎';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:4px 16px;border-radius:100px;font-size:0.75rem;font-weight:700}
+.price-name{font-size:0.9rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+.price-amount{font-size:2.5rem;font-weight:900;margin-bottom:4px}
+.price-amount .unit{font-size:0.9rem;font-weight:400;color:var(--text3)}
+.price-desc{font-size:0.85rem;color:var(--text3);margin-bottom:24px}
+.price-features{list-style:none;margin-bottom:32px}
+.price-features li{padding:8px 0;font-size:0.9rem;color:var(--text2);display:flex;align-items:flex-start;gap:10px}
+.price-features li::before{content:'';color:var(--green);font-weight:700;flex-shrink:0}
+.price-btn{display:block;width:100%;text-align:center;padding:14px;border-radius:var(--radius-sm);font-weight:600;font-size:0.95rem;transition:all .25s;border:none;cursor:pointer}
+.price-btn-primary{background:var(--gold);color:#000}
+.price-btn-primary:hover{background:var(--gold2)}
+.price-btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border2)}
+.price-btn-secondary:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ═══════════════ COURSE ═══════════════ */
+.course-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .3s}
+.course-card:hover{border-color:var(--border2)}
+.course-num{width:56px;height:56px;background:linear-gradient(135deg,var(--gold),#b8860b);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:900;color:#000;flex-shrink:0}
+.course-body{padding:24px}
+.course-body h3{margin-bottom:8px}
+.course-body p{color:var(--text2);font-size:0.9rem;line-height:1.7}
+.course-tags{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.course-tag{font-size:0.75rem;padding:4px 10px;border-radius:6px;background:var(--card3);color:var(--text3)}
+
+/* ═══════════════ QUOTE ═══════════════ */
+.quote-block{text-align:center;padding:80px 0;position:relative}
+.quote-block::before{content:'"';font-size:8rem;color:var(--gold);opacity:0.15;position:absolute;top:20px;left:50%;transform:translateX(-50%);font-family:var(--serif)}
+.quote-text{font-family:var(--serif);font-size:clamp(1.3rem,2.5vw,1.8rem);color:var(--text);max-width:700px;margin:0 auto;line-height:1.9;font-weight:400}
+.quote-author{margin-top:20px;font-size:0.9rem;color:var(--text3)}
+
+/* ═══════════════ CTA ═══════════════ */
+.cta-section{text-align:center;padding:100px 0;position:relative}
+.cta-section::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse 70% 50% at 50% 50%,rgba(226,182,79,0.06),transparent)}
+.cta-content{position:relative;z-index:1}
+.cta-content h2{margin-bottom:16px}
+.cta-content p{color:var(--text2);font-size:1.1rem;margin-bottom:32px;max-width:500px;margin-left:auto;margin-right:auto}
+
+/* ═══════════════ FOOTER ═══════════════ */
+.footer{border-top:1px solid var(--border);padding:48px 0;text-align:center}
+.footer-links{display:flex;justify-content:center;gap:32px;margin-bottom:24px;flex-wrap:wrap}
+.footer-links a{font-size:0.85rem;color:var(--text3);transition:color .2s}
+.footer-links a:hover{color:var(--gold)}
+.footer-copy{font-size:0.8rem;color:var(--text3)}
+.footer-disclaimer{font-size:0.75rem;color:var(--text3);max-width:600px;margin:12px auto 0;line-height:1.6}
+
+/* ═══════════════ ANIMATIONS ═══════════════ */
+.fade-in{opacity:0;transform:translateY(20px);transition:all .6s ease-out}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* === Knowledge Graph Embedded === */
+.kg-section{margin-top:0}
+.kg-layout{display:flex;gap:0;min-height:500px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.kg-graph{position:relative;flex:1;min-width:0;height:500px}
+.kg-graph svg{width:100%;height:100%}
+.kg-sidebar{width:360px;flex-shrink:0;background:rgba(15,15,19,0.98);border-left:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;max-height:500px}
+.kg-sidebar-header{padding:16px 16px 8px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(15,15,19,0.98);z-index:5}
+.kg-sidebar-header h4{font-size:0.95rem;font-weight:700;margin-bottom:2px}
+.kg-sidebar-header .kg-sb-cat{font-size:0.65rem;color:var(--gold);letter-spacing:.04em}
+.kg-sidebar-empty{padding:32px 16px;text-align:center;color:var(--text3);font-size:0.8rem;flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px}
+.kg-sidebar-list{padding:8px 12px;flex:1;overflow-y:auto}
+.kg-course-item{display:flex;align-items:center;gap:10px;padding:10px 12px;margin:2px 0;border-radius:10px;cursor:pointer;transition:all .2s;text-decoration:none;color:inherit;border:1px solid transparent}
+.kg-course-item:hover{background:rgba(255,255,255,.03);border-color:var(--border);transform:translateX(2px)}
+.kg-course-item .kg-ci-num{font-size:0.75rem;font-weight:700;color:var(--gold);min-width:26px;flex-shrink:0}
+.kg-course-item .kg-ci-info{flex:1;min-width:0}
+.kg-course-item .kg-ci-title{font-size:0.8rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kg-course-item .kg-ci-meta{font-size:0.65rem;color:var(--text3);margin-top:2px}
+.kg-node circle{stroke-width:2px;transition:all .3s;cursor:pointer}
+.kg-node:hover circle{stroke-width:4px;filter:brightness(1.4)}
+.kg-node text{font-size:11px;fill:var(--text3);text-anchor:middle;pointer-events:none;transition:fill .3s;font-family:var(--sans)}
+.kg-node:hover text{fill:var(--text);font-weight:600}
+.kg-node.root circle{fill:var(--gold)!important;stroke:var(--gold)!important}
+.kg-node.root text{font-size:14px;font-weight:900;fill:var(--gold)!important}
+.kg-link{stroke:var(--border);stroke-width:1;transition:stroke .3s}
+.kg-link:hover{stroke:var(--gold)!important;stroke-width:2}
+@media(max-width:900px){.kg-layout{flex-direction:column}.kg-sidebar{width:100%;max-height:300px}}
+.kg-hint{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);color:var(--text3);font-size:0.72rem;pointer-events:none;transition:opacity .5s}
+
+/* ═══════════════ FIVE PILLAR THEORY GRID ═══════════════ */
+.pillar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin:32px auto 24px;max-width:1100px}
+.pillar-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px 16px 20px;text-align:center;cursor:pointer;transition:all .35s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+.pillar-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0;transition:height .35s}
+.pillar-card:hover{transform:translateY(-6px);border-color:var(--border2)}
+.pillar-card:hover::before{height:6px}
+.pillar-card.active{border-color:var(--border2);box-shadow:0 4px 32px rgba(0,0,0,.3)}
+.pillar-card.active::before{height:5px}
+.pillar-gold{--pc:#e2b64f;--pc2:rgba(226,182,79,.06)}.pillar-gold::before{background:linear-gradient(90deg,#b8922e,#f0d478,#b8922e)}
+.pillar-green{--pc:#22c55e;--pc2:rgba(34,197,94,.06)}.pillar-green::before{background:linear-gradient(90deg,#15803d,#4ade80,#15803d)}
+.pillar-blue{--pc:#3b82f6;--pc2:rgba(59,130,246,.06)}.pillar-blue::before{background:linear-gradient(90deg,#1d4ed8,#60a5fa,#1d4ed8)}
+.pillar-purple{--pc:#a78bfa;--pc2:rgba(167,139,250,.06)}.pillar-purple::before{background:linear-gradient(90deg,#7c3aed,#c4b5fd,#7c3aed)}
+.pillar-red{--pc:#ef4444;--pc2:rgba(239,68,68,.06)}.pillar-red::before{background:linear-gradient(90deg,#b91c1c,#f87171,#b91c1c)}
+.pillar-visual{height:70px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.pillar-wave{width:100%;height:100%}
+.pillar-wave .w-anim{animation:waveShift 3s ease-in-out infinite}
+.pillar-wave .w-anim2{animation:waveShift 3s ease-in-out 1.5s infinite}
+.pillar-wave .t-line{animation:tLinePulse 2s ease-in-out infinite}
+@keyframes waveShift{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+@keyframes tLinePulse{0%,100%{opacity:0.6}50%{opacity:1}}
+.pillar-icon{font-size:2rem;margin-bottom:8px;transition:transform .35s}
+.pillar-card:hover .pillar-icon{transform:scale(1.15)}
+.pillar-name{font-family:var(--serif);font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:4px}
+.pillar-author{font-size:.72rem;color:var(--text3);margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase}
+.pillar-tag{display:inline-block;font-size:.65rem;font-weight:600;color:var(--pc);background:var(--pc2);padding:3px 10px;border-radius:12px;border:1px solid color-mix(in srgb,var(--pc) 15%,transparent)}
+.theory-detail{max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .5s ease,margin .5s ease;opacity:0;margin:0 auto;max-width:1100px}
+.theory-detail.show{max-height:600px;opacity:1;margin-top:8px;margin-bottom:36px}
+.td-inner{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px;position:relative}
+.td-close{position:absolute;top:16px;right:20px;background:none;border:none;color:var(--text3);font-size:1.2rem;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all .2s}
+.td-close:hover{background:var(--card2);color:var(--text)}
+.td-header{display:flex;align-items:center;gap:14px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.td-icon{font-size:2.5rem;transition:transform .3s}
+.td-name{font-family:var(--serif);font-size:1.3rem;font-weight:800;color:var(--text)}
+.td-sub{font-size:.78rem;color:var(--text3);margin-top:2px}
+.td-body{color:var(--text2);font-size:.95rem;line-height:1.9}
+.td-body p{margin-bottom:10px}
+.td-body strong{color:var(--text)}
+.td-body em{color:var(--gold)}
+.td-courses{margin-top:18px;padding-top:16px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap}
+.td-course-link{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;background:var(--card2);border:1px solid var(--border);border-radius:8px;font-size:.78rem;color:var(--text2);text-decoration:none;transition:all .25s}
+.td-course-link:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-1px)}
+@media(max-width:900px){.pillar-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.pillar-grid{grid-template-columns:repeat(2,1fr);gap:10px}.pillar-card{padding:18px 10px 14px}.pillar-name{font-size:.9rem}.pillar-icon{font-size:1.5rem}.pillar-visual{height:50px}}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <svg viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="12" stroke="#e2b64f" stroke-width="1.5"/><path d="M6 18c2-6 4-8 8-10s6 2 8 6" stroke="#e2b64f" stroke-width="1.5" fill="none"/><circle cx="14" cy="12" r="2" fill="#e2b64f"/></svg>
+      康波研究院
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="knowledge-graph.html">知识图谱</a>
+      <a href="courses.html">主干课程</a>
+      <a href="books.html">推荐书目</a>
+      <a href="book-courses.html">推荐书目课程</a>
+      <a href="miniapp.html">微信小程序</a>
+      <a href="#tools">工具</a>
+      <!-- <a href="#">定价</a> -->
+      <a href="learn.html">学习仪表盘</a>
+      <a href="start.html" class="nav-cta">开始学习</a>
+      <a href="3d.html"> 3D探索</a>
+    </div>
+    <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+      <svg width="24" height="24" fill="none" stroke="#a1a1aa" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+
+    <canvas id="heroParticles" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
+
+  <div class="hero-content">
+    <div class="hero-badge"><span class="dot"></span> 第六轮康波已启动 · 2026年处于回升初期</div>
+    <h1 class="serif">掌握<span class="gold">50年财富周期</span><br>规划你的人生投资节奏</h1>
+    <p class="hero-sub">基于康德拉季耶夫长波理论 + 周金涛涛动周期论 + 时寒冰趋势投资 + 宋鸿兵货币战争，构建完整的周期投资决策框架。</p>
+    <div class="hero-actions">
+      <a href="courses.html" class="btn btn-primary">查看主干课程</a>
+      <a href="#tools" class="btn btn-secondary">免费体验工具</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">65门</div><div class="desc">精编课程覆盖10大阶段</div></div>
+      <div class="hero-stat"><div class="num">4维</div><div class="desc">共振投资决策框架</div></div>
+      <div class="hero-stat"><div class="num">2040</div><div class="desc">投资规划终点年</div></div>
+    </div>
+  </div>
+</section>
+
+      <div style="margin-top:48px;text-align:center">
+        <a href="cycle-dashboard.html" style="display:inline-flex;align-items:center;gap:8px;background:rgba(226,182,79,0.08);border:1px solid rgba(226,182,79,0.2);border-radius:100px;padding:10px 24px;color:var(--gold);font-size:0.85rem;font-weight:500;transition:all .3s;text-decoration:none"
+           onmouseover="this.style.background='rgba(226,182,79,0.15)';this.style.transform='translateY(-2px)'"
+           onmouseout="this.style.background='rgba(226,182,79,0.08)';this.style.transform='none'">
+           查看康波周期实时定位
+        </a>
+      </div>
+
+
+<!-- ═══════════════ CONTINUOUS AUDIO ═══════════════ -->
+<section class="audio-marathon section-sm" id="audio-marathon">
+  <div class="container">
+    <div class="audio-panel">
+      <div class="audio-head">
+        <div>
+          <div class="label">连续听课</div>
+          <h2 class="serif">主干课程 + 书目课程，一键自动连播</h2>
+          <p>汇总 65 门主干课程与 500 门书目课程音频，适合通勤、复习和沉浸式学习。</p>
+        </div>
+        <div class="audio-tabs" id="homeAudioTabs">
+          <button class="audio-tab active" type="button" data-scope="all">全部</button>
+          <button class="audio-tab" type="button" data-scope="core">主干</button>
+          <button class="audio-tab" type="button" data-scope="books">书目</button>
+        </div>
+      </div>
+
+      <div class="audio-player">
+        <div class="audio-now">
+          <div class="audio-kicker" id="homeAudioKicker">正在加载音频清单</div>
+          <div class="audio-title" id="homeAudioTitle">请稍候</div>
+          <div class="audio-subtitle" id="homeAudioSubtitle">系统正在整理可播放课程</div>
+
+          <div class="audio-controls">
+            <button class="audio-main-btn" type="button" id="homeAudioPlay">播放</button>
+            <button class="audio-step" type="button" id="homeAudioPrev">上一课</button>
+            <button class="audio-step" type="button" id="homeAudioNext">下一课</button>
+            <span class="audio-status" id="homeAudioStatus">加载中...</span>
+          </div>
+
+          <div class="audio-progress">
+            <span id="homeAudioCurrent">00:00</span>
+            <input id="homeAudioSeek" type="range" min="0" max="100" value="0" step="1" aria-label="音频进度">
+            <span id="homeAudioDuration">--:--</span>
+          </div>
+
+          <div class="audio-counts" id="homeAudioCounts">
+            <span>主干 0</span><span>书目 0</span><span>全部课程</span>
+          </div>
+          <div class="audio-error" id="homeAudioError" hidden></div>
+        </div>
+
+        <div class="audio-queue" id="homeAudioQueue"></div>
+      </div>
+      <audio id="homeAudioElement" preload="metadata"></audio>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ QUOTE ═══════════════ -->
+<div class="quote-block">
+  <div class="container-sm">
+    <p class="quote-text serif">"人生就是一场康波。你的财富机会完全取决于你对康波周期的理解。"</p>
+    <p class="quote-author">— 周金涛，中信建投首席经济学家，2016年</p>
+  </div>
+</div>
+
+<!-- ═══════════════ THEORY SECTION ═══════════════ -->
+<section id="theory" class="section" style="background:var(--bg2)">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="label">理论体系</div>
+      <h2>四维共振框架，一个完整体系</h2>
+      <p>我们整合了中国和西方最权威的周期理论，构建了从宏观定位到微观操作的完整投资决策体系。当四个维度同时给出正面信号时，投资确定性最高。</p>
+      <div class="kg-layout">
+        <div class="kg-graph" id="kgEmbed">
+          <div class="kg-hint" id="kgHint">拖拽探索 · 点击节点查看相关课程</div>
+        </div>
+        <div class="kg-sidebar" id="kgSidebar">
+          <div class="kg-sidebar-empty"><br>点击左侧知识图谱中的节点<br>查看相关课程</div>
+        </div>
+      </div>
+    </div>
+      <!-- ═══ FIVE PILLAR GRID ═══ -->
+    <div class="pillar-grid" id="pillarGrid">
+      <div class="pillar-card pillar-gold" data-theory="0">
+        <div class="pillar-visual">
+          <svg viewBox="0 0 200 80" class="pillar-wave">
+            <defs><linearGradient id="wg0" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#e2b64f"/><stop offset="100%" stop-color="#f0d478"/></linearGradient></defs>
+            <path d="M0,40 C30,10 70,10 100,40 S170,70 200,40" fill="none" stroke="url(#wg0)" stroke-width="2.5" class="w-anim"/>
+            <path d="M0,47 C30,25 70,25 100,47 S170,77 200,47" fill="none" stroke="url(#wg0)" stroke-width="1" opacity="0.3" class="w-anim2"/>
+          </svg>
+        </div>
+        <div class="pillar-icon"></div>
+        <div class="pillar-name">长波理论</div>
+        <div class="pillar-author">康德拉季耶夫</div>
+        <div class="pillar-tag">50-60年经济周期</div>
+      </div>
+      <div class="pillar-card pillar-green" data-theory="1">
+        <div class="pillar-visual">
+          <svg viewBox="0 0 200 80" class="pillar-wave">
+            <defs><linearGradient id="wg1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="#4ade80"/></linearGradient></defs>
+            <circle cx="40" cy="40" r="30" fill="none" stroke="url(#wg1)" stroke-width="1" opacity="0.3"/>
+            <circle cx="100" cy="40" r="20" fill="none" stroke="url(#wg1)" stroke-width="1.5" opacity="0.5"/>
+            <circle cx="140" cy="40" r="10" fill="none" stroke="url(#wg1)" stroke-width="2" opacity="0.7"/>
+            <circle cx="170" cy="40" r="5" fill="#4ade80" opacity="0.9"/>
+          </svg>
+        </div>
+        <div class="pillar-icon"></div>
+        <div class="pillar-name">周期嵌套</div>
+        <div class="pillar-author">周金涛</div>
+        <div class="pillar-tag">四周期共振模型</div>
+      </div>
+      <div class="pillar-card pillar-blue" data-theory="2">
+        <div class="pillar-visual">
+          <svg viewBox="0 0 200 80" class="pillar-wave">
+            <defs><linearGradient id="wg2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#60a5fa"/></linearGradient></defs>
+            <line x1="10" y1="65" x2="190" y2="15" stroke="url(#wg2)" stroke-width="2.5" class="t-line"/>
+            <line x1="30" y1="70" x2="170" y2="30" stroke="url(#wg2)" stroke-width="0.8" opacity="0.3"/>
+          </svg>
+        </div>
+        <div class="pillar-icon"></div>
+        <div class="pillar-name">趋势投资</div>
+        <div class="pillar-author">时寒冰</div>
+        <div class="pillar-tag">供需趋势 · 宏观动量</div>
+      </div>
+      <div class="pillar-card pillar-purple" data-theory="3">
+        <div class="pillar-visual">
+          <svg viewBox="0 0 200 80" class="pillar-wave">
+            <defs><linearGradient id="wg3" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#c4b5fd"/></linearGradient></defs>
+            <path d="M10,40 L30,25 L50,40 L70,20 L90,55 L110,30 L130,50 L150,25 L170,45 L190,35" fill="none" stroke="url(#wg3)" stroke-width="2" class="w-anim"/>
+          </svg>
+        </div>
+        <div class="pillar-icon"></div>
+        <div class="pillar-name">货币战争</div>
+        <div class="pillar-author">宋鸿兵</div>
+        <div class="pillar-tag">美元霸权 · 货币博弈</div>
+      </div>
+      <div class="pillar-card pillar-red" data-theory="4">
+        <div class="pillar-visual">
+          <svg viewBox="0 0 200 80" class="pillar-wave">
+            <defs><linearGradient id="wg4" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ef4444"/><stop offset="100%" stop-color="#f87171"/></linearGradient></defs>
+            <path d="M0,15 C50,15 70,65 100,40 S150,15 200,40" fill="none" stroke="url(#wg4)" stroke-width="2" class="w-anim"/>
+            <path d="M0,25 C50,25 70,75 100,50 S150,25 200,50" fill="none" stroke="url(#wg4)" stroke-width="0.8" opacity="0.3"/>
+          </svg>
+        </div>
+        <div class="pillar-icon"></div>
+        <div class="pillar-name">大贬值</div>
+        <div class="pillar-author">亚当·巴拉塔</div>
+        <div class="pillar-tag">法币崩溃 · 资产重置</div>
+      </div>
+    </div>
+
+    <!-- ═══ THEORY DETAIL PANEL ═══ -->
+    <div class="theory-detail" id="theoryDetail">
+      <div class="td-inner">
+        <button class="td-close" onclick="closeTheoryDetail()" aria-label="close"></button>
+        <div class="td-header">
+          <div class="td-icon" id="tdIcon"></div>
+          <div>
+            <div class="td-name" id="tdName">四维共振</div>
+            <div class="td-sub" id="tdSub">点击上方理论卡片查看详情</div>
+          </div>
+        </div>
+        <div class="td-body" id="tdBody">
+          <p>五套理论构成了我们完整的分析框架：</p>
+          <p><strong>长波理论</strong>定大方向，<strong>周期嵌套</strong>定节奏，<strong>趋势投资</strong>选赛道，<strong>货币战争</strong>判风险，<strong>大贬值</strong>保底线</p>
+          <p>当五个维度同时发出正面信号，就形成了<em>四维共振</em>——历史上这种时刻出现的概率不到5%，但每次都带来了巨大的财富转移。</p>
+        </div>
+        <div class="td-courses" id="tdCourses"></div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════ WAVE TIMELINE ═══════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="label">周期定位</div>
+      <h2>六轮康波 · 240年经济长河</h2>
+      <p>每一轮康波由一个主导技术群驱动，重塑整个经济结构。我们正处于第五轮萧条末期与第六轮回升初期的交替窗口。</p>
+    </div>
+    <div class="wave-timeline">
+      <div class="wave-line"></div>
+      <div class="wave-item fade-in"><div class="wave-content"><h3>第一轮 · 蒸汽机时代</h3><div class="period">1780-1845 · 持续65年</div><div class="driver">蒸汽机 + 纺织机械 + 铁路</div></div><div class="wave-dot"></div></div>
+      <div class="wave-item fade-in"><div class="wave-content"><h3>第二轮 · 钢铁铁路时代</h3><div class="period">1845-1900 · 持续55年</div><div class="driver">钢铁 + 铁路网 + 电报</div></div><div class="wave-dot"></div></div>
+      <div class="wave-item fade-in"><div class="wave-content"><h3>第三轮 · 电气化时代</h3><div class="period">1900-1950 · 持续50年</div><div class="driver">电气化 + 化工 + 汽车</div></div><div class="wave-dot"></div></div>
+      <div class="wave-item fade-in"><div class="wave-content"><h3>第四轮 · 石油化工时代</h3><div class="period">1950-1990 · 持续40年</div><div class="driver">石油化工 + 喷气机 + 电子</div></div><div class="wave-dot"></div></div>
+      <div class="wave-item fade-in"><div class="wave-content current"><h3>第五轮 · 信息技术时代</h3><div class="period">1990-2030 · 萧条末期(95%)</div><div class="driver">信息技术 + 互联网 + 移动通信</div></div><div class="wave-dot" style="background:var(--blue);box-shadow:0 0 20px rgba(59,130,246,0.5)"></div></div>
+      <div class="wave-item fade-in"><div class="wave-content current" style="border-color:var(--gold)"><h3>第六轮 · AI+生物科技+新能源</h3><div class="period">2025-2070 · 回升初期(5%)</div><div class="driver">人工智能 + 生物科技 + 新能源 + 量子计算</div></div><div class="wave-dot" style="background:var(--gold);box-shadow:0 0 20px rgba(226,182,79,0.5)"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ COURSE SECTION ═══════════════ -->
+<section id="course" class="section" style="background:var(--bg2)">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="label">课程体系</div>
+      <h2>从理论到实战，65门课掌握周期投资</h2>
+      <p>10大阶段 · 65门主干课程 · 50+本核心著作 · 每课含交互练习题 + 参考答案 + 语音讲解</p>
+    </div>
+
+    <div id="sharedCoreCatalog"></div>
+    <script src="content-manifest.js"></script>
+    <script src="catalog-contract.js"></script>
+    <script>KangboCatalog.renderHome(document.getElementById('sharedCoreCatalog'));</script>
+
+    <div style="text-align:center;margin-top:40px">
+      <a href="courses.html" class="btn btn-primary" style="display:inline-block">查看全部65门主干课程</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TOOLS SECTION ═══════════════ -->
+<section id="tools" class="section">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="label">免费工具</div>
+      <h2>三分钟定位你的周期位置</h2>
+      <p>输入你的年龄和资产情况，立即获得个性化的周期定位和投资建议。</p>
+    </div>
+    <div class="grid-3" style="max-width:900px;margin:0 auto">
+      <a href="calculator.html" class="card fade-in" style="text-align:center">
+        <div class="card-icon gold" style="margin:0 auto 16px"></div>
+        <h3>康波计算器</h3>
+        <p>输入出生年份，生成你的人生康波时间表和三次财富机会窗口。</p>
+      </a>
+      <a href="asset-rotation.html" class="card fade-in" style="text-align:center">
+        <div class="card-icon green" style="margin:0 auto 16px"></div>
+        <h3>资产轮动查询</h3>
+        <p>选择当前周期阶段，查看最佳/可配置/应避免的资产类别。</p>
+      </a>
+      <a href="radar.html" class="card fade-in" style="text-align:center">
+        <div class="card-icon blue" style="margin:0 auto 16px"></div>
+        <h3>四维评分系统</h3>
+        <p>周金涛×时寒冰×宋鸿兵×巴拉塔四维度评分，量化每个投资标的的确定性。</p>
+      </a>
+      <a href="ranking.html" class="card fade-in" style="text-align:center">
+        <div class="card-icon purple" style="margin:0 auto 16px"></div>
+        <h3>四维排名榜</h3>
+        <p>所有资产按四维平均分排名，一目了然看清确定性最强的标的。</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ INTERACTIVE TOOLS ═══════════════ -->
+<section class="section-sm" style="background:var(--bg2)">
+  <div class="container">
+    <div class="section-header fade-in" style="text-align:center;margin-bottom:40px">
+      <div class="label">互动工具</div>
+      <h2>不止阅读，动手探索周期</h2>
+      <p>拖拽、点击、滑动——用数据可视化理解康波</p>
+    </div>
+    <div class="grid-3">
+      <a href="cycle-dashboard.html" class="tool-card fade-in" style="display:block;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px;text-align:center;transition:all .3s;text-decoration:none"
+         onmouseover="this.style.borderColor='#e2b64f';this.style.transform='translateY(-6px)';this.style.boxShadow='0 12px 40px rgba(226,182,79,0.1)'"
+         onmouseout="this.style.borderColor='var(--border)';this.style.transform='none';this.style.boxShadow='none'">
+        <div style="font-size:3rem;margin-bottom:16px"></div>
+        <h3 style="font-size:1.1rem;color:var(--text);margin-bottom:8px">周期实时仪表盘</h3>
+        <p style="font-size:0.85rem;color:var(--text3)">拖动康波时钟，查看各阶段资产配置</p>
+      </a>
+      <a href="tools.html" class="tool-card fade-in" style="display:block;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px;text-align:center;transition:all .3s;text-decoration:none"
+         onmouseover="this.style.borderColor='#3b82f6';this.style.transform='translateY(-6px)';this.style.boxShadow='0 12px 40px rgba(59,130,246,0.1)'"
+         onmouseout="this.style.borderColor='var(--border)';this.style.transform='none';this.style.boxShadow='none'">
+        <div style="font-size:3rem;margin-bottom:16px"></div>
+        <h3 style="font-size:1.1rem;color:var(--text);margin-bottom:8px">四维共振评分器</h3>
+        <p style="font-size:0.85rem;color:var(--text3)">15种资产，雷达图对比，一键排名</p>
+      </a>
+      <a href="knowledge-graph.html" class="tool-card fade-in" style="display:block;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px;text-align:center;transition:all .3s;text-decoration:none"
+         onmouseover="this.style.borderColor='#a855f7';this.style.transform='translateY(-6px)';this.style.boxShadow='0 12px 40px rgba(168,85,247,0.1)'"
+         onmouseout="this.style.borderColor='var(--border)';this.style.transform='none';this.style.boxShadow='none'">
+        <div style="font-size:3rem;margin-bottom:16px"></div>
+        <h3 style="font-size:1.1rem;color:var(--text);margin-bottom:8px">3D 知识图谱</h3>
+        <p style="font-size:0.85rem;color:var(--text3)">力导向图，拖拽探索康波知识网络</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ PRICING ═══════════════ -->
+<section id="pricing" class="section" style="background:var(--bg2)">
+  <div class="container">
+    <div class="section-header fade-in">
+      <div class="label">定价方案</div>
+      <h2>选择适合你的学习路径</h2>
+      <p>套餐名称、价格与权益读取小程序同源接口。先试学，再决定是否订阅。</p>
+    </div>
+    <p class="price-desc">本站网页仅展示方案，不创建订单、不收款。订阅须通过已验证的小程序入口完成；本页暂未提供已验证的订阅入口或二维码，不提供网页支付跳转。</p>
+    <p style="margin:20px 0"><a class="btn btn-primary" href="courses.html">先试学：查看课程与免费内容</a></p>
+    <div id="membership-catalog" aria-live="polite" aria-busy="true">
+      <p role="status">正在加载套餐；网页不创建订单、不收款。</p>
+    </div>
+    <noscript><p>请启用 JavaScript 后刷新以读取套餐。未加载时不展示价格；本站网页不收款。</p></noscript>
+  </div>
+  <script src="membership-catalog.js" defer></script>
+</section>
+
+<!-- ═══════════════ CTA ═══════════════ -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content fade-in">
+      <h2 class="serif">2030年，一生一次的财富机会</h2>
+      <p>周金涛预测的第三次机会窗口即将到来。现在开始学习，就是最好的准备。</p>
+      <a href="#pricing" class="btn btn-primary">开始学习</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-links">
+      <a href="knowledge-graph.html">知识图谱</a>
+      <a href="courses.html">主干课程</a>
+      <a href="miniapp.html">微信小程序</a>
+      <a href="#tools">工具</a>
+      <!-- <a href="#">定价</a> -->
+      <a href="https://mp.weixin.qq.com/s/pFz7fqcXvYgXodkSQzWwBQ" target="_blank">微信文章</a>
+    </div>
+    <div class="footer-copy">康波研究院 © 2026 · MoKangMedical</div>
+    <div class="footer-disclaimer">本平台内容基于康波理论和公开信息整理，仅供参考，不构成投资建议。投资有风险，决策需谨慎。</div>
+  </div>
+</footer>
+
+<script>
+// Scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.1 });
+
+// Homepage continuous audio
+(function(){
+  const tabs = document.getElementById('homeAudioTabs');
+  const audio = document.getElementById('homeAudioElement');
+  const els = {
+    kicker: document.getElementById('homeAudioKicker'),
+    title: document.getElementById('homeAudioTitle'),
+    subtitle: document.getElementById('homeAudioSubtitle'),
+    play: document.getElementById('homeAudioPlay'),
+    prev: document.getElementById('homeAudioPrev'),
+    next: document.getElementById('homeAudioNext'),
+    status: document.getElementById('homeAudioStatus'),
+    seek: document.getElementById('homeAudioSeek'),
+    current: document.getElementById('homeAudioCurrent'),
+    duration: document.getElementById('homeAudioDuration'),
+    counts: document.getElementById('homeAudioCounts'),
+    queue: document.getElementById('homeAudioQueue'),
+    error: document.getElementById('homeAudioError')
+  };
+  if (!tabs || !audio || !els.play) return;
+
+  const scopeNames = { all: '全部课程', core: '主干课程', books: '书目课程' };
+  const state = { scope: 'all', tracks: [], index: 0, seeking: false };
+
+  function formatTime(seconds) {
+    const safe = Math.max(0, Math.floor(seconds || 0));
+    return String(Math.floor(safe / 60)).padStart(2, '0') + ':' + String(safe % 60).padStart(2, '0');
+  }
+
+  function normalize(track, index) {
+    const isBook = track.type === 'book';
+    return {
+      id: track.id,
+      title: track.title || (isBook ? '书目课程' : '主干课程'),
+      audioUrl: track.audioUrl,
+      displayNo: index + 1,
+      badge: isBook ? '书目' : '主干',
+      subtitle: isBook ? ('书目课程 ' + track.courseId + (track.author ? ' · ' + track.author : '')) : ('主干课程 ' + track.courseId)
+    };
+  }
+
+  function showError(message) {
+    els.error.hidden = !message;
+    els.error.textContent = message || '';
+  }
+
+  function updateTime() {
+    const duration = audio.duration || 0;
+    const current = audio.currentTime || 0;
+    els.current.textContent = formatTime(current);
+    els.duration.textContent = duration ? formatTime(duration) : '--:--';
+    if (!state.seeking) {
+      els.seek.value = duration ? Math.min(100, Math.round(current / duration * 100)) : 0;
+    }
+  }
+
+  function renderQueue() {
+    els.queue.innerHTML = '';
+    if (!state.tracks.length) return;
+    let start = Math.max(0, state.index - 2);
+    let end = Math.min(state.tracks.length, start + 8);
+    start = Math.max(0, end - 8);
+    state.tracks.slice(start, end).forEach(track => {
+      const row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'audio-queue-row' + (track.displayNo - 1 === state.index ? ' active' : '');
+      row.dataset.index = String(track.displayNo - 1);
+
+      const num = document.createElement('span');
+      num.className = 'audio-queue-num';
+      num.textContent = String(track.displayNo).padStart(2, '0');
+
+      const main = document.createElement('span');
+      const title = document.createElement('span');
+      title.className = 'audio-queue-title';
+      title.textContent = track.title;
+      const sub = document.createElement('span');
+      sub.className = 'audio-queue-sub';
+      sub.textContent = track.subtitle;
+      main.appendChild(title);
+      main.appendChild(sub);
+
+      const type = document.createElement('span');
+      type.className = 'audio-queue-type';
+      type.textContent = track.badge;
+
+      row.appendChild(num);
+      row.appendChild(main);
+      row.appendChild(type);
+      row.addEventListener('click', () => setCurrent(Number(row.dataset.index), true));
+      els.queue.appendChild(row);
+    });
+  }
+
+  function setCurrent(index, autoplay) {
+    if (!state.tracks.length) return;
+    state.index = ((index % state.tracks.length) + state.tracks.length) % state.tracks.length;
+    const current = state.tracks[state.index];
+    audio.pause();
+    audio.src = current.audioUrl;
+    audio.load();
+    els.kicker.textContent = current.badge + ' · ' + current.displayNo + ' / ' + state.tracks.length;
+    els.title.textContent = current.title;
+    els.subtitle.textContent = current.subtitle;
+    els.current.textContent = '00:00';
+    els.duration.textContent = '--:--';
+    els.seek.value = 0;
+    els.play.classList.remove('playing');
+    els.play.textContent = '播放';
+    els.status.textContent = autoplay ? '正在加载...' : '点击播放后自动连播';
+    showError('');
+    renderQueue();
+    if (autoplay) {
+      setTimeout(playCurrent, 80);
+    }
+  }
+
+  function playCurrent() {
+    if (!state.tracks.length) return;
+    const playPromise = audio.play();
+    els.status.textContent = '正在加载...';
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => {
+        els.status.textContent = '浏览器阻止了自动播放，请手动点击播放';
+      });
+    }
+  }
+
+  async function load(scope) {
+    state.scope = scope;
+    tabs.querySelectorAll('.audio-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.scope === scope));
+    els.kicker.textContent = '正在加载音频清单';
+    els.title.textContent = '请稍候';
+    els.subtitle.textContent = '系统正在整理可播放课程';
+    els.status.textContent = '加载中...';
+    showError('');
+    try {
+      const res = await fetch('/api/audio-playlist?scope=' + encodeURIComponent(scope));
+      if (!res.ok) throw new Error('音频清单加载失败');
+      const data = await res.json();
+      state.tracks = (data.tracks || []).map(normalize).filter(track => track.audioUrl);
+      const counts = data.counts || {};
+      els.counts.innerHTML = '<span>主干 ' + (counts.core || 0) + '</span><span>书目 ' + (counts.book || 0) + '</span><span>' + (scopeNames[scope] || '全部课程') + '</span>';
+      if (!state.tracks.length) {
+        els.title.textContent = '暂无可播放音频';
+        els.subtitle.textContent = '请稍后再试';
+        els.status.textContent = '未找到音频';
+        renderQueue();
+        return;
+      }
+      setCurrent(0, false);
+    } catch (err) {
+      state.tracks = [];
+      els.title.textContent = '音频清单加载失败';
+      els.subtitle.textContent = '请检查网络后刷新页面';
+      els.status.textContent = '加载失败';
+      renderQueue();
+      showError(err.message || '音频清单加载失败');
+    }
+  }
+
+  tabs.addEventListener('click', e => {
+    const tab = e.target.closest('.audio-tab');
+    if (tab && tab.dataset.scope !== state.scope) load(tab.dataset.scope);
+  });
+  els.play.addEventListener('click', () => audio.paused ? playCurrent() : audio.pause());
+  els.prev.addEventListener('click', () => setCurrent(state.index - 1, !audio.paused));
+  els.next.addEventListener('click', () => setCurrent(state.index + 1, !audio.paused));
+  els.seek.addEventListener('input', () => { state.seeking = true; });
+  els.seek.addEventListener('change', () => {
+    const duration = audio.duration || 0;
+    if (duration) audio.currentTime = duration * Number(els.seek.value || 0) / 100;
+    state.seeking = false;
+    updateTime();
+  });
+  audio.addEventListener('play', () => {
+    els.play.classList.add('playing');
+    els.play.textContent = '暂停';
+    els.status.textContent = '正在连续播放';
+  });
+  audio.addEventListener('pause', () => {
+    els.play.classList.remove('playing');
+    els.play.textContent = '播放';
+    if (!audio.ended) els.status.textContent = '已暂停';
+  });
+  audio.addEventListener('loadedmetadata', updateTime);
+  audio.addEventListener('timeupdate', updateTime);
+  audio.addEventListener('ended', () => setCurrent(state.index + 1, true));
+  audio.addEventListener('error', () => {
+    showError('当前音频加载失败，正在切换下一课');
+    setTimeout(() => setCurrent(state.index + 1, true), 900);
+  });
+
+  load('all');
+})();
+
+// Particle animation
+(function(){const c=document.getElementById('heroParticles');if(!c)return;const ctx=c.getContext('2d');let w,h,particles=[];function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight;particles=Array.from({length:60},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-0.5)*0.5,vy:(Math.random()-0.5)*0.5,r:Math.random()*1.5+0.5,o:Math.random()*0.4+0.1}));}resize();window.addEventListener('resize',resize);function animate(){ctx.clearRect(0,0,w,h);particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=w;if(p.x>w)p.x=0;if(p.y<0)p.y=h;if(p.y>h)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(226,182,79,${p.o})`;ctx.fill();});requestAnimationFrame(animate);}animate();})();
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Nav scroll effect
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('.nav');
+  nav.style.borderBottomColor = window.scrollY > 50 ? 'var(--border2)' : 'transparent';
+});
+</script>
+<script>
+// Course mapping for knowledge graph sidebar
+window.__kgCourses={
+"周期理论基础":[{num:"1",title:"康波理论 — 为什么经济有\"四季\"？",meta:"基础 · 30分钟",link:"lesson1.html"},{num:"2",title:"周金涛 — \"人生就是一场康波\"",meta:"核心 · 40分钟",link:"lesson2.html"},{num:"3",title:"第六轮康波 — AI驱动的新纪元",meta:"深度 · 45分钟",link:"lesson3.html"},{num:"4",title:"顶级家族 — \"老钱密码\"",meta:"案例 · 35分钟",link:"lesson4.html"},{num:"5",title:"货币战争与全球博弈",meta:"进阶 · 40分钟",link:"lesson5.html"},{num:"6",title:"投资操作手册 2026-2040",meta:"实战 · 50分钟",link:"lesson6.html"}],
+"投资大师智慧":[{num:"7",title:"价值投资 — 从格雷厄姆到巴菲特",meta:"经典 · 40分钟",link:"lesson7.html"},{num:"8",title:"索罗斯 — 反身性与量子基金",meta:"高级 · 45分钟",link:"lesson8.html"},{num:"9",title:"达里奥 — 全天候与债务周期",meta:"策略 · 40分钟",link:"lesson9.html"},{num:"10",title:"塔勒布 — 黑天鹅与反脆弱",meta:"思维 · 35分钟",link:"lesson10.html"},{num:"11",title:"凯恩斯 — 动物精神与政府干预",meta:"理论 · 30分钟",link:"lesson11.html"},{num:"12",title:"明斯基 — 金融不稳定假说",meta:"预警 · 35分钟",link:"lesson12.html"}],
+"经济学派对决":[{num:"13",title:"奥地利学派 — 货币、周期与自由",meta:"学派 · 40分钟",link:"lesson13.html"},{num:"14",title:"现代货币理论(MMT)",meta:"前沿 · 35分钟",link:"lesson14.html"},{num:"15",title:"马克思 — 资本积累与危机理论",meta:"批判 · 40分钟",link:"lesson15.html"},{num:"16",title:"巴拉塔 — 大贬值与货币重置",meta:"预警 · 35分钟",link:"lesson16.html"}],
+"周期实战应用":[{num:"17",title:"人口周期 — 经济的终极密码",meta:"底层 · 40分钟",link:"lesson17.html"},{num:"18",title:"地缘政治经济学",meta:"宏观 · 45分钟",link:"lesson18.html"},{num:"19",title:"技术奇点 — 当AI超越人类",meta:"前沿 · 35分钟",link:"lesson19.html"},{num:"20",title:"终极整合 — 构建你的投资世界观",meta:"综合 · 60分钟",link:"lesson20.html"}],
+"读懂中国经济":[{num:"21",title:"有温度的经济学",meta:"人文 · 30分钟",link:"lesson21.html"},{num:"22",title:"置身事内 — 中国政府与经济",meta:"必读 · 40分钟",link:"lesson22.html"},{num:"23",title:"债务危机 — 达里奥全天候思维",meta:"深度 · 45分钟",link:"lesson23.html"},{num:"24",title:"21世纪资本论 — 贫富分化",meta:"进阶 · 30分钟",link:"lesson24.html"}],
+"生活经济学":[{num:"25",title:"贫穷的本质",meta:"基础 · 30分钟",link:"lesson25.html"},{num:"26",title:"薛兆丰经济学讲义",meta:"基础 · 30分钟",link:"lesson26.html"},{num:"27",title:"激荡三十年",meta:"基础 · 35分钟",link:"lesson27.html"},{num:"28",title:"房子、教育、医疗",meta:"进阶 · 40分钟",link:"lesson28.html"},{num:"29",title:"数字经济时代",meta:"进阶 · 35分钟",link:"lesson29.html"},{num:"30",title:"未来十年 — 守住财富",meta:"前瞻 · 45分钟",link:"lesson30.html"}],
+"理财基础技能":[{num:"31",title:"储蓄与复利",meta:"必修 · 40分钟",link:"lesson31.html"},{num:"32",title:"通货膨胀与购买力",meta:"必修 · 40分钟",link:"lesson32.html"},{num:"33",title:"资产配置入门",meta:"核心 · 45分钟",link:"lesson33.html"}],
+"经济史与金融":[{num:"34",title:"欧美经济群雄逐鹿300年",meta:"进阶 · 45分钟",link:"lesson34.html"},{num:"35",title:"世界金融史",meta:"进阶 · 45分钟",link:"lesson35.html"},{num:"36",title:"二战 — 战争、财富与智慧",meta:"进阶 · 45分钟",link:"lesson36.html"},{num:"37",title:"布雷顿森林体系",meta:"进阶 · 40分钟",link:"lesson37.html"},{num:"38",title:"货币战争",meta:"进阶 · 40分钟",link:"lesson38.html"},{num:"39",title:"交易的艺术",meta:"实战 · 45分钟",link:"lesson39.html"}],
+"投资实战未来":[{num:"40",title:"房地产投资周期",meta:"实战 · 45分钟",link:"lesson40.html"},{num:"41",title:"股票市场周期与估值",meta:"实战 · 50分钟",link:"lesson41.html"},{num:"42",title:"黄金与贵金属投资",meta:"进阶 · 40分钟",link:"lesson42.html"},{num:"43",title:"加密货币与数字资产",meta:"前沿 · 40分钟",link:"lesson43.html"},{num:"44",title:"全球宏观经济指标",meta:"分析 · 45分钟",link:"lesson44.html"},{num:"45",title:"投资心理学与行为金融",meta:"心理 · 45分钟",link:"lesson45.html"},{num:"46",title:"风险管理与对冲策略",meta:"风控 · 50分钟",link:"lesson46.html"},{num:"47",title:"退休规划与养老金",meta:"规划 · 45分钟",link:"lesson47.html"},{num:"48",title:"税务筹划与财富传承",meta:"传承 · 45分钟",link:"lesson48.html"},{num:"49",title:"ESG与可持续投资",meta:"趋势 · 40分钟",link:"lesson49.html"},{num:"50",title:" 构建你的投资体系",meta:"终极 · 60分钟",link:"lesson50.html"}],
+"高级投资策略":[{num:"51",title:" 宏观经济指标",meta:"深度 · 60分钟",link:"lesson51.html"},{num:"52",title:" 央行与货币政策",meta:"深度 · 60分钟",link:"lesson52.html"},{num:"53",title:" 行业轮动策略",meta:"策略 · 55分钟",link:"lesson53.html"},{num:"54",title:" 债券市场深度解析",meta:"固收 · 60分钟",link:"lesson54.html"},{num:"55",title:" 康波周期深度剖析",meta:"核心 · 60分钟",link:"lesson55.html"},{num:"56",title:" 全球资产配置",meta:"配置 · 50分钟",link:"lesson56.html"},{num:"57",title:" 大宗商品与通胀",meta:"商品 · 50分钟",link:"lesson57.html"},{num:"58",title:" 新兴市场投资",meta:"全球 · 60分钟",link:"lesson58.html"},{num:"60",title:" 科技创新与康波",meta:"科技 · 60分钟",link:"lesson60.html"},{num:"65",title:" 投资体系总结",meta:"终极 · 70分钟",link:"lesson65.html"}],
+"周期与投资理论":[{num:"1",title:"《经济生活中的长波》",meta:"康德拉季耶夫",link:"book1.html"},{num:"2",title:"《周金涛周期论集》",meta:"周金涛",link:"book2.html"},{num:"4",title:"《周期》",meta:"霍华德·马克斯",link:"book4.html"},{num:"9",title:"《聪明的投资者》",meta:"格雷厄姆",link:"book9.html"},{num:"11",title:"《巴菲特致股东的信》",meta:"巴菲特",link:"book11.html"},{num:"12",title:"《穷查理宝典》",meta:"芒格",link:"book12.html"},{num:"14",title:"《原则》",meta:"达里奥",link:"book14.html"},{num:"178",title:"《达利欧2026大周期研判》",meta:"达利欧",link:"book178.html"}],
+"货币与风险管理":[{num:"19",title:"《黑天鹅》",meta:"塔勒布",link:"book19.html"},{num:"20",title:"《反脆弱》",meta:"塔勒布",link:"book20.html"},{num:"25",title:"《就业、利息和货币通论》",meta:"凯恩斯",link:"book25.html"},{num:"27",title:"《人的行为》",meta:"米塞斯",link:"book27.html"},{num:"28",title:"《通往奴役之路》",meta:"哈耶克",link:"book28.html"},{num:"31",title:"《资本论》",meta:"马克思",link:"book31.html"},{num:"64",title:"《国富论》",meta:"亚当·斯密",link:"book64.html"},{num:"89",title:"《货币的非国家化》",meta:"哈耶克",link:"book89.html"}],
+"人口地缘与中国":[{num:"33",title:"《人口峭壁》",meta:"Dent",link:"book33.html"},{num:"35",title:"《注定一战》",meta:"艾利森",link:"book35.html"},{num:"36",title:"《世界秩序》",meta:"基辛格",link:"book36.html"},{num:"37",title:"《置身事内》",meta:"兰小欢",link:"book37.html"},{num:"38",title:"《激荡三十年》",meta:"吴晓波",link:"book38.html"},{num:"75",title:"《邓小平时代》",meta:"傅高义",link:"book75.html"}],
+"行为金融与财富":[{num:"43",title:"《思考，快与慢》",meta:"卡尼曼",link:"book43.html"},{num:"44",title:"《影响力》",meta:"西奥迪尼",link:"book44.html"},{num:"45",title:"《非理性繁荣》",meta:"席勒",link:"book45.html"},{num:"46",title:"《富爸爸穷爸爸》",meta:"清崎",link:"book46.html"},{num:"183",title:"《动物精神》",meta:"阿克洛夫&席勒",link:"book183.html"},{num:"193",title:"《掌控习惯》",meta:"克利尔",link:"book193.html"}],
+"技术与未来趋势":[{num:"50",title:"《奇点临近》",meta:"库兹韦尔",link:"book50.html"},{num:"51",title:"《生命3.0》",meta:"泰格马克",link:"book51.html"},{num:"52",title:"《AI Superpowers》",meta:"李开复",link:"book52.html"},{num:"67",title:"《智能商业》",meta:"曾鸣",link:"book67.html"},{num:"80",title:"《气候经济与人类未来》",meta:"盖茨",link:"book80.html"},{num:"88",title:"《芯片战争》",meta:"米勒",link:"book88.html"}],
+"AI认知与生物科技":[{num:"337",title:"《人工智能：一种现代方法》",meta:"斯图尔特·罗素",link:"book337.html"},{num:"338",title:"《深度学习》",meta:"伊恩·古德费洛",link:"book338.html"},{num:"340",title:"《超级智能》",meta:"波斯特洛姆",link:"book340.html"},{num:"355",title:"《哥德尔·埃舍尔·巴赫》",meta:"侯世达",link:"book355.html"},{num:"364",title:"《基因传》",meta:"悉达多·穆克吉",link:"book364.html"},{num:"378",title:"《合成生物学》",meta:"乔治·丘奇",link:"book378.html"}],
+"能源气候与地缘":[{num:"391",title:"《能源转型》",meta:"斯米尔",link:"book391.html"},{num:"392",title:"《气候赌场》",meta:"诺德豪斯",link:"book392.html"},{num:"419",title:"《注定一战》",meta:"艾利森",link:"book419.html"},{num:"421",title:"《世界秩序》",meta:"基辛格",link:"book421.html"},{num:"424",title:"《文明的冲突》",meta:"亨廷顿",link:"book424.html"},{num:"440",title:"《技术冷战》",meta:"亚当·西格尔",link:"book440.html"}],
+"前沿科学与东方":[{num:"446",title:"《时间简史》",meta:"霍金",link:"book446.html"},{num:"460",title:"《费曼物理学讲义》",meta:"费曼",link:"book460.html"},{num:"463",title:"《数学之美》",meta:"吴军",link:"book463.html"},{num:"473",title:"《孙子兵法》",meta:"孙武",link:"book473.html"},{num:"474",title:"《道德经》",meta:"老子",link:"book474.html"},{num:"479",title:"《资治通鉴》",meta:"司马光",link:"book479.html"},{num:"485",title:"《传习录》",meta:"王阳明",link:"book485.html"}],
+"康波计算器":[{title:"康波计算器",meta:"输入出生年份，生成人生康波时间表",link:"calculator.html"}],
+"四维评分系统":[{title:"四维评分系统",meta:"量化投资确定性 · 资产雷达图",link:"radar.html"}],
+"资产轮动查询":[{title:"资产轮动查询",meta:"查看最佳资产配置",link:"asset-rotation.html"}],
+"互动仪表盘":[{title:"康波仪表盘",meta:"拖动时钟探索周期",link:"cycle-dashboard.html"}],
+"六轮康波历史":[{title:"六轮康波时间线",meta:"1780-2070 · 从蒸汽机到AI",link:"index.html#waves"}],
+"第六轮·AI时代":[{title:"第六轮康波深度分析",meta:"AI+生物+新能源+量子计算",link:"lesson3.html"},{title:"科技创新与康波",meta:"AI产业链深度",link:"lesson60.html"}],
+"周金涛预言":[{title:"周金涛 — 人生就是一场康波",meta:"核心 · 40分钟",link:"lesson2.html"},{title:"投资操作手册 2026-2040",meta:"实战 · 50分钟",link:"lesson6.html"}]
+};
+window.__kgCourses = KangboCatalog.sidebar(window.__kgCourses);
+(function(){
+var c=document.getElementById("kgEmbed");if(!c)return;
+var W=c.clientWidth||900,H=c.clientHeight||600;
+var svg=d3.select("#kgEmbed").html("").append("svg").attr("viewBox",[-W/2,-H/2,W,H]);
+var g=svg.append("g");
+svg.call(d3.zoom().scaleExtent([0.2,3]).on("zoom",function(e){g.attr("transform",e.transform)}));
+var gc={root:"#e2b64f",course:"#f59e0b",book:"#a78bfa",tool:"#3b82f6",concept:"#22c55e",wave:"#06b6d4",phase:"#ec4899"};
+var gn={root:"总览",course:"主干课程阶段",book:"推荐书目分类",tool:"实战工具",concept:"核心概念",wave:"历史波浪",phase:"周期阶段"};
+var ns=[
+  {id:"康波研究院",group:"root",r:28,desc:" 康波研究院 — 系统学习50年财富周期。65门主干课程 + 500门书目精读 + 实战工具箱。",link:"index.html"},
+  // Core courses - 10 phases
+  {id:"周期理论基础",group:"course",r:16,desc:" 第1-6课 · 康波理论、周金涛框架、第六轮康波、家族策略、货币战争、投资手册",link:"courses.html"},
+  {id:"投资大师智慧",group:"course",r:16,desc:" 第7-12课 · 价值投资、索罗斯反身性、达里奥全天候、塔勒布黑天鹅、凯恩斯、明斯基",link:"courses.html"},
+  {id:"经济学派对决",group:"course",r:15,desc:" 第13-16课 · 奥地利学派、MMT、马克思危机论、大贬值",link:"courses.html"},
+  {id:"周期实战应用",group:"course",r:15,desc:" 第17-20课 · 人口周期、地缘政治、技术奇点、终极整合",link:"courses.html"},
+  {id:"读懂中国经济",group:"course",r:15,desc:" 第21-24课 · 有温度的经济学、置身事内、债务危机、21世纪资本论",link:"courses.html"},
+  {id:"生活经济学",group:"course",r:14,desc:" 第25-30课 · 贫穷本质、薛兆丰讲义、激荡三十年、民生经济学、数字经济、未来十年",link:"courses.html"},
+  {id:"理财基础技能",group:"course",r:13,desc:" 第31-33课 · 储蓄复利、通货膨胀、资产配置入门",link:"courses.html"},
+  {id:"经济史与金融",group:"course",r:14,desc:" 第34-39课 · 欧美经济史、世界金融史、二战经济、布雷顿森林、货币战争、交易艺术",link:"courses.html"},
+  {id:"投资实战未来",group:"course",r:15,desc:" 65门主干课程中的第40-50课，共11课 · 房产/股票/黄金/加密/宏观指标/行为金融/风控/退休/税务/ESG/终极体系",link:"courses.html"},
+  {id:"高级投资策略",group:"course",r:14,desc:" 65门主干课程中的第51-65课，共15课 · 宏观指标/央行/行业轮动/债券/康波深度/REITs/外汇/新兴市场/地缘/量化/危机投资",link:"courses.html"},
+  // Book categories
+  {id:"周期与投资理论",group:"book",r:15,desc:" 周期理论+投资哲学 · 康德拉季耶夫/周金涛/格雷厄姆/巴菲特/芒格/索罗斯/达里奥/林奇等",link:"book-courses.html"},
+  {id:"货币与风险管理",group:"book",r:15,desc:" 货币制度+风险管理 · 凯恩斯/哈耶克/米塞斯/明斯基/塔勒布/马克思/MMT/大贬值等",link:"book-courses.html"},
+  {id:"人口地缘与中国",group:"book",r:14,desc:" 人口地缘+中国经济 · 兰小欢/吴晓波/基辛格/艾利森/蔡昉/陆铭/薛兆丰等",link:"book-courses.html"},
+  {id:"行为金融与财富",group:"book",r:13,desc:" 行为金融+财富管理 · 卡尼曼/席勒/泰勒/西奥迪尼/清崎/舍费尔/柯维等",link:"book-courses.html"},
+  {id:"技术与未来趋势",group:"book",r:14,desc:" 技术未来+未来经济 · 库兹韦尔/泰格马克/李开复/Web3/DeFi/GPT/元宇宙/碳中和等",link:"book-courses.html"},
+  {id:"AI认知与生物科技",group:"book",r:14,desc:" AI与认知+生物科技 · 罗素/侯世达/平克/穆克吉/辛克莱/CRISPR/脑机接口等",link:"book-courses.html"},
+  {id:"能源气候与地缘",group:"book",r:14,desc:" 能源气候+地缘安全 · 斯米尔/诺德豪斯/基辛格/亨廷顿/核战略/供应链战争/北极地缘等",link:"book-courses.html"},
+  {id:"前沿科学与东方",group:"book",r:14,desc:" 前沿科学+东方智慧 · 霍金/费曼/香农/孙子/老子/王阳明/毛泽东/资治通鉴等",link:"book-courses.html"},
+  // Tools
+  {id:"康波计算器",group:"tool",r:13,desc:" 输入出生年份，生成人生康波时间表和三次财富机会窗口",link:"calculator.html"},
+  {id:"四维评分系统",group:"tool",r:13,desc:" 周金涛×时寒冰×宋鸿兵×巴拉塔四维度评分，量化投资确定性",link:"radar.html"},
+  {id:"资产轮动查询",group:"tool",r:13,desc:" 选择周期阶段，查看最佳/可配置/应避免的资产类别",link:"asset-rotation.html"},
+  {id:"互动仪表盘",group:"tool",r:12,desc:" 拖动康波时钟，可视化各阶段资产配置",link:"cycle-dashboard.html"},
+  // Waves
+  {id:"六轮康波历史",group:"wave",r:16,desc:" 1780-2070 · 蒸汽机、钢铁、电力、石油、信息、AI+生物+新能源",link:"index.html#waves"},
+  {id:"第五轮·信息时代",group:"wave",r:12,desc:"1990-2030 · 互联网+移动通信。萧条末期，AI技术突破",link:"index.html#waves"},
+  {id:"第六轮·AI时代",group:"wave",r:14,desc:"2025-2070 · AI+生物科技+新能源+量子计算。回升初期",link:"index.html#waves"},
+  // Concepts
+  {id:"四维共振框架",group:"concept",r:14,desc:"投资评估四大维度：康波周期(Z)+产业趋势(S)+技术共振(T)+大贬值(B)",link:"index.html#theory"},
+  {id:"大贬值",group:"concept",r:13,desc:"全球法币购买力系统性崩塌。36万亿美债+央行购金潮=货币重置前夜",link:"index.html#theory"},
+  {id:"货币重置",group:"concept",r:12,desc:"布雷顿森林、牙买加体系，以及下一阶段锚定黄金或数字货币",link:"index.html#theory"},
+  {id:"去美元化",group:"concept",r:12,desc:"金砖扩员+人民币国际化。美元储备占比从72%降至57%",link:"index.html#theory"},
+  {id:"萧条末期",group:"phase",r:13,desc:"旧产业出清·新产业孕育。最佳建仓窗口。黄金>大宗>算力",link:"index.html#waves"},
+  {id:"回升初期",group:"phase",r:13,desc:"新技术商业化启动。成长股+AI基础设施最佳配置期",link:"index.html#waves"},
+  {id:"周金涛预言",group:"concept",r:13,desc:"周期天王：每人一生只有三次财富机会。2026正站在第三次窗口",link:"lesson2.html"},
+];
+var ls=[
+  // Root connections
+  {source:"康波研究院",target:"周期理论基础",v:5},{source:"康波研究院",target:"投资大师智慧",v:4},{source:"康波研究院",target:"经济学派对决",v:3},{source:"康波研究院",target:"周期实战应用",v:4},{source:"康波研究院",target:"读懂中国经济",v:4},{source:"康波研究院",target:"生活经济学",v:3},{source:"康波研究院",target:"理财基础技能",v:3},{source:"康波研究院",target:"经济史与金融",v:3},{source:"康波研究院",target:"投资实战未来",v:5},{source:"康波研究院",target:"高级投资策略",v:4},
+  {source:"康波研究院",target:"周期与投资理论",v:5},{source:"康波研究院",target:"货币与风险管理",v:4},{source:"康波研究院",target:"人口地缘与中国",v:4},{source:"康波研究院",target:"行为金融与财富",v:3},{source:"康波研究院",target:"技术与未来趋势",v:4},{source:"康波研究院",target:"AI认知与生物科技",v:3},{source:"康波研究院",target:"能源气候与地缘",v:3},{source:"康波研究院",target:"前沿科学与东方",v:3},
+  {source:"康波研究院",target:"康波计算器",v:4},{source:"康波研究院",target:"四维评分系统",v:4},{source:"康波研究院",target:"资产轮动查询",v:3},{source:"康波研究院",target:"互动仪表盘",v:2},
+  {source:"康波研究院",target:"六轮康波历史",v:5},{source:"康波研究院",target:"四维共振框架",v:5},{source:"康波研究院",target:"大贬值",v:4},{source:"康波研究院",target:"货币重置",v:4},{source:"康波研究院",target:"去美元化",v:3},{source:"康波研究院",target:"萧条末期",v:4},{source:"康波研究院",target:"回升初期",v:4},{source:"康波研究院",target:"周金涛预言",v:4},
+  // Course connections
+  {source:"周期理论基础",target:"投资大师智慧",v:3},{source:"投资大师智慧",target:"经济学派对决",v:3},{source:"周期理论基础",target:"六轮康波历史",v:5},{source:"周期实战应用",target:"投资实战未来",v:4},{source:"读懂中国经济",target:"人口地缘与中国",v:5},{source:"投资实战未来",target:"高级投资策略",v:4},{source:"理财基础技能",target:"投资实战未来",v:3},
+  // Book cross-connections
+  {source:"周期与投资理论",target:"投资大师智慧",v:4},{source:"货币与风险管理",target:"经济学派对决",v:4},{source:"人口地缘与中国",target:"读懂中国经济",v:5},{source:"行为金融与财富",target:"理财基础技能",v:3},{source:"技术与未来趋势",target:"投资实战未来",v:4},
+  // Wave
+  {source:"六轮康波历史",target:"第五轮·信息时代",v:4},{source:"六轮康波历史",target:"第六轮·AI时代",v:5},{source:"第六轮·AI时代",target:"萧条末期",v:4},{source:"第六轮·AI时代",target:"回升初期",v:4},{source:"第六轮·AI时代",target:"AI认知与生物科技",v:4},
+  // Concept web
+  {source:"四维共振框架",target:"大贬值",v:4},{source:"大贬值",target:"货币重置",v:5},{source:"货币重置",target:"去美元化",v:4},{source:"去美元化",target:"萧条末期",v:3},{source:"萧条末期",target:"回升初期",v:4},{source:"周金涛预言",target:"萧条末期",v:5},
+  // Tools
+  {source:"四维评分系统",target:"四维共振框架",v:4},{source:"康波计算器",target:"周期理论基础",v:3}
+];
+var sim=d3.forceSimulation(ns).force("link",d3.forceLink(ls).id(function(d){return d.id}).distance(function(d){return 130-d.v*15})).force("charge",d3.forceManyBody().strength(-450)).force("center",d3.forceCenter(0,0)).force("collision",d3.forceCollide(55));
+var link=g.append("g").selectAll("line").data(ls).join("line").attr("class","kg-link").attr("stroke-opacity",function(d){return 0.15+d.v*0.08});
+var node=g.append("g").selectAll(".kg-node").data(ns).join("g").attr("class",function(d){return"kg-node"+(d.group=="root"?" root":"")}).call(d3.drag().on("start",function(e,d){if(!e.active)sim.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y}).on("drag",function(e,d){d.fx=e.x;d.fy=e.y}).on("end",function(e,d){if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null}));
+node.append("circle").attr("r",function(d){return d.r||14}).attr("fill",function(d){return gc[d.group]}).attr("stroke",function(d){return gc[d.group]}).attr("stroke-opacity",0.4).attr("fill-opacity",function(d){return d.group=="root"?1:d.group=="concept"||d.group=="phase"?0.3:0.2});
+node.append("text").text(function(d){return d.id}).attr("dy",function(d){return(d.r||14)+15}).attr("text-anchor","middle").attr("font-size","9px").attr("fill","#a1a1aa").attr("font-weight","500");
+node.on("mouseenter",function(e,d){d3.select(this).select("circle").attr("fill-opacity",0.9).attr("stroke-opacity",1).attr("r",(d.r||14)*1.2);link.attr("stroke-opacity",function(l){return l.source.id===d.id||l.target.id===d.id?1:0.03});node.select("circle").attr("fill-opacity",function(n){return n===d?0.9:0.05})}).on("mouseleave",function(e,d){d3.select(this).select("circle").attr("fill-opacity",d.group=="root"?1:d.group=="concept"||d.group=="phase"?0.3:0.2).attr("stroke-opacity",0.4).attr("r",d.r||14);link.attr("stroke-opacity",function(l){return 0.15+l.v*0.08});node.select("circle").attr("fill-opacity",function(n){return n.group=="root"?1:n.group=="concept"||n.group=="phase"?0.3:0.2})});
+node.on("click",function(e,d){e.stopPropagation();document.getElementById("kgHint").style.opacity="0";
+var sb=document.getElementById("kgSidebar");
+var cm=window.__kgCourses||{};
+var courses=cm[d.id]||[];
+var cat=gn[d.group];
+var color=gc[d.group];
+var html='<div class="kg-sidebar-header"><h4>'+d.id+'</h4><div class="kg-sb-cat" style="color:'+color+'">'+cat+(d.group=="course"?" · 共65门":"")+(d.group=="book"?" · 共500门":"")+'</div></div>';
+if(courses.length===0){
+  html+='<div class="kg-sidebar-empty"><br>暂无直接关联课程<br><span style="font-size:0.7rem;margin-top:4px">'+(d.link?'<a href="'+d.link+'" style="color:var(--gold)">点击查看详细页面</a>':'拖拽探索其他节点')+'</span></div>';
+}else{
+  html+='<div class="kg-sidebar-list">';
+  courses.forEach(function(c){
+    html+='<a href="'+c.link+'" class="kg-course-item"><div class="kg-ci-num">'+(c.num||'')+'</div><div class="kg-ci-info"><div class="kg-ci-title">'+c.title+'</div><div class="kg-ci-meta">'+(c.meta||'')+'</div></div></a>';
+  });
+  var total=cat.indexOf("阶段")>0?65:cat.indexOf("分类")>0?500:0;
+  if(total>0&&courses.length<total)html+='<a href="'+(d.link||"#")+'" style="display:block;text-align:center;padding:10px;color:var(--gold);font-size:0.75rem;margin-top:4px">查看全部'+(total)+'门</a>';
+  html+='</div>';
+}
+sb.innerHTML=html});
+sim.on("tick",function(){link.attr("x1",function(d){return d.source.x}).attr("y1",function(d){return d.source.y}).attr("x2",function(d){return d.target.x}).attr("y2",function(d){return d.target.y});node.attr("transform",function(d){return"translate("+d.x+","+d.y+")"})});
+window.kgClose=function(){document.getElementById("kgInfo").classList.remove("show")};
+})();
+</script>
+<script>
+(function(){
+var theories=[{icon:"",name:"长波理论",author:"康德拉季耶夫(1925)",sub:"50-60年技术创新驱动的经济长周期。我们正站在第五轮终点与第六轮起点的历史交汇处。",body:'<p><strong>核心框架：</strong>每50-60年，一组突破性技术集群驱动经济经历完整的春夏秋冬四阶段。</p><p><strong>五轮历史：</strong>蒸汽机(1780-1845)、钢铁铁路(1845-1900)、电气化(1900-1950)、石油化工(1950-1990)、信息技术(1990-2025)。</p><p><strong>当前位置：</strong>第五轮康波萧条期(2020-2028)，<em>第六轮AI+算力+能源的回升初期(2025+)。</em></p><p><strong>投资含义：</strong>萧条末期是最佳建仓窗口。历史上在这一阶段买入资产的人，平均获得了10倍以上回报。</p>',courses:[{n:1,t:"康波理论"},{n:3,t:"第六轮康波"},{n:6,t:"投资操作手册"}]},{icon:"",name:"周期嵌套",author:"周金涛(2005)",sub:"康波50年、库兹涅茨20年、朱格拉10年、基钦4年。四周期共振产生巨大的财富转移效应。",body:'<p><strong>核心框架：</strong>经济周期是多个周期嵌套叠加的复合波。</p><p><strong>四个周期：</strong>康波(50-60年·技术)、库兹涅茨(18-25年·房地产)、朱格拉(7-11年·资本支出)、基钦(3-5年·库存)。</p><p><strong>周期天王预言：</strong>每人一生只有<em>三次财富机会</em>，错过一次就错过一生。</p><p><strong>2026定位：</strong>康波冬末+库兹涅茨下行+朱格拉底部+基钦回升=历史级共振窗口。</p>',courses:[{n:2,t:"周金涛"},{n:17,t:"人口周期"},{n:23,t:"债务危机"}]},{icon:"",name:"趋势投资",author:"时寒冰(2012)",sub:"供需基本面决定长期趋势。当趋势形成时不要对抗，顺势而为是最优策略。",body:'<p><strong>核心框架：</strong>价格由供需决定，供需由趋势驱动。识别宏观趋势比预测短期波动更重要。</p><p><strong>七大预测(2012)：</strong>黄金长期牛市、美元信用松动、全球通胀回归、中国房地产见顶、能源安全重塑、粮食危机、地缘冲突——<em>已全部验证。</em></p><p><strong>三原则：</strong>① 尊重趋势不猜顶底 ② 供应端驱动的趋势更持久 ③ 宏观趋势>行业周期>个股。</p>',courses:[{n:5,t:"货币战争与全球博弈"},{n:18,t:"地缘政治经济学"},{n:30,t:"未来十年"}]},{icon:"",name:"货币战争",author:"宋鸿兵(2007)",sub:"货币是看不见的战场。美元霸权的每一次松动，都意味着全球财富版图的重构。",body:'<p><strong>核心框架：</strong>货币的本质是债务凭证。各国央行通过货币发行和利率操作进行隐秘的财富转移。</p><p><strong>美元霸权四阶段：</strong>布雷顿森林(1944-1971)、石油美元(1974)、牙买加体系(1976)、后美元时代(<em>2022+</em>)。</p><p><strong>去美元化：</strong>美元储备从72%降至57%。金砖扩员、人民币国际化、央行购金潮三条线推进。</p><p><strong>黄金重估：</strong>若全球央行将黄金储备恢复到历史平均水平，金价目标可能在<em>8000-10000美元/盎司</em>。</p>',courses:[{n:5,t:"货币战争"},{n:14,t:"MMT"},{n:42,t:"黄金投资"}]},{icon:"",name:"大贬值",author:"亚当·巴拉塔(2020)",sub:"法币购买力正在系统性地崩塌。持有实物资产的人将成为新货币秩序的赢家。",body:'<p><strong>核心框架：</strong>所有法币最终都会贬值至零。36万亿美债+持续QE=购买力崩塌的数学必然。</p><p><strong>四大预警：</strong>① 美国国债利息超越军费 ② 各国央行创纪录购金 ③ 通胀\"暂时论\"被反复打脸 ④ BRICS货币体系推进。</p><p><strong>避险矩阵：</strong>黄金(货币重置对冲)>大宗商品(实物稀缺)>算力资产(AI基建)>优质房产(核心地段)>现金(持续贬值)。</p><p><strong>时间窗口：</strong>2025-2030年可能出现一次<em>货币重置事件</em>，持有硬资产与持有法币的贫富差距将急剧拉大。</p>',courses:[{n:16,t:"大贬值与货币重置"},{n:42,t:"黄金投资"},{n:46,t:"风险管理"}]}];
+function setActive(card){document.querySelectorAll('.pillar-card').forEach(function(c){c.classList.remove('active')});if(card)card.classList.add('active')}
+window.closeTheoryDetail=function(){document.getElementById('theoryDetail').classList.remove('show');setActive(null)};
+document.querySelectorAll('.pillar-card').forEach(function(card){card.addEventListener('click',function(){var idx=parseInt(this.getAttribute('data-theory')),t=theories[idx],td=document.getElementById('theoryDetail');if(this.classList.contains('active')){closeTheoryDetail();return}setActive(this);document.getElementById('tdIcon').textContent=t.icon;document.getElementById('tdName').textContent=t.name;document.getElementById('tdSub').textContent=t.author+' · '+t.sub;document.getElementById('tdBody').innerHTML=t.body;var links='';t.courses.forEach(function(c){links+='<a href=\"lesson'+c.n+'.html\" class=\"td-course-link\"> 第'+c.n+'课：'+c.t+'</a>'});document.getElementById('tdCourses').innerHTML=links;td.classList.add('show')})});
+})();
+</script>
+</body>
+</html>

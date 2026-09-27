@@ -1,0 +1,14 @@
+<!-- 课程卡片组件 -->
+<view class="course-card" bindtap="onTap">
+ <view class="cc-num">{{num}}</view>
+ <view class="cc-body">
+ <text class="cc-title">{{title}}</text>
+ <text class="cc-desc" wx:if="{{desc}}">{{desc}}</text>
+ <view class="cc-tags">
+ <text class="tag {{diffColor}}" wx:if="{{diffLabel}}">{{diffLabel}}</text>
+ <text class="tag tag-gold" wx:if="{{free}}">开放</text>
+ <text class="tag tag-orange" wx:elif="{{locked}}">会员</text>
+ <text class="cc-time">{{time}}</text>
+ </view>
+ </view>
+</view>
