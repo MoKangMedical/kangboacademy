@@ -11,7 +11,7 @@
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://d3js.org">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link rel="preload" href="https://d3js.org/d3.v7.min.js" as="script">
+    <link rel="preload" href="vendor/d3.v7.min.js" as="script">
 
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -60,18 +60,18 @@ h3{font-size:1.25rem;font-weight:600}
 /* ═══════════════ NAV ═══════════════ */
 .nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(9,9,11,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:all .3s}
 .nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
-.nav-logo{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:8px}
+.nav-logo{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0}
 .nav-logo svg{width:28px;height:28px}
-.nav-links{display:flex;gap:32px;align-items:center}
-.nav-links a{font-size:0.875rem;color:var(--text2);transition:color .2s;font-weight:500}
+.nav-links{display:flex;gap:24px;align-items:center;min-width:0;overflow-x:auto;margin-left:24px;padding:8px 0}
+.nav-links a{font-size:0.875rem;color:var(--text2);transition:color .2s;font-weight:500;white-space:nowrap;flex-shrink:0}
 .nav-links a:hover{color:var(--text)}
 .nav-cta{background:var(--gold);color:#000;padding:8px 20px;border-radius:8px;font-weight:600;font-size:0.85rem;transition:all .2s}
 .nav-cta:hover{background:var(--gold2);transform:translateY(-1px)}
 @media(max-width:768px){
   .nav-links{display:none}
-  .nav-links.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--bg2);padding:20px;gap:16px;border-bottom:1px solid var(--border)}
+  .nav-links.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:var(--bg2);padding:20px;gap:16px;border-bottom:1px solid var(--border);margin-left:0;max-height:calc(100dvh - 64px);overflow-y:auto}
 }
-.hamburger{display:none;cursor:pointer;padding:8px}
+.hamburger{display:none;cursor:pointer;padding:8px;border:0;background:transparent}
 @media(max-width:768px){.hamburger{display:block}}
 
 /* ═══════════════ HERO ═══════════════ */
@@ -294,7 +294,7 @@ h3{font-size:1.25rem;font-weight:600}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="vendor/d3.v7.min.js"></script>
 </head>
 <body>
 
@@ -315,11 +315,14 @@ h3{font-size:1.25rem;font-weight:600}
       <!-- <a href="#">定价</a> -->
       <a href="learn.html">学习仪表盘</a>
       <a href="start.html" class="nav-cta">开始学习</a>
+      <a href="shuige/index.html">🎙️ 水哥课程</a>
+      <a href="brain-training/index.html">🧠 脑力训练</a>
+      <a href="zhangyiming/index.html">📚 张一鸣书架</a>
       <a href="3d.html"> 3D探索</a>
     </div>
-    <div class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+    <button type="button" class="hamburger" aria-label="展开或收起导航" aria-expanded="false" aria-controls="navLinks" onclick="this.setAttribute('aria-expanded',document.getElementById('navLinks').classList.toggle('open'))">
       <svg width="24" height="24" fill="none" stroke="#a1a1aa" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-    </div>
+    </button>
   </div>
 </nav>
 
@@ -359,9 +362,9 @@ h3{font-size:1.25rem;font-weight:600}
     <div class="audio-panel">
       <div class="audio-head">
         <div>
-          <div class="label">连续听课</div>
+          <div class="label">连续收听导读</div>
           <h2 class="serif">主干课程 + 书目课程，一键自动连播</h2>
-          <p>汇总 65 门主干课程与 500 门书目课程音频，适合通勤、复习和沉浸式学习。</p>
+          <p>汇总 65 门主干课程与 500 门书目课程的音频导读，适合通勤与复习。完整内容与练习请进入课程正文，音频时长以播放器为准。</p>
         </div>
         <div class="audio-tabs" id="homeAudioTabs">
           <button class="audio-tab active" type="button" data-scope="all">全部</button>

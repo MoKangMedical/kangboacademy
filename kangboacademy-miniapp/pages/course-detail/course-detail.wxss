@@ -844,6 +844,15 @@
  justify-content: center;
 }
 
+.practice-error {
+ display: flex;
+ flex-direction: column;
+ gap: 20rpx;
+ padding: 24rpx 0;
+ color: var(--text);
+ font-size: 26rpx;
+}
+
 .rc-title {
  font-size: 26rpx;
  color: var(--text);

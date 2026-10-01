@@ -19,6 +19,7 @@ from fastapi.responses import JSONResponse, RedirectResponse, Response
 from pydantic import BaseModel, EmailStr, StrictInt
 from typing import Optional, List, Dict
 from content_contract import catalog_metadata
+from payment_security import PaymentSecurityError, load_verification_key, verify_message, validate_transaction, read_notification_body
 
 # ============================================================
 # CONFIG
@@ -174,6 +175,18 @@ def init_db():
         quiz_taken INTEGER DEFAULT 0,
         FOREIGN KEY (user_id) REFERENCES users(id),
         UNIQUE(user_id, date)
+    );
+
+    CREATE TABLE IF NOT EXISTS practice_submissions (
+        user_id INTEGER NOT NULL,
+        submission_key TEXT NOT NULL,
+        payload_hash TEXT NOT NULL,
+        owner TEXT NOT NULL,
+        lease_until REAL NOT NULL,
+        response_json TEXT,
+        created_at TEXT NOT NULL DEFAULT (datetime('now')),
+        PRIMARY KEY (user_id, submission_key),
+        FOREIGN KEY (user_id) REFERENCES users(id)
     );
 
     CREATE TABLE IF NOT EXISTS practice_attempts (
@@ -1362,6 +1375,9 @@ def sensitive_file_check(path: str, executable: bool = False) -> dict:
     }
 
 PAYMENT_ENV_KEYS = [
+    "WECHAT_PAY_LIVE_ENABLED",
+    "WECHAT_PAY_PLATFORM_PUBLIC_KEY_ID",
+    "WECHAT_PAY_PLATFORM_PUBLIC_KEY_PATH",
     "WECHAT_PAY_MCHID",
     "WECHAT_PAY_CERT_SERIAL_NO",
     "WECHAT_PAY_PRIVATE_KEY_PATH",
@@ -1379,6 +1395,9 @@ def payment_runtime_config() -> dict:
     values = payment_env_values()
     return {
         "mchid": values.get("WECHAT_PAY_MCHID", ""),
+        "liveEnabled": values.get("WECHAT_PAY_LIVE_ENABLED", "").lower() == "true",
+        "platformPublicKeyId": values.get("WECHAT_PAY_PLATFORM_PUBLIC_KEY_ID", ""),
+        "platformPublicKeyPath": values.get("WECHAT_PAY_PLATFORM_PUBLIC_KEY_PATH", ""),
         "certSerialNo": values.get("WECHAT_PAY_CERT_SERIAL_NO", ""),
         "privateKeyPath": values.get("WECHAT_PAY_PRIVATE_KEY_PATH", ""),
         "apiV3Key": values.get("WECHAT_PAY_API_V3_KEY", ""),
@@ -1469,10 +1488,19 @@ def write_payment_config(payload: dict) -> dict:
 
 def payment_config() -> dict:
     runtime = payment_runtime_config()
+    try:
+        load_verification_key(runtime)
+        verification_ready = True
+    except (PaymentSecurityError, ImportError):
+        verification_ready = False
     private_key_path = runtime["privateKeyPath"]
     private_key_path_configured = bool(private_key_path)
     private_key_file_exists = Path(private_key_path).exists() if private_key_path else False
+    order_query_ready = all([runtime['mchid'], runtime['certSerialNo'],
+                             private_key_file_exists, verification_ready])
     ready = all([
+        runtime.get("liveEnabled") is True,
+        verification_ready,
         runtime["mchid"],
         runtime["certSerialNo"],
         private_key_path_configured,
@@ -1481,6 +1509,10 @@ def payment_config() -> dict:
         runtime["notifyUrl"],
     ])
     missing = []
+    if not verification_ready:
+        missing.append("WECHAT_PAY_PLATFORM_PUBLIC_KEY")
+    if runtime.get("liveEnabled") is not True:
+        missing.append("WECHAT_PAY_LIVE_ENABLED")
     if not runtime["mchid"]:
         missing.append("WECHAT_PAY_MCHID")
     if not runtime["certSerialNo"]:
@@ -1503,15 +1535,15 @@ def payment_config() -> dict:
     return {
         "provider": "wechat",
         "ready": bool(ready),
+        "signatureVerificationReady": verification_ready,
+        "orderQueryReady": bool(order_query_ready),
+        "liveEnabled": runtime.get("liveEnabled") is True,
         "mchidConfigured": bool(runtime["mchid"]),
         "serialConfigured": bool(runtime["certSerialNo"]),
         "privateKeyConfigured": private_key_path_configured,
         "privateKeyFileExists": private_key_file_exists,
         "apiV3KeyConfigured": bool(runtime["apiV3Key"]),
         "notifyUrl": runtime["notifyUrl"],
-        "envFile": runtime["envFile"],
-        "legacyEnvFile": runtime["legacyEnvFile"],
-        "privateKeyPath": private_key_path if private_key_path_configured else "",
         "missing": missing,
         "required": required,
         "docs": {
@@ -1520,7 +1552,7 @@ def payment_config() -> dict:
             "status": "/api/payment/status/{order_no}",
             "plans": "/api/membership/plans",
         },
-        "message": "微信支付商户配置完成后可直接发起 JSAPI 支付" if ready else "请配置微信支付商户号、API证书序列号、商户私钥和 APIv3 Key",
+        "message": "支付配置就绪，仍须真实联调验收" if ready else "收款未启用；商户配置、可信微信支付公钥及上线验收缺一不可",
     }
 
 def payment_service_commands() -> dict:
@@ -1974,6 +2006,7 @@ def wechat_pay_request(method: str, path: str, payload: Optional[dict] = None, t
     auth = wechat_pay_authorization(method, path, body, timestamp, nonce, config)
     headers = {
         "Authorization": auth,
+        "Wechatpay-Serial": config.get("platformPublicKeyId", ""),
         "Accept": "application/json",
         "User-Agent": "kangboacademy-miniapp/1.0",
     }
@@ -1987,12 +2020,16 @@ def wechat_pay_request(method: str, path: str, payload: Optional[dict] = None, t
     )
     try:
         with urlrequest.urlopen(req, timeout=timeout) as resp:
-            raw = resp.read().decode("utf-8")
+            raw_body = resp.read(1024 * 1024 + 1)
+            verify_message(raw_body, resp.headers, config)
+            raw = raw_body.decode("utf-8")
             return json.loads(raw) if raw else {}
+    except PaymentSecurityError:
+        raise HTTPException(status_code=502, detail="微信支付响应验签失败")
     except urlerror.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="ignore")
         raise HTTPException(status_code=502, detail=f"微信支付接口请求失败: {detail}")
-    except (urlerror.URLError, TimeoutError, json.JSONDecodeError) as exc:
+    except (urlerror.URLError, TimeoutError, json.JSONDecodeError, UnicodeDecodeError) as exc:
         raise HTTPException(status_code=502, detail=f"微信支付服务暂不可用: {exc}")
 
 def call_wechat_jsapi_order(payload: dict) -> dict:
@@ -2026,12 +2063,20 @@ def decrypt_wechat_resource(resource: dict) -> dict:
     api_v3_key = config["apiV3Key"]
     if not api_v3_key:
         raise HTTPException(500, "微信支付 APIv3 Key 未配置")
-    associated_data = (resource.get("associated_data") or "").encode("utf-8")
-    nonce = (resource.get("nonce") or "").encode("utf-8")
-    ciphertext = base64.b64decode(resource.get("ciphertext") or "")
-    aesgcm = AESGCM(api_v3_key.encode("utf-8"))
-    plaintext = aesgcm.decrypt(nonce, ciphertext, associated_data)
-    return json.loads(plaintext.decode("utf-8"))
+    try:
+        associated_data = (resource.get("associated_data") or "").encode("utf-8")
+        nonce = (resource.get("nonce") or "").encode("utf-8")
+        if resource.get('algorithm') != 'AEAD_AES_256_GCM' or len(nonce) != 12:
+            raise ValueError('Invalid encryption metadata')
+        ciphertext = base64.b64decode(resource.get("ciphertext") or "", validate=True)
+        aesgcm = AESGCM(api_v3_key.encode("utf-8"))
+        plaintext = aesgcm.decrypt(nonce, ciphertext, associated_data)
+        transaction = json.loads(plaintext.decode("utf-8"))
+        if not isinstance(transaction, dict):
+            raise ValueError('Invalid transaction')
+        return transaction
+    except Exception:
+        raise HTTPException(400, "微信支付通知解密失败")
 
 def has_active_entitlement(conn, user_id: int, scope: str) -> bool:
     scopes = [scope]
@@ -2057,17 +2102,19 @@ def apply_paid_order(conn, payment: dict, transaction_id: str = "", notify_paylo
     expires = (now + timedelta(days=duration_days)).isoformat()
     scope = plan.get("scope", payment.get("entitlement_scope") or "core")
 
-    conn.execute("""
+    updated = conn.execute("""
         UPDATE payments
         SET status='paid', paid_at=datetime('now'), updated_at=datetime('now'),
             transaction_id=COALESCE(NULLIF(?, ''), transaction_id),
             notify_payload=COALESCE(?, notify_payload)
-        WHERE order_no=?
+        WHERE order_no=? AND status!='paid'
     """, (
         transaction_id,
         json.dumps(notify_payload, ensure_ascii=False) if notify_payload else None,
         payment["order_no"],
     ))
+    if updated.rowcount != 1:
+        return {"alreadyPaid": True}
     if scope != "free":
         conn.execute("""
             INSERT INTO user_entitlements (user_id, scope, plan, order_no, starts_at, expires_at, status)
@@ -2607,6 +2654,7 @@ class PracticeSubmitReq(BaseModel):
     lesson: str
     answers: Dict[str, str]
     reflection: Optional[str] = ""
+    submission_id: Optional[str] = None
 
 class AgentChatReq(BaseModel):
     prompt: str
@@ -3418,7 +3466,8 @@ async def get_payment_config():
     return payment_config()
 
 @app.get("/api/payment/diagnostics")
-async def get_payment_diagnostics(days: int = 7):
+async def get_payment_diagnostics(request: Request, days: int = 7):
+    require_payment_admin_token(request, "缺少支付诊断权限")
     return payment_diagnostics(days)
 
 @app.post("/api/payment/config")
@@ -3442,6 +3491,12 @@ async def create_payment(req: PaymentReq, user=Depends(get_current_user)):
         raise HTTPException(400, "免费套餐无需支付")
 
     provider = req.method or "wechat"
+    if provider != "wechat":
+        raise HTTPException(400, "不支持的支付方式")
+    if not payment_config()["ready"]:
+        raise HTTPException(503, "收款暂未开放，请先体验免费课程")
+    if not user.get("wechat_openid"):
+        raise HTTPException(400, "请在小程序内重新登录后支付")
     out_trade_no = order_no()
     amount_fen = int(plan.get("amount_fen", int(plan["price"] * 100)))
     expires = (datetime.now() + timedelta(minutes=30)).isoformat()
@@ -3498,12 +3553,15 @@ async def create_payment(req: PaymentReq, user=Depends(get_current_user)):
         "payer": {"openid": user["wechat_openid"]},
         "attach": json.dumps({"plan": req.plan, "scope": plan.get("scope")}, ensure_ascii=False),
     }
-    wx_order = call_wechat_jsapi_order(payload)
-    prepay_id = wx_order.get("prepay_id")
-    if not prepay_id:
+    try:
+        wx_order = call_wechat_jsapi_order(payload)
+        prepay_id = wx_order.get("prepay_id")
+        if not prepay_id:
+            raise HTTPException(502, "微信支付未返回 prepay_id")
+        pay_params = build_request_payment_params(prepay_id, runtime)
+    except Exception:
         conn.close()
-        raise HTTPException(502, "微信支付未返回 prepay_id")
-    pay_params = build_request_payment_params(prepay_id, runtime)
+        raise
     conn.execute(
         "UPDATE payments SET prepay_id=?, payment_payload=?, updated_at=datetime('now') WHERE order_no=?",
         (prepay_id, json.dumps(wx_order, ensure_ascii=False), out_trade_no)
@@ -3519,29 +3577,41 @@ async def create_payment(req: PaymentReq, user=Depends(get_current_user)):
 
 @app.post("/api/payment/wechat/notify")
 async def wechat_payment_notify(request: Request):
-    payload = await request.json()
-    resource = payload.get("resource") or {}
-    transaction = decrypt_wechat_resource(resource)
-    out_trade_no = transaction.get("out_trade_no")
-    trade_state = transaction.get("trade_state")
-    transaction_id = transaction.get("transaction_id", "")
-    if not out_trade_no:
-        return JSONResponse(status_code=400, content={"code": "FAIL", "message": "缺少 out_trade_no"})
-
+    try:
+        raw = await read_notification_body(request)
+        verify_message(raw, request.headers, payment_runtime_config())
+        payload = json.loads(raw)
+        if not isinstance(payload, dict) or payload.get('event_type') != 'TRANSACTION.SUCCESS':
+            raise PaymentSecurityError('Unsupported payment notification')
+        resource = payload.get('resource')
+        if not isinstance(resource, dict):
+            raise PaymentSecurityError('Invalid payment resource')
+        transaction = decrypt_wechat_resource(resource)
+        if transaction.get('trade_state') != 'SUCCESS':
+            raise PaymentSecurityError('Notification is not a successful payment')
+    except (PaymentSecurityError, ValueError, UnicodeDecodeError, HTTPException):
+        return JSONResponse(status_code=400, content={"code": "FAIL", "message": "支付通知核验失败"})
     conn = get_db()
-    payment = conn.execute("SELECT * FROM payments WHERE order_no=?", (out_trade_no,)).fetchone()
-    if not payment:
+    try:
+        conn.execute('BEGIN IMMEDIATE')
+        payment = conn.execute('SELECT * FROM payments WHERE order_no=?',
+                               (transaction.get('out_trade_no'),)).fetchone()
+        if not payment:
+            raise PaymentSecurityError('Unknown payment order')
+        payment = dict(payment)
+        owner = conn.execute('SELECT wechat_openid FROM users WHERE id=?', (payment['user_id'],)).fetchone()
+        validate_transaction(transaction, payment, payment_runtime_config(), WECHAT_MINIAPP_APPID,
+                             owner['wechat_openid'] if owner else '')
+        apply_paid_order(conn, payment, transaction['transaction_id'], transaction)
+        conn.commit()
+    except PaymentSecurityError:
+        conn.rollback()
+        return JSONResponse(status_code=400, content={"code": "FAIL", "message": "支付订单核验失败"})
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
         conn.close()
-        return JSONResponse(status_code=404, content={"code": "FAIL", "message": "订单不存在"})
-    if trade_state == "SUCCESS":
-        apply_paid_order(conn, dict(payment), transaction_id, transaction)
-    else:
-        conn.execute(
-            "UPDATE payments SET status=?, notify_payload=?, updated_at=datetime('now') WHERE order_no=?",
-            (trade_state.lower() if trade_state else "notified", json.dumps(transaction, ensure_ascii=False), out_trade_no)
-        )
-    conn.commit()
-    conn.close()
     return {"code": "SUCCESS", "message": "成功"}
 
 @app.get("/api/payment/status/{order_no}")
@@ -3553,9 +3623,12 @@ async def payment_status(order_no: str, user=Depends(get_current_user)):
         raise HTTPException(404, "订单不存在")
     payment = dict(payment)
     sync_status = ""
-    if payment["status"] != "paid" and payment_config()["ready"] and payment.get("provider") == "wechat":
+    readiness = payment_config()
+    if payment["status"] != "paid" and readiness.get("orderQueryReady", readiness["ready"]) and payment.get("provider") == "wechat":
         try:
             transaction = query_wechat_order(payment["order_no"])
+            validate_transaction(transaction, payment, payment_runtime_config(), WECHAT_MINIAPP_APPID,
+                                 user.get('wechat_openid'))
             trade_state = transaction.get("trade_state") or ""
             sync_status = trade_state or "UNKNOWN"
             if trade_state == "SUCCESS":
@@ -3564,12 +3637,13 @@ async def payment_status(order_no: str, user=Depends(get_current_user)):
                 payment = dict(conn.execute("SELECT * FROM payments WHERE order_no=?", (order_no,)).fetchone())
             elif trade_state and trade_state not in ("USERPAYING", "NOTPAY"):
                 conn.execute(
-                    "UPDATE payments SET status=?, notify_payload=?, updated_at=datetime('now') WHERE order_no=?",
+                    "UPDATE payments SET status=?, notify_payload=?, updated_at=datetime('now') WHERE order_no=? AND status!='paid'",
                     (trade_state.lower(), json.dumps(transaction, ensure_ascii=False), order_no)
                 )
                 conn.commit()
                 payment = dict(conn.execute("SELECT * FROM payments WHERE order_no=?", (order_no,)).fetchone())
-        except HTTPException:
+        except (HTTPException, PaymentSecurityError):
+            conn.rollback()
             sync_status = "QUERY_FAILED"
     conn.close()
     return {
@@ -3771,134 +3845,139 @@ async def get_lesson_practice(lesson: str, authorization: str = Header(None)):
 
 @app.post("/api/practice/submit")
 async def submit_practice(req: PracticeSubmitReq, user=Depends(get_current_user)):
-    meta = resolve_lesson(req.lesson)
-    if not can_access_lesson(user, meta):
-        raise HTTPException(403, "订阅后可提交练习")
-    page = meta["page"]
-    if not page.exists():
-        raise HTTPException(404, "课程内容不存在")
+    from practice_idempotency import PracticeSubmission
+    from starlette.concurrency import run_in_threadpool
 
-    practice = build_practice_questions(page, req.lesson)
-    questions = practice["questions"]
-    keywords = practice["keywords"]
-    answers = req.answers or {}
-    reflection = (req.reflection or "").strip()[:2000]
-    results = []
-    for question in questions:
-        answer = answers.get(question["id"], "")
-        scored = score_answer(answer, question.get("keywords") or keywords)
-        results.append({
-            "questionId": question["id"],
-            "title": question["title"],
-            "answer": answer,
-            **scored,
-        })
-    overall = round(sum(item["score"] for item in results) / max(1, len(results)))
-    feedback = build_agent_feedback(overall, results, keywords)
-    ai_analysis = build_practice_ai_analysis(user, meta, practice, results, overall, reflection)
-    today = datetime.now().strftime("%Y-%m-%d")
-    minutes = max(5, len(questions) * 4)
+    payload = {"lesson": req.lesson, "answers": req.answers, "reflection": req.reflection or ""}
+    async with PracticeSubmission(get_db, user["id"], req.submission_id, payload) as submission:
+        if submission.response is not None:
+            return submission.response
+        meta = resolve_lesson(req.lesson)
+        if not can_access_lesson(user, meta):
+            raise HTTPException(403, "订阅后可提交练习")
+        page = meta["page"]
+        if not page.exists():
+            raise HTTPException(404, "课程内容不存在")
 
-    conn = get_db()
-    attempts_before = conn.execute(
-        "SELECT COUNT(*) AS c FROM practice_attempts WHERE user_id=?",
-        (user["id"],)
-    ).fetchone()["c"]
-    cursor = conn.execute("""
-        INSERT INTO practice_attempts (
-            user_id, lesson, course_id, is_book_course, score, max_score,
-            answers_json, results_json, feedback, reflection_text,
-            ai_analysis_json, ai_followups_json, ai_status
-        )
-        VALUES (?, ?, ?, ?, ?, 100, ?, ?, ?, ?, ?, ?, ?)
-    """, (
-        user["id"], req.lesson, meta["courseRef"], 1 if meta["isBookCourse"] else 0,
-        overall, json.dumps(answers, ensure_ascii=False),
-        json.dumps(results, ensure_ascii=False), feedback, reflection,
-        json.dumps(ai_analysis, ensure_ascii=False),
-        json.dumps(ai_analysis.get("followUps", []), ensure_ascii=False),
-        ai_analysis.get("status", ""),
-    ))
-    attempt_id = cursor.lastrowid
+        practice = build_practice_questions(page, req.lesson)
+        questions = practice["questions"]
+        keywords = practice["keywords"]
+        answers = req.answers or {}
+        reflection = (req.reflection or "").strip()[:2000]
+        results = []
+        for question in questions:
+            answer = answers.get(question["id"], "")
+            scored = score_answer(answer, question.get("keywords") or keywords)
+            results.append({
+                "questionId": question["id"],
+                "title": question["title"],
+                "answer": answer,
+                **scored,
+            })
+        overall = round(sum(item["score"] for item in results) / max(1, len(results)))
+        feedback = build_agent_feedback(overall, results, keywords)
+        ai_analysis = await run_in_threadpool(build_practice_ai_analysis, user, meta, practice, results, overall, reflection)
+        today = datetime.now().strftime("%Y-%m-%d")
+        minutes = max(5, len(questions) * 4)
+        with submission.transaction() as conn:
+            attempts_before = conn.execute(
+                "SELECT COUNT(*) AS c FROM practice_attempts WHERE user_id=?",
+                (user["id"],)
+            ).fetchone()["c"]
+            cursor = conn.execute("""
+                INSERT INTO practice_attempts (
+                    user_id, lesson, course_id, is_book_course, score, max_score,
+                    answers_json, results_json, feedback, reflection_text,
+                    ai_analysis_json, ai_followups_json, ai_status
+                )
+                VALUES (?, ?, ?, ?, ?, 100, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                user["id"], req.lesson, meta["courseRef"], 1 if meta["isBookCourse"] else 0,
+                overall, json.dumps(answers, ensure_ascii=False),
+                json.dumps(results, ensure_ascii=False), feedback, reflection,
+                json.dumps(ai_analysis, ensure_ascii=False),
+                json.dumps(ai_analysis.get("followUps", []), ensure_ascii=False),
+                ai_analysis.get("status", ""),
+            ))
+            attempt_id = cursor.lastrowid
 
-    conn.execute("""
-        INSERT INTO course_progress (
-            user_id, course_id, status, progress_percent, quiz_score, quiz_total, started_at, updated_at
-        )
-        VALUES (?, ?, 'in_progress', 100, ?, 100, datetime('now'), datetime('now'))
-        ON CONFLICT(user_id, course_id) DO UPDATE SET
-            progress_percent=MAX(progress_percent, 100),
-            quiz_score=?,
-            quiz_total=100,
-            updated_at=datetime('now')
-    """, (user["id"], meta["courseRef"], overall, overall))
-    conn.execute("""
-        INSERT INTO learning_streaks (user_id, date, quiz_taken)
-        VALUES (?, ?, 1)
-        ON CONFLICT(user_id, date) DO UPDATE SET quiz_taken = quiz_taken + 1
-    """, (user["id"], today))
-    conn.execute("""
-        INSERT INTO daily_refinements (user_id, date, practice_count, score_total, minutes, updated_at)
-        VALUES (?, ?, 1, ?, ?, datetime('now'))
-        ON CONFLICT(user_id, date) DO UPDATE SET
-            practice_count = practice_count + 1,
-            score_total = score_total + excluded.score_total,
-            minutes = minutes + excluded.minutes,
-            updated_at = datetime('now')
-    """, (user["id"], today, overall, minutes))
+            conn.execute("""
+                INSERT INTO course_progress (
+                    user_id, course_id, status, progress_percent, quiz_score, quiz_total, started_at, updated_at
+                )
+                VALUES (?, ?, 'in_progress', 100, ?, 100, datetime('now'), datetime('now'))
+                ON CONFLICT(user_id, course_id) DO UPDATE SET
+                    progress_percent=MAX(progress_percent, 100),
+                    quiz_score=?,
+                    quiz_total=100,
+                    updated_at=datetime('now')
+            """, (user["id"], meta["courseRef"], overall, overall))
+            conn.execute("""
+                INSERT INTO learning_streaks (user_id, date, quiz_taken)
+                VALUES (?, ?, 1)
+                ON CONFLICT(user_id, date) DO UPDATE SET quiz_taken = quiz_taken + 1
+            """, (user["id"], today))
+            conn.execute("""
+                INSERT INTO daily_refinements (user_id, date, practice_count, score_total, minutes, updated_at)
+                VALUES (?, ?, 1, ?, ?, datetime('now'))
+                ON CONFLICT(user_id, date) DO UPDATE SET
+                    practice_count = practice_count + 1,
+                    score_total = score_total + excluded.score_total,
+                    minutes = minutes + excluded.minutes,
+                    updated_at = datetime('now')
+            """, (user["id"], today, overall, minutes))
 
-    total_attempts = attempts_before + 1
-    streak = consecutive_practice_days(conn, user["id"])
-    badge_keys = ["daily_refiner_1"]
-    if attempts_before == 0:
-        badge_keys.append("first_practice")
-    if overall >= 80:
-        badge_keys.append("sharp_80")
-    if overall >= 90:
-        badge_keys.append("mastery_90")
-    if lesson_free(meta):
-        badge_keys.append("book_spark" if meta["isBookCourse"] else "core_spark")
-    if total_attempts >= 3:
-        badge_keys.append("three_practices")
-    if streak >= 3:
-        badge_keys.append("streak_3")
-    if streak >= 7:
-        badge_keys.append("streak_7")
+            total_attempts = attempts_before + 1
+            streak = consecutive_practice_days(conn, user["id"])
+            badge_keys = ["daily_refiner_1"]
+            if attempts_before == 0:
+                badge_keys.append("first_practice")
+            if overall >= 80:
+                badge_keys.append("sharp_80")
+            if overall >= 90:
+                badge_keys.append("mastery_90")
+            if lesson_free(meta):
+                badge_keys.append("book_spark" if meta["isBookCourse"] else "core_spark")
+            if total_attempts >= 3:
+                badge_keys.append("three_practices")
+            if streak >= 3:
+                badge_keys.append("streak_3")
+            if streak >= 7:
+                badge_keys.append("streak_7")
 
-    badges_earned = award_badges(conn, user["id"], badge_keys)
-    if badges_earned:
-        conn.execute(
-            "UPDATE daily_refinements SET badges_earned = badges_earned + ? WHERE user_id=? AND date=?",
-            (len(badges_earned), user["id"], today)
-        )
-        conn.execute(
-            "UPDATE practice_attempts SET badges_json=? WHERE id=?",
-            (json.dumps(badges_earned, ensure_ascii=False), attempt_id)
-        )
-    daily = conn.execute(
-        "SELECT * FROM daily_refinements WHERE user_id=? AND date=?",
-        (user["id"], today)
-    ).fetchone()
-    conn.commit()
-    conn.close()
-
-    return {
-        "success": True,
-        "attemptId": attempt_id,
-        "lesson": req.lesson,
-        "score": overall,
-        "maxScore": 100,
-        "results": results,
-        "feedback": feedback,
-        "reflection": reflection,
-        "aiAnalysis": ai_analysis,
-        "aiAnalysisStatus": ai_analysis.get("status"),
-        "aiAnalysisMessage": ai_analysis.get("message", ""),
-        "aiFollowUps": ai_analysis.get("followUps", []),
-        "badgesEarned": badges_earned,
-        "dailyRefinement": dict(daily) if daily else None,
-        "streakDays": streak,
-    }
+            badges_earned = award_badges(conn, user["id"], badge_keys)
+            if badges_earned:
+                conn.execute(
+                    "UPDATE daily_refinements SET badges_earned = badges_earned + ? WHERE user_id=? AND date=?",
+                    (len(badges_earned), user["id"], today)
+                )
+                conn.execute(
+                    "UPDATE practice_attempts SET badges_json=? WHERE id=?",
+                    (json.dumps(badges_earned, ensure_ascii=False), attempt_id)
+                )
+            daily = conn.execute(
+                "SELECT * FROM daily_refinements WHERE user_id=? AND date=?",
+                (user["id"], today)
+            ).fetchone()
+            response = {
+                "success": True,
+                "attemptId": attempt_id,
+                "lesson": req.lesson,
+                "score": overall,
+                "maxScore": 100,
+                "results": results,
+                "feedback": feedback,
+                "reflection": reflection,
+                "aiAnalysis": ai_analysis,
+                "aiAnalysisStatus": ai_analysis.get("status"),
+                "aiAnalysisMessage": ai_analysis.get("message", ""),
+                "aiFollowUps": ai_analysis.get("followUps", []),
+                "badgesEarned": badges_earned,
+                "dailyRefinement": dict(daily) if daily else None,
+                "streakDays": streak,
+            }
+            submission.complete(conn, response)
+        return response
 
 @app.get("/api/daily-refinement")
 async def get_daily_refinement(user=Depends(get_current_user)):

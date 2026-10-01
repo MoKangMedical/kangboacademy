@@ -27,7 +27,8 @@ function request(url, options = {}) {
  url: url.startsWith('http') ? url : API_URL + url,
  method,
  data,
- timeout: 15000,
+ timeout: Number.isInteger(options.timeout) && options.timeout >= 1000 && options.timeout <= 60000
+  ? options.timeout : 15000,
  header: {
  'Content-Type': 'application/json',
  ...header
@@ -36,12 +37,15 @@ function request(url, options = {}) {
  if (res.statusCode >= 200 && res.statusCode < 300) {
  resolve(res.data);
  } else if (res.statusCode === 401) {
+ // A response from an older session must not log out a newer login.
+ if (token && wx.getStorageSync('token') === token) {
  wx.removeStorageSync('token');
  wx.removeStorageSync('userInfo');
  const app = typeof getApp === 'function' ? getApp() : null;
  if (app && app.globalData) {
  app.globalData.isLogin = false;
  app.globalData.userInfo = null;
+ }
  }
  reject(new Error('登录已过期'));
  } else {
@@ -259,10 +263,13 @@ function getPractice(lesson) {
  * 提交课程互动练习
  */
 async function submitPractice(lesson, answers, reflection = '') {
+ const { practiceSubmissionPayload, withSubmissionId } = require('./practice-submission');
+ const payload = practiceSubmissionPayload(lesson, answers, reflection);
  await confirmAIProcessing('practice');
  return request('/practice/submit', {
  method: 'POST',
- data: { lesson, answers, reflection }
+ timeout: 40000,
+ data: withSubmissionId(payload)
  });
 }
 

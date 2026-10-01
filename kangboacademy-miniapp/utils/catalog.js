@@ -1,4 +1,4 @@
-const CONTRACT = require('../data/content-contract.json');
+const CONTRACT = require('../data/content-contract');
 const BOOK_LABELS = {};
 CONTRACT.categoryOrder.forEach(key => { BOOK_LABELS[key] = CONTRACT.categories[key]; });
 const metadata = new Map(CONTRACT.courses.map(course => [course.key, course]));

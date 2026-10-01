@@ -18,8 +18,9 @@
  <text>{{audioPlaying ? '暂停' : '播放'}}</text>
  </view>
  <view class="audio-info">
- <text class="audio-label">{{isBookCourse ? '书目课程音频' : '主干课程音频'}}</text>
+ <text class="audio-label">{{isBookCourse ? '书目音频导读' : '主干课程音频导读'}}</text>
  <text class="audio-title">{{audioTitle}}</text>
+ <text class="audio-state">音频用于导读与复习，完整课程请阅读下方正文。</text>
  <text class="audio-state" wx:if="{{audioLoading}}">正在加载...</text>
  <text class="audio-state error" wx:elif="{{audioError}}">{{audioError}}</text>
  <text class="audio-state" wx:else>{{audioPlaying ? '播放中' : '点击播放'}}</text>
@@ -91,7 +92,7 @@
  </view>
 
  <!-- 互动练习 -->
- <view class="practice-section px" wx:if="{{!loading && !error && !locked && (practiceLoading || practiceQuestions.length)}}">
+ <view class="practice-section px" wx:if="{{!loading && !error && !locked && (practiceLoading || practiceQuestions.length || practiceError)}}">
  <view class="practice-card">
  <view class="practice-head">
  <view>
@@ -110,6 +111,11 @@
 
  <view class="practice-loading" wx:if="{{practiceLoading}}">
  <text class="text-muted">正在生成互动练习...</text>
+ </view>
+
+ <view class="practice-error" wx:if="{{practiceError}}">
+ <text>{{practiceError}}</text>
+ <view class="btn btn-ghost" bindtap="retryPractice">重新加载练习</view>
  </view>
 
  <view class="question-card" wx:for="{{practiceQuestions}}" wx:key="id">

@@ -8,6 +8,7 @@ function mockWx(decision) {
  global.wx = {
  hideLoading() {},
  getStorageSync() { return ''; },
+ setStorageSync() {},
  showModal(options) {
  dialogs.push(options);
  if (decision === 'fail') options.fail();
@@ -47,7 +48,9 @@ test('practice consent sends the original payload exactly once', async () => {
  await api.submitPractice('book1.html', answers, 'reflection');
  assert.equal(state.requests.length, 1);
  assert.match(state.requests[0].url, /\/practice\/submit$/);
- assert.deepEqual(state.requests[0].data, { lesson: 'book1.html', answers, reflection: 'reflection' });
+ const { submission_id, ...payload } = state.requests[0].data;
+ assert.match(submission_id, /^practice-/);
+ assert.deepEqual(payload, { lesson: 'book1.html', answers, reflection: 'reflection' });
 });
 
 test('agent requests obtain consent each time', async () => {

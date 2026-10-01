@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>书目课程 — 康波研究院</title>
+<meta name="description" content="康波研究院推荐书目精读课程：500本经典著作的深度解读，涵盖周期理论、投资哲学、风险管理等12大领域。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+ --bg:#07070a; --bg2:#0d0d14; --bg3:#12121a;
+ --card:#15151c; --card2:#1c1c24; --card3:#1e1e27;
+ --border:#2c2c38; --border2:#3a3a48;
+ --text:#f5f5f7; --text2:#b5b5c2; --text3:#7a7a88;
+ --gold:#e2b64f; --gold-light:#f0d478; --gold-dark:#b8922e;
+ --serif:'Noto Serif SC',serif; --sans:'Inter',-apple-system,sans-serif;
+ --radius:14px; --radius-lg:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.65;}
+a{color:inherit;text-decoration:none}
+.nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(7,7,10,.88);backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav-inner{max-width:1260px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-size:1.05rem;font-weight:700;color:var(--gold)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{font-size:.8rem;color:var(--text3);font-weight:500;padding:8px 16px;border-radius:8px;transition:all .25s}
+.nav-links a:hover,.nav-links a.active{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-links a.active{color:var(--gold)}
+
+.hero{position:relative;padding:140px 0 60px;text-align:center;overflow:hidden;background:radial-gradient(ellipse 70% 50% at 50% 25%,rgba(226,182,79,0.07) 0%,transparent 70%),radial-gradient(ellipse 60% 40% at 80% 60%,rgba(139,92,246,0.04) 0%,transparent 60%)}
+.hero-content{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 24px}
+.hero-badge{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.14em;color:var(--gold);background:rgba(226,182,79,.08);border:1px solid rgba(226,182,79,.15);padding:6px 20px;border-radius:40px;margin-bottom:24px}
+.hero h1{font-family:var(--serif);font-size:clamp(2.2rem,5vw,3.2rem);font-weight:900;line-height:1.25;margin-bottom:18px}
+.hero h1 .hl{background:linear-gradient(135deg,var(--gold) 20%,var(--gold-light) 60%,var(--gold-dark));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--text2);font-size:1.05rem;line-height:1.9;max-width:560px;margin:0 auto 36px}
+.hero-stats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.hero-stat{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px 22px;text-align:center;min-width:90px}
+.hero-stat-num{font-size:1.6rem;font-weight:800;color:var(--gold);font-family:var(--serif);line-height:1}
+.hero-stat-label{font-size:.7rem;color:var(--text3);margin-top:4px}
+
+.cat-tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;max-width:1060px;margin:0 auto 20px;padding:0 24px}
+.cat-tab{font-size:.75rem;font-weight:500;color:var(--text3);padding:6px 14px;border-radius:20px;border:1px solid var(--border);cursor:pointer;transition:all .25s;background:transparent;font-family:var(--sans)}
+.cat-tab:hover{color:var(--text);border-color:var(--border2)}
+.cat-tab.active{color:var(--gold);background:rgba(226,182,79,.08);border-color:rgba(226,182,79,.2)}
+
+.cat-section{margin-bottom:48px}
+.cat-header{display:flex;align-items:center;gap:14px;padding:18px 24px;margin:0 0 16px;border-bottom:1px solid var(--border);position:sticky;top:64px;background:rgba(7,7,10,.95);backdrop-filter:blur(20px);z-index:50}
+.cat-icon{font-size:1.6rem;flex-shrink:0;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:rgba(226,182,79,.06);border-radius:10px}
+.cat-title{font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--gold)}
+.cat-sub{font-size:.75rem;color:var(--text3);margin-top:2px}
+.cat-count{font-size:.72rem;color:var(--text3);background:var(--card2);padding:4px 12px;border-radius:20px}
+
+.course-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:8px;padding:0 24px;max-width:1260px;margin:0 auto}
+.course-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;transition:all .3s;display:flex;align-items:center;gap:14px;cursor:pointer}
+.course-card:hover{border-color:rgba(226,182,79,.2);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.course-num{font-family:var(--serif);font-size:1.1rem;font-weight:700;color:var(--gold);min-width:36px;text-align:center}
+.course-info{flex:1;min-width:0}
+.course-title{font-family:var(--serif);font-size:.95rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.course-author{font-size:.75rem;color:var(--text3);margin-top:2px}
+.course-diff{display:flex;gap:1px;flex-shrink:0}
+.diff-star{font-size:.6rem;color:var(--border2)}
+.diff-star.on{color:var(--gold)}
+
+.wave-tabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:28px;padding:0 24px}
+.wave-tab{font-size:.72rem;font-weight:500;color:var(--text3);padding:5px 12px;border-radius:16px;border:1px solid var(--border);cursor:pointer;transition:all .25s;background:transparent;font-family:var(--sans)}
+.wave-tab:hover{color:var(--text);border-color:var(--border2)}
+.wave-tab.active{color:var(--gold);background:rgba(226,182,79,.08);border-color:rgba(226,182,79,.25)}
+
+.footer{text-align:center;padding:60px 24px;color:var(--text3);font-size:.78rem;border-top:1px solid var(--border);margin-top:20px}
+
+.hidden{display:none!important}
+.no-results{text-align:center;padding:40px;color:var(--text3)}
+@media(max-width:1100px){
+ .nav-inner{height:auto;min-height:64px;flex-wrap:wrap;gap:8px;padding:12px 20px}
+ .nav-brand{flex-shrink:0}
+ .nav-links{width:100%;min-width:0;overflow-x:auto;white-space:nowrap;padding-bottom:4px}
+ .nav-links a{flex:0 0 auto;padding:7px 12px}
+ .cat-header{top:110px}
+}
+@media(max-width:768px){.course-grid{grid-template-columns:minmax(0,1fr);padding:0 16px}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+ <div class="nav-inner"><a href="index.html" class="nav-brand"><svg width="24" height="24" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="12" stroke="#e2b64f" stroke-width="1.5"/><path d="M6 18c2-6 4-8 8-10s6 2 8 6" stroke="#e2b64f" stroke-width="1.5" fill="none"/><circle cx="14" cy="12" r="2" fill="#e2b64f"/></svg>
+ 康波研究院
+ </a>
+ <div class="nav-links"><a href="knowledge-graph.html">知识图谱</a>
+ <a href="courses.html">主干课程</a>
+ <a href="books.html">推荐书目</a>
+ <a href="book-courses.html" class="active">推荐书目课程</a>
+ <a href="naval-courses/index.html">纳瓦尔100课</a>
+<a href="shuige/index.html">🎙️ 水哥课程</a>
+        <a href="learn.html">学习仪表盘</a>
+ <a href="courses.html" style="color:var(--gold)">开始学习</a>
+ <a href="brain-training/index.html">🧠 脑力训练</a>
+<a href="zhangyiming/index.html">📚 张一鸣书架</a>
+<a href="3d.html">3D探索</a>
+ </div>
+ </div>
+</nav>
+
+<section class="hero">
+ <div class="hero-content"><div class="hero-badge">精读课程 · 500本经典深度解读</div>
+ <h1>推荐书目<span class="hl">深度精读</span></h1>
+ <p>每本书都配有完整的精读课程——从作者背景到核心思想，从经典段落到实战练习。分十七波逐步扩展，从62本核心书目延伸至500本，构建完整的投资知识体系。</p>
+ <div class="hero-stats"><div class="hero-stat"><div class="hero-stat-num">500</div><div class="hero-stat-label">精读课程</div></div>
+ <div class="hero-stat"><div class="hero-stat-num">19</div><div class="hero-stat-label">知识领域</div></div>
+ <div class="hero-stat"><div class="hero-stat-num">17</div><div class="hero-stat-label">波次扩展</div></div>
+ <div class="hero-stat"><div class="hero-stat-num"></div><div class="hero-stat-label">含练习+音频</div></div>
+ </div>
+ </div>
+</section>
+
+<div class="cat-tabs" id="catTabs"><button class="cat-tab active" onclick="filterCat('all')">全部</button>
+<button class="cat-tab" onclick="filterCat('period')">周期理论</button>
+<button class="cat-tab" onclick="filterCat('invest')">投资哲学</button>
+<button class="cat-tab" onclick="filterCat('risk')"> 风险管理</button>
+<button class="cat-tab" onclick="filterCat('money')">货币金融</button>
+<button class="cat-tab" onclick="filterCat('demo')">人口经济</button>
+<button class="cat-tab" onclick="filterCat('tech')">科技创新</button>
+<button class="cat-tab" onclick="filterCat('china')">中国经济</button>
+<button class="cat-tab" onclick="filterCat('behavior')">行为金融</button>
+<button class="cat-tab" onclick="filterCat('wealth')">财富管理</button>
+<button class="cat-tab" onclick="filterCat('inequality')"> 贫富分化</button>
+<button class="cat-tab" onclick="filterCat('history')">经济金融史</button>
+<button class="cat-tab" onclick="filterCat('global')">全球宏观</button>
+<button class="cat-tab" onclick="filterCat('future')">未来经济</button>
+<button class="cat-tab" onclick="filterCat('ai')">AI与认知</button>
+<button class="cat-tab" onclick="filterCat('bio')">生物科技</button>
+<button class="cat-tab" onclick="filterCat('energy')">能源气候</button>
+<button class="cat-tab" onclick="filterCat('geo')">地缘安全</button>
+<button class="cat-tab" onclick="filterCat('science')">前沿科学</button>
+<button class="cat-tab" onclick="filterCat('east')">东方智慧</button>
+</div>
+
+<div class="wave-tabs" id="waveTabs"><button class="wave-tab active" onclick="filterWave(0)">全部十七波</button>
+<button class="wave-tab" onclick="filterWave(1)">第1波 (1-62)</button>
+<button class="wave-tab" onclick="filterWave(2)">第2波 (63-92)</button>
+<button class="wave-tab" onclick="filterWave(3)">第3波 (93-117)</button>
+<button class="wave-tab" onclick="filterWave(4)">第4波 (118-147)</button>
+<button class="wave-tab" onclick="filterWave(5)">第5波 (148-177)</button>
+<button class="wave-tab" onclick="filterWave(6)">第6波 (178-207)</button>
+<button class="wave-tab" onclick="filterWave(7)">第7波 (208-238)</button>
+<button class="wave-tab" onclick="filterWave(8)">第8波 (239-268)</button>
+<button class="wave-tab" onclick="filterWave(9)">第9波 (269-298)</button>
+<button class="wave-tab" onclick="filterWave(10)">第10波 (299-328)</button>
+<button class="wave-tab" onclick="filterWave(11)">第11波 (329-336)</button>
+<button class="wave-tab" onclick="filterWave(12)">第12波 (337-363)</button>
+<button class="wave-tab" onclick="filterWave(13)">第13波 (364-390)</button>
+<button class="wave-tab" onclick="filterWave(14)">第14波 (391-418)</button>
+<button class="wave-tab" onclick="filterWave(15)">第15波 (419-445)</button>
+<button class="wave-tab" onclick="filterWave(16)">第16波 (446-472)</button>
+<button class="wave-tab" onclick="filterWave(17)">第17波 (473-500)</button>
+</div>
+
+<div id="courseContainer"></div>
+<div class="no-results hidden" id="noResults">没有找到匹配的课程</div>
+<div class="footer"><p>康波研究院 · 书目精读课程 · 500门课 · 伴随音频讲解</p></div>
+
+<script>
+var COURSES = [
+ {n:1,t:"《经济生活中的长波》",a:"康德拉季耶夫",d:5,c:"period"},
+ {n:2,t:"《周金涛周期论集》",a:"周金涛",d:4,c:"period"},
+ {n:3,t:"《时寒冰说：未来二十年》",a:"时寒冰",d:3,c:"period"},
+ {n:4,t:"《周期》",a:"霍华德·马克斯",d:3,c:"period"},
+ {n:5,t:"《逃不开的经济周期》",a:"拉斯·特维德",d:4,c:"period"},
+ {n:6,t:"《经济发展理论》",a:"熊彼特",d:5,c:"period"},
+ {n:7,t:"《投资最重要的事》",a:"霍华德·马克斯",d:3,c:"period"},
+ {n:8,t:"《大国的兴衰》",a:"保罗·肯尼迪",d:4,c:"period"},
+ {n:9,t:"《聪明的投资者》",a:"格雷厄姆",d:3,c:"invest"},
+ {n:10,t:"《证券分析》",a:"格雷厄姆&多德",d:5,c:"invest"},
+ {n:11,t:"《巴菲特致股东的信》",a:"巴菲特",d:3,c:"invest"},
+ {n:12,t:"《穷查理宝典》",a:"芒格",d:3,c:"invest"},
+ {n:13,t:"《金融炼金术》",a:"索罗斯",d:5,c:"invest"},
+ {n:14,t:"《原则》",a:"达里奥",d:3,c:"invest"},
+ {n:15,t:"《债务危机》",a:"达里奥",d:4,c:"invest"},
+ {n:16,t:"《漫步华尔街》",a:"马尔基尔",d:3,c:"invest"},
+ {n:17,t:"《彼得·林奇的成功投资》",a:"彼得·林奇",d:3,c:"invest"},
+ {n:18,t:"《股市长线法宝》",a:"西格尔",d:3,c:"invest"},
+ {n:19,t:"《黑天鹅》",a:"塔勒布",d:3,c:"risk"},
+ {n:20,t:"《反脆弱》",a:"塔勒布",d:3,c:"risk"},
+ {n:21,t:"《随机漫步的傻瓜》",a:"塔勒布",d:3,c:"risk"},
+ {n:22,t:"《非对称风险》",a:"塔勒布",d:4,c:"risk"},
+ {n:23,t:"《金钱心理学》",a:"豪泽尔",d:3,c:"risk"},
+ {n:24,t:"《货币战争》",a:"宋鸿兵",d:2,c:"money"},
+ {n:25,t:"《就业、利息和货币通论》",a:"凯恩斯",d:5,c:"money"},
+ {n:26,t:"《赤字神话》",a:"凯尔顿",d:3,c:"money"},
+ {n:27,t:"《人的行为》",a:"米塞斯",d:5,c:"money"},
+ {n:28,t:"《通往奴役之路》",a:"哈耶克",d:4,c:"money"},
+ {n:29,t:"《大贬值》",a:"巴拉塔",d:3,c:"money"},
+ {n:30,t:"《稳定不稳定的经济》",a:"明斯基",d:5,c:"money"},
+ {n:31,t:"《资本论》",a:"马克思",d:5,c:"money"},
+ {n:32,t:"《货币金融学》",a:"米什金",d:4,c:"money"},
+ {n:33,t:"《人口峭壁》",a:"Dent",d:2,c:"demo"},
+ {n:34,t:"《百岁人生》",a:"格拉顿&斯科特",d:3,c:"demo"},
+ {n:35,t:"《注定一战》",a:"艾利森",d:3,c:"demo"},
+ {n:36,t:"《世界秩序》",a:"基辛格",d:4,c:"demo"},
+ {n:37,t:"《置身事内》",a:"兰小欢",d:3,c:"china"},
+ {n:38,t:"《激荡三十年》",a:"吴晓波",d:3,c:"china"},
+ {n:39,t:"《薛兆丰经济学讲义》",a:"薛兆丰",d:2,c:"china"},
+ {n:40,t:"《大国大城》",a:"陆铭",d:3,c:"china"},
+ {n:41,t:"《变量》系列",a:"何帆",d:2,c:"china"},
+ {n:42,t:"《大败局》",a:"吴晓波",d:3,c:"china"},
+ {n:43,t:"《思考，快与慢》",a:"卡尼曼",d:4,c:"behavior"},
+ {n:44,t:"《影响力》",a:"西奥迪尼",d:3,c:"behavior"},
+ {n:45,t:"《非理性繁荣》",a:"席勒",d:4,c:"behavior"},
+ {n:46,t:"《富爸爸穷爸爸》",a:"清崎",d:1,c:"wealth"},
+ {n:47,t:"《财务自由之路》",a:"舍费尔",d:2,c:"wealth"},
+ {n:48,t:"《小狗钱钱》",a:"舍费尔",d:1,c:"wealth"},
+ {n:49,t:"《指数基金投资指南》",a:"银行螺丝钉",d:2,c:"wealth"},
+ {n:50,t:"《奇点临近》",a:"库兹韦尔",d:3,c:"tech"},
+ {n:51,t:"《生命3.0》",a:"泰格马克",d:4,c:"tech"},
+ {n:52,t:"《AI Superpowers》",a:"李开复",d:2,c:"tech"},
+ {n:53,t:"《21世纪资本论》",a:"皮凯蒂",d:4,c:"inequality"},
+ {n:54,t:"《贫穷的本质》",a:"巴纳吉&迪弗洛",d:3,c:"inequality"},
+ {n:55,t:"《这次不一样》",a:"莱因哈特&罗格夫",d:4,c:"history"},
+ {n:56,t:"《嚣张的特权》",a:"埃肯格林",d:4,c:"history"},
+ {n:57,t:"《货币的上升》",a:"弗格森",d:4,c:"history"},
+ {n:58,t:"《大癫狂》",a:"麦基",d:3,c:"history"},
+ {n:59,t:"《经济学原理》",a:"曼昆",d:3,c:"global"},
+ {n:60,t:"《布雷顿森林之战》",a:"斯泰尔",d:4,c:"global"},
+ {n:61,t:"《时运变迁》",a:"沃尔克",d:4,c:"global"},
+ {n:62,t:"《大衰退》",a:"辜朝明",d:4,c:"global"},
+ {n:63,t:"《房债》",a:"迈恩&苏菲",d:3,c:"risk"},
+ {n:64,t:"《国富论》",a:"亚当·斯密",d:5,c:"money"},
+ {n:65,t:"《枪炮、病菌与钢铁》",a:"戴蒙德",d:4,c:"history"},
+ {n:66,t:"《激荡十年》",a:"吴晓波",d:3,c:"china"},
+ {n:67,t:"《智能商业》",a:"曾鸣",d:3,c:"tech"},
+ {n:68,t:"《平台革命》",a:"帕克",d:3,c:"tech"},
+ {n:69,t:"《监控资本主义时代》",a:"祖博夫",d:4,c:"tech"},
+ {n:70,t:"《索罗斯传》",a:"斯莱特",d:3,c:"history"},
+ {n:71,t:"《谈判力》",a:"费舍尔",d:2,c:"wealth"},
+ {n:72,t:"《黑客与画家》",a:"格雷厄姆",d:3,c:"tech"},
+ {n:73,t:"《魔鬼经济学》",a:"列维特",d:2,c:"behavior"},
+ {n:74,t:"《牛奶可乐经济学》",a:"弗兰克",d:2,c:"behavior"},
+ {n:75,t:"《邓小平时代》",a:"傅高义",d:4,c:"china"},
+ {n:76,t:"《稀缺》",a:"穆来纳森",d:3,c:"behavior"},
+ {n:77,t:"《数字黄金》",a:"波普尔",d:3,c:"tech"},
+ {n:78,t:"《数字货币时代》",a:"普拉萨德",d:3,c:"tech"},
+ {n:79,t:"《人类兼容》",a:"罗素",d:4,c:"tech"},
+ {n:80,t:"《气候经济与人类未来》",a:"盖茨",d:3,c:"tech"},
+ {n:81,t:"《碳中和经济学》",a:"中金公司",d:4,c:"tech"},
+ {n:82,t:"《ESG投资》",a:"希尔",d:3,c:"tech"},
+ {n:83,t:"《不上班也有钱》",a:"曾婉琳",d:2,c:"wealth"},
+ {n:84,t:"《巴比伦最富有的人》",a:"克雷森",d:1,c:"wealth"},
+ {n:85,t:"《对冲基金风云录》",a:"比格斯",d:3,c:"invest"},
+ {n:86,t:"《投资中最简单的事》",a:"邱国鹭",d:3,c:"invest"},
+ {n:87,t:"《巴菲特的护城河》",a:"多尔西",d:3,c:"invest"},
+ {n:88,t:"《芯片战争》",a:"米勒",d:3,c:"tech"},
+ {n:89,t:"《货币的非国家化》",a:"哈耶克",d:4,c:"money"},
+ {n:90,t:"《洛克菲勒家族传》",a:"切尔诺",d:3,c:"history"},
+ {n:91,t:"《李嘉诚传》",a:"冯邦彦",d:3,c:"history"},
+ {n:92,t:"《The Sovereign Individual》",a:"戴维森&里斯·莫格",d:4,c:"invest"},
+ {n:93,t:"《以利为利》",a:"周飞舟",d:4,c:"china"},
+ {n:94,t:"《转型中的地方政府》",a:"周黎安",d:4,c:"china"},
+ {n:95,t:"《城投再来》",a:"李奇霖",d:3,c:"china"},
+ {n:96,t:"《中国经济增长十年展望》",a:"刘世锦",d:4,c:"china"},
+ {n:97,t:"《金融科技》",a:"陈龙",d:3,c:"tech"},
+ {n:98,t:"《超级智能》",a:"波斯特洛姆",d:4,c:"tech"},
+ {n:99,t:"《奇点更近了》",a:"库兹韦尔",d:4,c:"tech"},
+ {n:100,t:"《黄金简史》",a:"伯恩斯坦",d:3,c:"money"},
+ {n:101,t:"《精通比特币》",a:"安东诺普洛斯",d:4,c:"money"},
+ {n:102,t:"《The Bitcoin Standard》",a:"阿莫斯",d:3,c:"money"},
+ {n:103,t:"《当音乐停止之后》",a:"布林德",d:4,c:"risk"},
+ {n:104,t:"《美元陷阱》",a:"普拉萨德",d:3,c:"money"},
+ {n:105,t:"《大棋局》",a:"布热津斯基",d:4,c:"history"},
+ {n:106,t:"《新版图：能源气候与国家冲突》",a:"耶金",d:4,c:"demo"},
+ {n:107,t:"《第二曲线》",a:"汉迪",d:3,c:"tech"},
+ {n:108,t:"《乡土中国》",a:"费孝通",d:3,c:"china"},
+ {n:109,t:"《世界贸易战》",a:"余永定",d:3,c:"history"},
+ {n:110,t:"《文明的抉择》",a:"赫德森",d:4,c:"history"},
+ {n:111,t:"《宏观经济学》",a:"布兰查德",d:4,c:"invest"},
+ {n:112,t:"《全球资产配置》",a:"安格",d:4,c:"invest"},
+ {n:113,t:"《有效资产管理》",a:"伯恩斯坦",d:3,c:"invest"},
+ {n:114,t:"《投资金律》",a:"伯恩斯坦",d:3,c:"invest"},
+ {n:115,t:"《房地产周期》",a:"任泽平",d:3,c:"invest"},
+ {n:116,t:"《行为金融学》",a:"史莱佛",d:4,c:"behavior"},
+ {n:117,t:"《投资心理学》",a:"诺夫辛格",d:3,c:"behavior"},
+ {n:118,t:"《价格与生产》",a:"哈耶克",d:5,c:"invest"},
+ {n:119,t:"《风险的真相》",a:"伯恩斯坦",d:3,c:"risk"},
+ {n:120,t:"《理解现代货币》",a:"雷",d:4,c:"money"},
+ {n:121,t:"《七大致命的无辜欺诈》",a:"哈德森",d:4,c:"risk"},
+ {n:122,t:"《贫穷的资本主义》",a:"德索托",d:4,c:"invest"},
+ {n:123,t:"《助推》",a:"泰勒",d:3,c:"behavior"},
+ {n:124,t:"《注意力商人》",a:"吴修铭",d:3,c:"tech"},
+ {n:125,t:"《美国货币史》",a:"弗里德曼",d:5,c:"history"},
+ {n:126,t:"《致命的自负》",a:"哈耶克",d:5,c:"money"},
+ {n:127,t:"《知识在社会中的运用》",a:"哈耶克",d:4,c:"money"},
+ {n:128,t:"《货币与信用理论》",a:"米塞斯",d:5,c:"money"},
+ {n:129,t:"《凯恩斯传》",a:"斯基德尔斯基",d:4,c:"history"},
+ {n:130,t:"《共产党宣言》",a:"马克思&恩格斯",d:4,c:"money"},
+ {n:131,t:"《人口负增长时代》",a:"蔡昉",d:3,c:"demo"},
+ {n:132,t:"《人口战略》",a:"梁建章",d:3,c:"demo"},
+ {n:133,t:"《世界经济千年史》",a:"麦迪森",d:4,c:"history"},
+ {n:134,t:"《伯罗奔尼撒战争史》",a:"修昔底德",d:5,c:"history"},
+ {n:135,t:"《超级大国》",a:"扎卡里亚",d:3,c:"history"},
+ {n:136,t:"《美国世纪》",a:"埃文斯",d:3,c:"history"},
+ {n:137,t:"《期权期货及其他衍生产品》",a:"赫尔",d:5,c:"invest"},
+ {n:138,t:"《发展经济学》",a:"托达罗",d:4,c:"invest"},
+ {n:139,t:"《保险的智慧》",a:"杨帆",d:2,c:"wealth"},
+ {n:140,t:"《养老金革命》",a:"德鲁克",d:3,c:"wealth"},
+ {n:141,t:"《绿色金融》",a:"马骏",d:3,c:"invest"},
+ {n:142,t:"《博弈论与经济行为》",a:"冯·诺依曼",d:5,c:"invest"},
+ {n:143,t:"《索罗斯论索罗斯》",a:"索罗斯",d:4,c:"invest"},
+ {n:144,t:"《经济机器是怎样运行的》",a:"达里奥",d:3,c:"invest"},
+ {n:145,t:"《走在曲线之前》",a:"埃利斯",d:3,c:"invest"},
+ {n:146,t:"《沃伦·巴菲特的管理课》",a:"坎宁安",d:3,c:"invest"},
+ {n:147,t:"《投资的四大支柱》",a:"伯恩斯坦",d:3,c:"invest"},
+ {n:148,t:"《货币论》",a:"凯恩斯",d:5,c:"money"},
+ {n:149,t:"《自由秩序原理》",a:"哈耶克",d:5,c:"money"},
+ {n:150,t:"《奥地利学派经济学入门》",a:"泰勒",d:4,c:"money"},
+ {n:151,t:"《就业保障》",a:"切尔内娃",d:3,c:"money"},
+ {n:152,t:"《国家货币理论》",a:"克纳普",d:5,c:"money"},
+ {n:153,t:"《机器人的崛起》",a:"福特",d:3,c:"tech"},
+ {n:154,t:"《AI 2041》",a:"李开复",d:3,c:"tech"},
+ {n:155,t:"《DeFi与金融的未来》",a:"哈维",d:3,c:"tech"},
+ {n:156,t:"《货币的未来》",a:"普拉萨德",d:3,c:"money"},
+ {n:157,t:"《原则：应对变化中的世界秩序》",a:"达里奥",d:4,c:"demo"},
+ {n:158,t:"《Currency Wars》",a:"里卡兹",d:3,c:"money"},
+ {n:159,t:"《资本与意识形态》",a:"皮凯蒂",d:5,c:"inequality"},
+ {n:160,t:"《不平等社会》",a:"谢德尔",d:4,c:"inequality"},
+ {n:161,t:"《富人的阴谋》",a:"清崎",d:2,c:"wealth"},
+ {n:162,t:"《家族财富传承》",a:"休斯",d:3,c:"wealth"},
+ {n:163,t:"《财富的逻辑》",a:"陈志武",d:3,c:"wealth"},
+ {n:164,t:"《可持续金融》",a:"肖恩菲尔德",d:3,c:"wealth"},
+ {n:165,t:"《最优退休投资策略》",a:"米尔夫斯基",d:3,c:"wealth"},
+ {n:166,t:"《社会主义的经济计算》",a:"米塞斯",d:5,c:"money"},
+ {n:167,t:"《人口变迁的地缘政治后果》",a:"杰克逊",d:4,c:"demo"},
+ {n:168,t:"《世界人口展望2022》",a:"联合国",d:3,c:"demo"},
+ {n:169,t:"《二十一世纪的资本》",a:"皮凯蒂",d:4,c:"inequality"},
+ {n:170,t:"《经济学的思维方式》",a:"索维尔",d:3,c:"money"},
+ {n:171,t:"《美元与国家安全》",a:"科恩",d:4,c:"money"},
+ {n:172,t:"《Guide to Investing in Gold and Silver》",a:"马洛尼",d:3,c:"money"},
+ {n:173,t:"《Dangerous Markets》",a:"巴顿",d:4,c:"money"},
+ {n:174,t:"《信用创造与商业周期》",a:"米塞斯",d:5,c:"money"},
+ {n:175,t:"《投资丛林》",a:"法伯",d:3,c:"global"},
+ {n:176,t:"《坏血》",a:"卡雷鲁",d:2,c:"history"},
+ {n:177,t:"《黑天鹅》续篇",a:"塔勒布",d:3,c:"risk"},
+ {n:178,t:"《达利欧2026大周期研判》",a:"达利欧",d:4,c:"period"},
+ {n:179,t:"《乌合之众》",a:"勒庞",d:3,c:"behavior"},
+ {n:180,t:"《噪声》",a:"卡尼曼",d:4,c:"behavior"},
+ {n:181,t:"《错误的行为》",a:"泰勒",d:3,c:"behavior"},
+ {n:182,t:"《赢家的诅咒》",a:"泰勒",d:3,c:"behavior"},
+ {n:183,t:"《动物精神》",a:"阿克洛夫&席勒",d:4,c:"behavior"},
+ {n:184,t:"《超预测》",a:"泰特洛克",d:3,c:"invest"},
+ {n:185,t:"《信号与噪声》",a:"西尔弗",d:4,c:"behavior"},
+ {n:186,t:"《灰犀牛》",a:"渥克",d:3,c:"risk"},
+ {n:187,t:"《疯狗浪》",a:"布里尔",d:3,c:"risk"},
+ {n:188,t:"《创新者的窘境》",a:"克里斯坦森",d:4,c:"tech"},
+ {n:189,t:"《从0到1》",a:"蒂尔",d:3,c:"tech"},
+ {n:190,t:"《精益创业》",a:"莱斯",d:3,c:"tech"},
+ {n:191,t:"《思考致富》",a:"希尔",d:2,c:"wealth"},
+ {n:192,t:"《异类》",a:"格拉德威尔",d:2,c:"wealth"},
+ {n:193,t:"《掌控习惯》",a:"克利尔",d:2,c:"wealth"},
+ {n:194,t:"《人类简史》",a:"赫拉利",d:3,c:"history"},
+ {n:195,t:"《未来简史》",a:"赫拉利",d:3,c:"history"},
+ {n:196,t:"《大幻灭》",a:"拉詹",d:4,c:"risk"},
+ {n:197,t:"《极端经济》",a:"戴维斯",d:3,c:"risk"},
+ {n:198,t:"《自私的基因》",a:"道金斯",d:3,c:"wealth"},
+ {n:199,t:"《少有人走的路》",a:"派克",d:2,c:"wealth"},
+ {n:200,t:"《纳瓦尔宝典》",a:"乔根森",d:2,c:"wealth"},
+ {n:201,t:"《活出生命的意义》",a:"弗兰克尔",d:3,c:"wealth"},
+ {n:202,t:"《影响力方程式》",a:"布罗根",d:2,c:"behavior"},
+ {n:203,t:"《刻意练习》",a:"埃里克森",d:3,c:"wealth"},
+ {n:204,t:"《精要主义》",a:"麦基翁",d:2,c:"wealth"},
+ {n:205,t:"《反直觉思考》",a:"瓦茨",d:3,c:"behavior"},
+ {n:206,t:"《选择的悖论》",a:"施瓦茨",d:3,c:"behavior"},
+ {n:207,t:"《复利的习惯》",a:"萨巴蒂尔",d:2,c:"wealth"},
+ {n:208,t:"《B.AI与去中心化自治经济》",a:"孙宇晨",d:4,c:"future"},
+ {n:209,t:"《Web3与去中心化经济》",a:"加文·伍德",d:4,c:"future"},
+ {n:210,t:"《元宇宙经济学》",a:"马修·鲍尔",d:3,c:"future"},
+ {n:211,t:"《GPT经济学》",a:"布莱恩约弗森",d:4,c:"future"},
+ {n:212,t:"《数字货币与CBDC》",a:"国际清算银行",d:4,c:"future"},
+ {n:213,t:"《量子计算与金融未来》",a:"MIT科技评论",d:5,c:"future"},
+ {n:214,t:"《碳中和经济学》",a:"诺德豪斯",d:4,c:"future"},
+ {n:215,t:"《太空经济的商业逻辑》",a:"Space Capital",d:3,c:"future"},
+ {n:216,t:"《长寿经济与生物革命》",a:"辛克莱",d:4,c:"future"},
+ {n:217,t:"《再生金融ReFi》",a:"Gitcoin社区",d:4,c:"future"},
+ {n:218,t:"《去中心化科学DeSci》",a:"VitaDAO",d:4,c:"future"},
+ {n:219,t:"《数据主权与个人AI》",a:"微软研究院",d:4,c:"future"},
+ {n:220,t:"《自动驾驶经济学》",a:"特斯拉/Waymo",d:3,c:"future"},
+ {n:221,t:"《合成生物学产业》",a:"乔治·丘奇",d:5,c:"future"},
+ {n:222,t:"《网络国家与数字主权》",a:"巴拉吉",d:4,c:"future"},
+ {n:223,t:"《AI安全与对齐》",a:"斯图尔特·罗素",d:5,c:"future"},
+ {n:224,t:"《零知识证明与隐私经济》",a:"zcash基金会",d:5,c:"future"},
+ {n:225,t:"《代币化经济全面解析》",a:"Coinbase研究院",d:4,c:"future"},
+ {n:226,t:"《创作者经济3.0》",a:"Substack",d:3,c:"future"},
+ {n:227,t:"《循环经济与产业重构》",a:"麦克阿瑟基金会",d:3,c:"future"},
+ {n:228,t:"《主权个人与加密自由》",a:"戴维森",d:4,c:"future"},
+ {n:229,t:"《DeFi协议与金融工程》",a:"Uniswap",d:5,c:"future"},
+ {n:230,t:"《绿色能源与经济转型》",a:"国际能源署",d:3,c:"future"},
+ {n:231,t:"《机器人经济》",a:"波士顿动力",d:3,c:"future"},
+ {n:232,t:"《注意力经济与算法社会》",a:"特里斯坦·哈里斯",d:3,c:"future"},
+ {n:233,t:"《气候金融与碳市场》",a:"世界银行",d:4,c:"future"},
+ {n:234,t:"《脑机接口商业化》",a:"Neuralink",d:5,c:"future"},
+ {n:235,t:"《边缘计算与分布式云》",a:"Akamai",d:4,c:"future"},
+ {n:236,t:"《AI agent经济全景》",a:"OpenAI/Anthropic",d:4,c:"future"},
+ {n:237,t:"《后稀缺经济学》",a:"杰里米·里夫金",d:4,c:"future"},
+ {n:238,t:"《第六轮康波：2025-2075》",a:"康波研究院",d:4,c:"future"},
+ {n:239,t:"《因子投资实战》",a:"安德鲁·安",d:5,c:"invest"},
+ {n:240,t:"《量化交易从入门到实战》",a:"欧内斯特·陈",d:4,c:"invest"},
+ {n:241,t:"《期权波动率与定价》",a:"谢尔登·纳坦恩伯格",d:5,c:"invest"},
+ {n:242,t:"《期货市场技术分析》",a:"约翰·墨菲",d:4,c:"invest"},
+ {n:243,t:"《对冲基金策略全解》",a:"安德鲁·罗",d:5,c:"invest"},
+ {n:244,t:"《私募股权与风险投资》",a:"乔希·勒纳",d:4,c:"invest"},
+ {n:245,t:"《全球宏观交易策略》",a:"格雷格·格里森",d:5,c:"global"},
+ {n:246,t:"《固定收益投资手册》",a:"弗兰克·法博齐",d:5,c:"money"},
+ {n:247,t:"《大宗商品投资指南》",a:"约翰·斯蒂芬森",d:4,c:"invest"},
+ {n:248,t:"《房地产投资信托REITs》",a:"拉尔夫·布洛克",d:3,c:"invest"},
+ {n:249,t:"《可转债与结构化产品》",a:"迈克尔·谢里丹",d:4,c:"invest"},
+ {n:250,t:"《市场微观结构》",a:"莫琳·奥哈拉",d:5,c:"invest"},
+ {n:251,t:"《行为投资学》",a:"詹姆斯·蒙蒂尔",d:4,c:"behavior"},
+ {n:252,t:"《极端事件与尾部风险管理》",a:"纳西姆·塔勒布",d:5,c:"risk"},
+ {n:253,t:"《全球资产配置》",a:"梅班·费伯",d:4,c:"global"},
+ {n:254,t:"《新兴市场投资》",a:"马克·莫比乌斯",d:4,c:"global"},
+ {n:255,t:"《危机投资学》",a:"约翰·保尔森",d:5,c:"risk"},
+ {n:256,t:"《ESG投资实践》",a:"萨蒂亚吉特·博斯",d:3,c:"global"},
+ {n:257,t:"《加密货币投资策略》",a:"克里斯·伯尼斯克",d:4,c:"tech"},
+ {n:258,t:"《另类数据投资》",a:"吉恩·埃文斯",d:5,c:"tech"},
+ {n:259,t:"《投资组合构建与优化》",a:"理查德·格林诺德",d:5,c:"invest"},
+ {n:260,t:"《资产定价理论》",a:"约翰·科克伦",d:5,c:"invest"},
+ {n:261,t:"《央行货币政策解析》",a:"本·伯南克",d:5,c:"money"},
+ {n:262,t:"《主权债务危机》",a:"卡门·莱因哈特",d:4,c:"risk"},
+ {n:263,t:"《金融衍生品实务》",a:"约翰·赫尔",d:5,c:"invest"},
+ {n:264,t:"《价值投资2.0》",a:"托拜厄斯·卡莱尔",d:4,c:"invest"},
+ {n:265,t:"《成长股投资方法论》",a:"彼得·林奇",d:3,c:"invest"},
+ {n:266,t:"《分红投资策略》",a:"杰里米·西格尔",d:3,c:"wealth"},
+ {n:267,t:"《全球央行数字货币竞赛》",a:"国际清算银行",d:4,c:"money"},
+ {n:268,t:"《投资大师失败录》",a:"约翰·特雷恩",d:3,c:"risk"},
+ {n:269,t:"《竞争战略》",a:"迈克尔·波特",d:4,c:"invest"},
+ {n:270,t:"《创新者的窘境》",a:"克里斯坦森",d:4,c:"tech"},
+ {n:271,t:"《从0到1》",a:"彼得·蒂尔",d:3,c:"invest"},
+ {n:272,t:"《精益创业》",a:"埃里克·莱斯",d:3,c:"invest"},
+ {n:273,t:"《蓝海战略》",a:"W·钱·金",d:3,c:"invest"},
+ {n:274,t:"《好战略，坏战略》",a:"鲁梅尔特",d:4,c:"invest"},
+ {n:275,t:"《第五项修炼》",a:"彼得·圣吉",d:4,c:"behavior"},
+ {n:276,t:"《系统之美》",a:"德内拉·梅多斯",d:4,c:"behavior"},
+ {n:277,t:"《思考，快与慢》实战篇",a:"丹尼尔·卡尼曼",d:3,c:"behavior"},
+ {n:278,t:"《噪声》",a:"丹尼尔·卡尼曼",d:4,c:"behavior"},
+ {n:279,t:"《瞬变》",a:"奇普·希思",d:3,c:"behavior"},
+ {n:280,t:"《影响力》深度应用",a:"西奥迪尼",d:3,c:"behavior"},
+ {n:281,t:"《谈判力》",a:"罗杰·费希尔",d:3,c:"behavior"},
+ {n:282,t:"《高难度谈话》",a:"道格拉斯·斯通",d:3,c:"behavior"},
+ {n:283,t:"《高效能人士的七个习惯》",a:"史蒂芬·柯维",d:3,c:"wealth"},
+ {n:284,t:"《原则》企业实践",a:"瑞·达利欧",d:4,c:"invest"},
+ {n:285,t:"《赋能》",a:"麦克里斯特尔",d:3,c:"behavior"},
+ {n:286,t:"《重新定义公司》",a:"埃里克·施密特",d:3,c:"tech"},
+ {n:287,t:"《奈飞文化手册》",a:"帕蒂·麦考德",d:3,c:"behavior"},
+ {n:288,t:"《不拘一格》",a:"里德·哈斯廷斯",d:3,c:"behavior"},
+ {n:289,t:"《闪电式扩张》",a:"里德·霍夫曼",d:4,c:"tech"},
+ {n:290,t:"《平台革命》",a:"杰奥夫雷·帕克",d:4,c:"tech"},
+ {n:291,t:"《商业模式新生代》",a:"奥斯特瓦德",d:3,c:"invest"},
+ {n:292,t:"《指数型组织》",a:"萨利姆·伊斯梅尔",d:4,c:"tech"},
+ {n:293,t:"《创业维艰》",a:"本·霍洛维茨",d:3,c:"invest"},
+ {n:294,t:"《联盟》",a:"里德·霍夫曼",d:3,c:"behavior"},
+ {n:295,t:"《关键对话》",a:"科里·帕特森",d:3,c:"behavior"},
+ {n:296,t:"《掌控习惯》",a:"詹姆斯·克利尔",d:3,c:"wealth"},
+ {n:297,t:"《深度工作》",a:"卡尔·纽波特",d:3,c:"wealth"},
+ {n:298,t:"《商业冒险》",a:"约翰·布鲁克斯",d:3,c:"invest"},
+ {n:299,t:"《苏东坡传》",a:"林语堂",d:3,c:"history"},
+ {n:300,t:"《邓小平时代》",a:"傅高义",d:4,c:"history"},
+ {n:301,t:"《史蒂夫·乔布斯传》",a:"艾萨克森",d:3,c:"history"},
+ {n:302,t:"《穷查理宝典》深度篇",a:"查理·芒格",d:4,c:"history"},
+ {n:303,t:"《滚雪球：巴菲特传》",a:"艾丽斯·施罗德",d:3,c:"history"},
+ {n:304,t:"《洛克菲勒传》",a:"罗恩·切尔诺",d:4,c:"history"},
+ {n:305,t:"《摩根财团》",a:"罗恩·切尔诺",d:5,c:"history"},
+ {n:306,t:"《罗斯柴尔德家族》",a:"弗格森",d:5,c:"history"},
+ {n:307,t:"《凯恩斯传》",a:"斯基德尔斯基",d:5,c:"history"},
+ {n:308,t:"《弗里德曼传》",a:"埃本斯坦",d:4,c:"history"},
+ {n:309,t:"《亚当·斯密传》",a:"伊恩·罗斯",d:4,c:"history"},
+ {n:310,t:"《马克思传》",a:"弗朗西斯·惠恩",d:4,c:"history"},
+ {n:311,t:"《丘吉尔传》",a:"安德鲁·罗伯茨",d:4,c:"history"},
+ {n:312,t:"《拿破仑传》",a:"路德维希",d:3,c:"history"},
+ {n:313,t:"《成吉思汗与世界》",a:"韦瑟福德",d:3,c:"history"},
+ {n:314,t:"《万历十五年》",a:"黄仁宇",d:4,c:"history"},
+ {n:315,t:"《枪炮、病菌与钢铁》",a:"戴蒙德",d:4,c:"history"},
+ {n:316,t:"《人类简史》",a:"赫拉利",d:3,c:"history"},
+ {n:317,t:"《未来简史》",a:"赫拉利",d:3,c:"history"},
+ {n:318,t:"《今日简史》",a:"赫拉利",d:3,c:"history"},
+ {n:319,t:"《丝绸之路》",a:"弗兰科潘",d:4,c:"history"},
+ {n:320,t:"《崩溃》",a:"戴蒙德",d:4,c:"history"},
+ {n:321,t:"《大分流》",a:"彭慕兰",d:5,c:"history"},
+ {n:322,t:"《棉花帝国》",a:"斯文·贝克特",d:4,c:"history"},
+ {n:323,t:"《哥伦布大交换》",a:"克罗斯比",d:3,c:"history"},
+ {n:324,t:"《第三次工业革命》",a:"里夫金",d:3,c:"history"},
+ {n:325,t:"《美国四百年》",a:"斯里尼瓦桑",d:4,c:"history"},
+ {n:326,t:"《日本第一》",a:"傅高义",d:3,c:"history"},
+ {n:327,t:"《李光耀观天下》",a:"李光耀",d:4,c:"history"},
+ {n:328,t:"《注定一战》深度篇",a:"艾利森",d:4,c:"history"},
+ {n:329,t:"《失控》",a:"凯文·凯利",d:4,c:"tech"},
+ {n:330,t:"《必然》",a:"凯文·凯利",d:3,c:"tech"},
+ {n:331,t:"《科技想要什么》",a:"凯文·凯利",d:4,c:"tech"},
+ {n:332,t:"《新经济新规则》",a:"凯文·凯利",d:3,c:"tech"},
+ {n:333,t:"《宝贵的人生建议》",a:"凯文·凯利",d:2,c:"tech"},
+ {n:334,t:"《技术元素》",a:"凯文·凯利",d:3,c:"tech"},
+ {n:335,t:"《酷工具》",a:"凯文·凯利",d:2,c:"tech"},
+ {n:336,t:"《1000个铁杆粉丝》",a:"凯文·凯利",d:3,c:"invest"},
+ {n:337,t:"《人工智能：一种现代方法》",a:"斯图尔特·罗素",d:4,c:"ai"},
+ {n:338,t:"《深度学习》",a:"伊恩·古德费洛",d:5,c:"ai"},
+ {n:339,t:"《生命3.0》",a:"马克斯·泰格马克",d:3,c:"ai"},
+ {n:340,t:"《超级智能》",a:"尼克·波斯特洛姆",d:4,c:"ai"},
+ {n:341,t:"《人工智能时代》",a:"杰瑞·卡普兰",d:3,c:"ai"},
+ {n:342,t:"《机器之心》",a:"雷·库兹韦尔",d:4,c:"ai"},
+ {n:343,t:"《算法霸权》",a:"凯西·奥尼尔",d:3,c:"ai"},
+ {n:344,t:"《终极算法》",a:"佩德罗·多明戈斯",d:4,c:"ai"},
+ {n:345,t:"《AI 3.0》",a:"梅兰妮·米切尔",d:4,c:"ai"},
+ {n:346,t:"《人工智能简史》",a:"尼克",d:3,c:"ai"},
+ {n:347,t:"《预测机器》",a:"阿格拉沃尔",d:3,c:"ai"},
+ {n:348,t:"《人机共生》",a:"托马斯·达文波特",d:3,c:"ai"},
+ {n:349,t:"《AI超级大国》",a:"李开复",d:3,c:"ai"},
+ {n:350,t:"《机器人的崛起》",a:"马丁·福特",d:3,c:"ai"},
+ {n:351,t:"《第四次革命》",a:"卢西亚诺·弗洛里迪",d:4,c:"ai"},
+ {n:352,t:"《群体智能》",a:"詹姆斯·苏罗维奇",d:3,c:"ai"},
+ {n:353,t:"《复杂》",a:"梅兰妮·米切尔",d:4,c:"ai"},
+ {n:354,t:"《信息简史》",a:"詹姆斯·格雷克",d:3,c:"ai"},
+ {n:355,t:"《哥德尔·埃舍尔·巴赫》",a:"侯世达",d:5,c:"ai"},
+ {n:356,t:"《心智探奇》",a:"史蒂芬·平克",d:4,c:"ai"},
+ {n:357,t:"《情感机器》",a:"马文·明斯基",d:4,c:"ai"},
+ {n:358,t:"《如何创造思维》",a:"雷·库兹韦尔",d:4,c:"ai"},
+ {n:359,t:"《神经网络与深度学习》",a:"迈克尔·尼尔森",d:5,c:"ai"},
+ {n:360,t:"《强化学习》",a:"理查德·萨顿",d:5,c:"ai"},
+ {n:361,t:"《因果推断》",a:"朱迪亚·珀尔",d:5,c:"ai"},
+ {n:362,t:"《知识图谱》",a:"迈克·贝格曼",d:4,c:"ai"},
+ {n:363,t:"《人工智能法律指南》",a:"瑞安·卡洛",d:3,c:"ai"},
+ {n:364,t:"《基因传》",a:"悉达多·穆克吉",d:4,c:"bio"},
+ {n:365,t:"《癌症传》",a:"悉达多·穆克吉",d:4,c:"bio"},
+ {n:366,t:"《众病之王》",a:"悉达多·穆克吉",d:4,c:"bio"},
+ {n:367,t:"《生命科学》",a:"克雷格·文特尔",d:5,c:"bio"},
+ {n:368,t:"《CRISPR的力量》",a:"詹妮弗·杜德纳",d:4,c:"bio"},
+ {n:369,t:"《长生不老》",a:"大卫·辛克莱",d:4,c:"bio"},
+ {n:370,t:"《百岁人生》",a:"琳达·格拉顿",d:3,c:"bio"},
+ {n:371,t:"《医疗大数据》",a:"埃里克·托普",d:4,c:"bio"},
+ {n:372,t:"《医药的真相》",a:"本·戈德埃克",d:3,c:"bio"},
+ {n:373,t:"《疫苗竞赛》",a:"梅雷迪斯·瓦德曼",d:3,c:"bio"},
+ {n:374,t:"《脑机接口》",a:"米格尔·尼科莱利斯",d:5,c:"bio"},
+ {n:375,t:"《抗衰老革命》",a:"奥布里·德格雷",d:4,c:"bio"},
+ {n:376,t:"《微生物组》",a:"罗布·奈特",d:4,c:"bio"},
+ {n:377,t:"《精准医学》",a:"弗朗西斯·柯林斯",d:4,c:"bio"},
+ {n:378,t:"《合成生物学》",a:"乔治·丘奇",d:5,c:"bio"},
+ {n:379,t:"《再生医学》",a:"安东尼·阿塔拉",d:5,c:"bio"},
+ {n:380,t:"《药物发现》",a:"德里克·洛",d:4,c:"bio"},
+ {n:381,t:"《蛋白质折叠》",a:"约翰·穆尔特",d:5,c:"bio"},
+ {n:382,t:"《表观遗传学》",a:"内莎·凯里",d:4,c:"bio"},
+ {n:383,t:"《mRNA革命》",a:"卡塔林·卡里科",d:4,c:"bio"},
+ {n:384,t:"《数字疗法》",a:"埃迪·马蒂诺",d:3,c:"bio"},
+ {n:385,t:"《衰老经济学》",a:"安德鲁·斯科特",d:4,c:"bio"},
+ {n:386,t:"《健康不平等》",a:"迈克尔·马莫特",d:3,c:"bio"},
+ {n:387,t:"《营养科学》",a:"蒂姆·斯佩克特",d:3,c:"bio"},
+ {n:388,t:"《运动科学》",a:"亚历克斯·哈钦森",d:3,c:"bio"},
+ {n:389,t:"《睡眠革命》",a:"马修·沃克",d:3,c:"bio"},
+ {n:390,t:"《心理健康》",a:"约翰·哈里",d:3,c:"bio"},
+ {n:391,t:"《能源转型》",a:"瓦茨拉夫·斯米尔",d:4,c:"energy"},
+ {n:392,t:"《气候赌场》",a:"威廉·诺德豪斯",d:4,c:"energy"},
+ {n:393,t:"《第六次大灭绝》",a:"伊丽莎白·科尔伯特",d:3,c:"energy"},
+ {n:394,t:"《不可居住的地球》",a:"大卫·华莱士-威尔斯",d:4,c:"energy"},
+ {n:395,t:"《改变一切》",a:"娜奥米·克莱因",d:3,c:"energy"},
+ {n:396,t:"《电网革命》",a:"格雷琴·巴克",d:4,c:"energy"},
+ {n:397,t:"《太阳能革命》",a:"特拉维斯·布拉德福德",d:3,c:"energy"},
+ {n:398,t:"《风能崛起》",a:"保罗·吉普",d:3,c:"energy"},
+ {n:399,t:"《核能新纪元》",a:"詹姆斯·马哈菲",d:4,c:"energy"},
+ {n:400,t:"《氢经济》",a:"杰里米·里夫金",d:4,c:"energy"},
+ {n:401,t:"《储能革命》",a:"唐纳德·萨多威",d:4,c:"energy"},
+ {n:402,t:"《碳捕获》",a:"克劳斯·拉克纳",d:5,c:"energy"},
+ {n:403,t:"《绿色氢能》",a:"迈克尔·利布雷希",d:4,c:"energy"},
+ {n:404,t:"《电动汽车革命》",a:"列维·蒂勒曼",d:3,c:"energy"},
+ {n:405,t:"《碳市场》",a:"德克·福里斯特",d:4,c:"energy"},
+ {n:406,t:"《ESG投资》",a:"约翰·希尔",d:3,c:"energy"},
+ {n:407,t:"《蓝色经济》",a:"冈特·鲍利",d:3,c:"energy"},
+ {n:408,t:"《气候金融》",a:"索尼娅·拉巴特",d:4,c:"energy"},
+ {n:409,t:"《水战争》",a:"彼得·格莱克",d:4,c:"energy"},
+ {n:410,t:"《海洋经济》",a:"西尔维亚·厄尔",d:3,c:"energy"},
+ {n:411,t:"《粮食安全》",a:"莱斯特·布朗",d:3,c:"energy"},
+ {n:412,t:"《城市韧性》",a:"迈克尔·伯克维茨",d:4,c:"energy"},
+ {n:413,t:"《自然资本》",a:"格雷琴·戴利",d:4,c:"energy"},
+ {n:414,t:"《能源地缘政治》",a:"丹尼尔·耶金",d:4,c:"energy"},
+ {n:415,t:"《智能建筑》",a:"约翰·费尔南德斯",d:4,c:"energy"},
+ {n:416,t:"《碳达峰碳中和》",a:"中国学者",d:4,c:"energy"},
+ {n:417,t:"《气候治理》",a:"大卫·维克托",d:4,c:"energy"},
+ {n:418,t:"《行星边界》",a:"约翰·罗克斯特伦",d:5,c:"energy"},
+ {n:419,t:"《注定一战》",a:"格雷厄姆·艾利森",d:4,c:"geo"},
+ {n:420,t:"《大国的兴衰》",a:"保罗·肯尼迪",d:4,c:"geo"},
+ {n:421,t:"《世界秩序》",a:"亨利·基辛格",d:4,c:"geo"},
+ {n:422,t:"《论中国》",a:"亨利·基辛格",d:4,c:"geo"},
+ {n:423,t:"《软实力》",a:"约瑟夫·奈",d:3,c:"geo"},
+ {n:424,t:"《文明的冲突》",a:"塞缪尔·亨廷顿",d:4,c:"geo"},
+ {n:425,t:"《霸权之后》",a:"罗伯特·基欧汉",d:5,c:"geo"},
+ {n:426,t:"《联盟的起源》",a:"斯蒂芬·沃尔特",d:4,c:"geo"},
+ {n:427,t:"《地缘政治学》",a:"索尔·科恩",d:4,c:"geo"},
+ {n:428,t:"《隐形战争》",a:"大卫·桑格",d:4,c:"geo"},
+ {n:429,t:"《经济制裁》",a:"理查德·内德·勒博",d:4,c:"geo"},
+ {n:430,t:"《核战略》",a:"劳伦斯·弗里德曼",d:5,c:"geo"},
+ {n:431,t:"《太空竞赛》",a:"蒂姆·马歇尔",d:3,c:"geo"},
+ {n:432,t:"《供应链战争》",a:"罗伯特·卡普兰",d:4,c:"geo"},
+ {n:433,t:"《数字货币战争》",a:"迈克尔·凯西",d:4,c:"geo"},
+ {n:434,t:"《情报帝国》",a:"蒂姆·韦纳",d:4,c:"geo"},
+ {n:435,t:"《混合战争》",a:"弗兰克·霍夫曼",d:4,c:"geo"},
+ {n:436,t:"《北极地缘政治》",a:"迈克尔·拜尔斯",d:4,c:"geo"},
+ {n:437,t:"《印太战略》",a:"罗里·梅德卡夫",d:4,c:"geo"},
+ {n:438,t:"《一带一路》",a:"王义桅",d:3,c:"geo"},
+ {n:439,t:"《粮食权力》",a:"亨利·福伊",d:4,c:"geo"},
+ {n:440,t:"《技术冷战》",a:"亚当·西格尔",d:4,c:"geo"},
+ {n:441,t:"《移民危机》",a:"保罗·科利尔",d:3,c:"geo"},
+ {n:442,t:"《网络安全》",a:"布鲁斯·施奈尔",d:4,c:"geo"},
+ {n:443,t:"《恐怖主义》",a:"奥德丽·克罗宁",d:4,c:"geo"},
+ {n:444,t:"《资源战争》",a:"迈克尔·克莱尔",d:4,c:"geo"},
+ {n:445,t:"《全球治理》",a:"约翰·鲁杰",d:4,c:"geo"},
+ {n:446,t:"《时间简史》",a:"史蒂芬·霍金",d:4,c:"science"},
+ {n:447,t:"《万物理论》",a:"史蒂芬·霍金",d:5,c:"science"},
+ {n:448,t:"《宇宙的琴弦》",a:"布莱恩·格林",d:5,c:"science"},
+ {n:449,t:"《量子宇宙》",a:"布莱恩·考克斯",d:4,c:"science"},
+ {n:450,t:"《量子计算》",a:"迈克尔·尼尔森",d:5,c:"science"},
+ {n:451,t:"《量子信息论》",a:"约翰·普雷斯基",d:5,c:"science"},
+ {n:452,t:"《混沌》",a:"詹姆斯·格雷克",d:3,c:"science"},
+ {n:453,t:"《涌现》",a:"史蒂文·约翰逊",d:4,c:"science"},
+ {n:454,t:"《网络科学》",a:"阿尔伯特-拉斯洛·巴拉巴西",d:4,c:"science"},
+ {n:455,t:"《信息论》",a:"克劳德·香农",d:5,c:"science"},
+ {n:456,t:"《演化论》",a:"理查德·道金斯",d:3,c:"science"},
+ {n:457,t:"《人类进化》",a:"尤瓦尔·赫拉利",d:3,c:"science"},
+ {n:458,t:"《意识的解释》",a:"丹尼尔·丹尼特",d:5,c:"science"},
+ {n:459,t:"《黑洞与时间弯曲》",a:"基普·索恩",d:5,c:"science"},
+ {n:460,t:"《费曼物理学讲义》",a:"理查德·费曼",d:5,c:"science"},
+ {n:461,t:"《平行宇宙》",a:"加来道雄",d:4,c:"science"},
+ {n:462,t:"《伟大的超越》",a:"保罗·哈尔彭",d:5,c:"science"},
+ {n:463,t:"《数学之美》",a:"吴军",d:3,c:"science"},
+ {n:464,t:"《统计学的世界》",a:"大卫·摩尔",d:4,c:"science"},
+ {n:465,t:"《博弈论》",a:"马丁·奥斯本",d:4,c:"science"},
+ {n:466,t:"《计算理论》",a:"迈克尔·西普塞",d:5,c:"science"},
+ {n:467,t:"《元数学》",a:"道格拉斯·霍夫施塔特",d:5,c:"science"},
+ {n:468,t:"《认知科学》",a:"保罗·萨伽德",d:4,c:"science"},
+ {n:469,t:"《神经科学》",a:"埃里克·坎德尔",d:5,c:"science"},
+ {n:470,t:"《材料科学》",a:"马克·米奥多尼克",d:4,c:"science"},
+ {n:471,t:"《太空探索》",a:"卡尔·萨根",d:3,c:"science"},
+ {n:472,t:"《科学革命的结构》",a:"托马斯·库恩",d:4,c:"science"},
+ {n:473,t:"《孙子兵法》",a:"孙武",d:3,c:"east"},
+ {n:474,t:"《道德经》",a:"老子",d:4,c:"east"},
+ {n:475,t:"《论语》",a:"孔子",d:3,c:"east"},
+ {n:476,t:"《孟子》",a:"孟子",d:3,c:"east"},
+ {n:477,t:"《庄子》",a:"庄子",d:4,c:"east"},
+ {n:478,t:"《韩非子》",a:"韩非",d:4,c:"east"},
+ {n:479,t:"《资治通鉴》",a:"司马光",d:5,c:"east"},
+ {n:480,t:"《史记》",a:"司马迁",d:4,c:"east"},
+ {n:481,t:"《菜根谭》",a:"洪应明",d:3,c:"east"},
+ {n:482,t:"《围炉夜话》",a:"王永彬",d:3,c:"east"},
+ {n:483,t:"《曾国藩家书》",a:"曾国藩",d:4,c:"east"},
+ {n:484,t:"《了凡四训》",a:"袁了凡",d:3,c:"east"},
+ {n:485,t:"《传习录》",a:"王阳明",d:4,c:"east"},
+ {n:486,t:"《金刚经》",a:"鸠摩罗什译",d:4,c:"east"},
+ {n:487,t:"《六祖坛经》",a:"慧能",d:4,c:"east"},
+ {n:488,t:"《毛泽东选集》",a:"毛泽东",d:4,c:"east"},
+ {n:489,t:"《邓小平文选》",a:"邓小平",d:3,c:"east"},
+ {n:490,t:"《中国哲学简史》",a:"冯友兰",d:4,c:"east"},
+ {n:491,t:"《中国文化要义》",a:"梁漱溟",d:4,c:"east"},
+ {n:492,t:"《乡土中国》",a:"费孝通",d:3,c:"east"},
+ {n:493,t:"《万历十五年》深度篇",a:"黄仁宇",d:4,c:"east"},
+ {n:494,t:"《菊与刀》",a:"鲁思·本尼迪克特",d:3,c:"east"},
+ {n:495,t:"《禅与摩托车维修艺术》",a:"罗伯特·波西格",d:4,c:"east"},
+ {n:496,t:"《高效能人士的七个习惯》",a:"史蒂芬·柯维",d:3,c:"east"},
+ {n:497,t:"《第五项修炼》",a:"彼得·圣吉",d:4,c:"east"},
+ {n:498,t:"《从优秀到卓越》",a:"吉姆·柯林斯",d:3,c:"east"},
+ {n:499,t:"《创新者的解答》",a:"克莱顿·克里斯坦森",d:4,c:"east"},
+ {n:500,t:"《基业长青》",a:"吉姆·柯林斯",d:3,c:"east"},
+];
+
+var currentWave = 0;
+var currentCat = 'all';
+
+function getWave(n) {
+ if (n >= 1 && n <= 62) return 1;
+ if (n >= 63 && n <= 92) return 2;
+ if (n >= 93 && n <= 117) return 3;
+ if (n >= 118 && n <= 147) return 4;
+ if (n >= 148 && n <= 177) return 5;
+ if (n >= 178 && n <= 207) return 6;
+ if (n >= 208 && n <= 238) return 7;
+ if (n >= 239 && n <= 268) return 8;
+ if (n >= 269 && n <= 298) return 9;
+ if (n >= 299 && n <= 328) return 10;
+ if (n >= 329 && n <= 336) return 11;
+ if (n >= 337 && n <= 363) return 12;
+ if (n >= 364 && n <= 390) return 13;
+ if (n >= 391 && n <= 418) return 14;
+ if (n >= 419 && n <= 445) return 15;
+ if (n >= 446 && n <= 472) return 16;
+ if (n >= 473 && n <= 500) return 17;
+ return 0;
+}
+
+function stars(n){var s='';for(var i=0;i<5;i++)s+='<span class="diff-star'+(i<n?' on':'')+'"></span>';return s;}
+
+function render(){
+ var g=document.getElementById('courseContainer');
+ var filtered=COURSES;
+ if(currentCat!=='all') filtered=filtered.filter(function(c){return c.c===currentCat;});
+ if(currentWave!==0) filtered=filtered.filter(function(c){return getWave(c.n)===currentWave;});
+ var html='';
+ var cats={};
+var labels={period:' 周期理论',invest:' 投资哲学',risk:' 风险管理',money:' 货币与制度',demo:' 人口与地缘',china:' 中国经济',behavior:' 行为金融',wealth:' 财富管理',tech:' 技术与未来',inequality:' 贫富与不平等',history:' 经济金融史',global:' 全球宏观',future:' 未来经济',ai:' AI与认知',bio:' 生物科技',energy:' 能源气候',geo:' 地缘安全',science:' 前沿科学',east:' 东方智慧',kk:' 凯文·凯利'};
+ var descs={period:'理解经济的四季更替',invest:'大师的投资智慧传承',risk:'塔勒布的不确定性四部曲',money:'理解金融的制度逻辑',demo:'慢变量中的大趋势',china:'读懂中国的经济密码',behavior:'大脑如何欺骗你',wealth:'从储蓄到财务自由',tech:'技术如何重塑世界',inequality:'理解财富分配的逻辑',history:'以史为鉴知兴替',global:'把握全球资产配置方向',future:'AI与区块链重塑经济范式',ai:'人工智能与认知革命',bio:'生命科学与长寿经济',energy:'能源转型与气候博弈',geo:'大国博弈与地缘安全',science:'物理学、数学与复杂科学',east:'东方哲学与中华智慧',kk:'凯文·凯利思想全集'};
+ filtered.forEach(function(c){
+ var cn=c.c;
+ if(!cats[cn]){cats[cn]={label:labels[cn]||cn,desc:descs[cn]||'',list:[]};}
+ cats[cn].list.push(c);
+ });
+ for(var k in cats){
+ var cat=cats[k];
+ html+='<div class="cat-section" data-cat="'+k+'"><div class="cat-header"><div class="cat-icon">'+cat.label.substring(0,2)+'</div><div class="cat-info"><div class="cat-title">'+cat.label+'</div><div class="cat-sub">'+cat.desc+'</div></div><div class="cat-count">'+cat.list.length+' 课</div></div><div class="course-grid">';
+ cat.list.forEach(function(c){
+ html+='<a href="book'+c.n+'.html" class="course-card"><div class="course-num">'+c.n+'</div><div class="course-info"><div class="course-title">'+c.t+'</div><div class="course-author">'+c.a+'</div></div><div class="course-diff">'+stars(c.d)+'</div></a>';
+ });
+ html+='</div></div>';
+ }
+ g.innerHTML=html;
+ document.getElementById('noResults').classList.add('hidden');
+ if(Object.keys(cats).length===0) document.getElementById('noResults').classList.remove('hidden');
+}
+
+function filterCat(cat){
+ currentCat=cat;
+ document.querySelectorAll('.cat-tab').forEach(function(t){t.classList.remove('active')});
+ document.querySelector('.cat-tab[onclick*="'+cat+'"]').classList.add('active');
+ render();
+}
+
+function filterWave(w){
+ currentWave=w;
+ document.querySelectorAll('.wave-tab').forEach(function(t){t.classList.remove('active')});
+ document.querySelectorAll('.wave-tab')[w].classList.add('active');
+ render();
+}
+
+render();
+</script>
+
+<script>
+// === 购书链接注入 (书目课程页) ===
+(function(){
+ function bookIdFromCard(card){
+  var href = card.getAttribute('href') || '';
+  var m = href.match(/book(\d+)\.html/);
+  return m ? m[1] : '';
+ }
+ function injectPurchaseLinks(){
+  document.querySelectorAll('.course-card').forEach(function(card){
+   if (card.querySelector('.buy-links')) return;
+   var bookId = bookIdFromCard(card);
+   if (!bookId) return;
+   var buy = document.createElement('div');
+   buy.className = 'buy-links';
+   buy.style.cssText = 'display:flex;gap:4px;margin-left:auto;flex-shrink:0';
+   buy.innerHTML = '<a href="/api/shop/redirect/' + bookId + '?source=book_courses" target="_blank" rel="nofollow" style="font-size:.65rem;color:#171006;background:var(--gold);padding:3px 8px;border-radius:10px;border:1px solid rgba(226,182,79,.45)" title="购买正版书">购买</a>';
+   card.appendChild(buy);
+  });
+ }
+ var observer = new MutationObserver(injectPurchaseLinks);
+ observer.observe(document.getElementById('courseContainer'), {childList:true, subtree:true});
+ injectPurchaseLinks();
+})();
+</script>
+
+</body>
+</html>

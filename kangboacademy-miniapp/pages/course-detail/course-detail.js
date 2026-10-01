@@ -73,6 +73,7 @@ Page({
  autoReading: false,
  autoReadLabel: '慢速阅读',
  practiceLoading: false,
+ practiceError: '',
  practiceQuestions: [],
  practiceSubmitted: false,
  practiceScore: 0,
@@ -96,6 +97,8 @@ Page({
  autoReadTimer: null,
  practiceLoadTimer: null,
  currentScrollTop: 0,
+ refreshLockedOnReturn: false,
+ practiceRequestId: 0,
 
  onLoad(options) {
  const { lesson } = options;
@@ -124,7 +127,20 @@ Page({
  }
  },
 
+ onHide() {
+ this.refreshLockedOnReturn = this.data.locked && !this.data.loading;
+ },
+
+ onShow() {
+ const refresh = this.refreshLockedOnReturn;
+ this.refreshLockedOnReturn = false;
+ if (refresh && this.data.locked && !this.data.loading && this.data.lesson) {
+ return this.loadContent(this.data.lesson);
+ }
+ },
+
  onUnload() {
+ this.practiceRequestId += 1;
  this.stopAutoRead();
  this.clearPracticeTimer();
  this.destroyAudio();
@@ -135,6 +151,7 @@ Page({
  },
 
  async loadContent(lesson) {
+ this.practiceRequestId += 1;
  this.stopAutoRead();
  this.stopAudio();
  this.clearPracticeTimer();
@@ -146,6 +163,7 @@ Page({
  content: '',
  readerContent: '',
  practiceLoading: false,
+ practiceError: '',
  practiceQuestions: [],
  recommendedBooks: [],
  practiceSubmitted: false,
@@ -529,11 +547,14 @@ Page({
  },
 
  async loadPractice(lesson) {
- this.setData({ practiceLoading: true });
+ if (this.data.practiceLoading || this.data.loading || this.data.locked || this.data.error || this.data.lesson !== lesson) return;
+ const requestId = ++this.practiceRequestId;
+ this.setData({ practiceLoading: true, practiceError: '' });
  try {
  const res = await API.getPractice(lesson);
+ if (requestId !== this.practiceRequestId || this.data.lesson !== lesson) return;
  if (res.locked) {
- this.setData({ practiceLoading: false, practiceQuestions: [] });
+ this.setData({ practiceLoading: false, practiceQuestions: [], practiceError: res.message || '练习权限暂未确认，请稍后重试' });
  return;
  }
  const questions = (res.questions || []).map(q => ({
@@ -543,12 +564,20 @@ Page({
  }));
  this.setData({
  practiceLoading: false,
+ practiceError: questions.length ? '' : '本课练习暂未提供，请稍后重试',
  practiceQuestions: questions
  });
  } catch (err) {
+ if (requestId !== this.practiceRequestId || this.data.lesson !== lesson) return;
  console.error('加载练习失败:', err);
- this.setData({ practiceLoading: false, practiceQuestions: [] });
+ this.setData({ practiceLoading: false, practiceQuestions: [], practiceError: err.message || '练习加载失败，请重试' });
  }
+ },
+
+ retryPractice() {
+ if (!this.data.practiceError || !this.data.lesson) return;
+ this.clearPracticeTimer();
+ return this.loadPractice(this.data.lesson);
  },
 
  onPracticeInput(e) {

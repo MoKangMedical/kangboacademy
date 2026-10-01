@@ -36,10 +36,12 @@ def source_files():
     pairs.extend((p, Path('source/tests') / p.name) for p in (ROOT / 'tests').glob('*.test.js'))
     pairs.extend((p, Path('backend-candidate') / p.name) for p in (ROOT / 'server_patch/backend').glob('*.py'))
     pairs.extend((p, Path('backend-candidate/tests') / p.name) for p in (ROOT / 'server_patch/backend/tests').glob('*.py'))
-    for name in ('courses.html', 'book-shop.html', 'content-manifest.js', 'content-manifest.json', 'catalog-contract.js', 'membership-catalog.js'):
+    for name in ('courses.html', 'book-courses.html', 'book-shop.html', 'content-manifest.js', 'content-manifest.json', 'catalog-contract.js', 'membership-catalog.js'):
         pairs.append((ROOT / 'server_patch/frontend' / name, Path('web-patch') / name))
     pairs.append((ROOT / 'server_index.html', Path('web-patch/index.html')))
-    for name in ('DELIVERY.md', 'partner-products.md', '合作书商对接说明.md'):
+    pairs.extend((p, Path('web-patch/vendor') / p.name)
+                 for p in (ROOT / 'server_patch/frontend/vendor').iterdir() if p.is_file())
+    for name in ('DELIVERY.md', 'partner-products.md', '合作书商对接说明.md', 'PRODUCTION_MERGE.md', 'FIRST_PRODUCT_ACCEPTANCE.md'):
         pairs.append((ROOT / 'docs' / name, Path('docs') / name))
     pairs.append((ROOT / 'data/partner-products.template.csv', Path('merchant/partner-products.template.csv')))
     pairs.append((ROOT / 'requirements-validation.txt', Path('source/requirements-validation.txt')))
@@ -102,11 +104,11 @@ def build(output):
             page.write_text(html.replace(f'src="{name}"', f'src="{versioned}"'), encoding='utf-8')
     subprocess.run([sys.executable, str(ROOT / 'tools/import_partner_products.py'),
                     '--generate-matching-csv', str(output / 'merchant/500-books-to-match.csv')], check=True, cwd=ROOT)
-    status = {'generatedAt': datetime.now(timezone.utc).isoformat(), 'candidateVersion': '1.0.7-rc2',
+    status = {'generatedAt': datetime.now(timezone.utc).isoformat(), 'candidateVersion': '1.0.7-rc6',
               'localChecks': 'passed', 'productionDeployed': False, 'uploaded': False,
               'reviewSubmitted': False, 'released': False, 'completeProductionBackup': False,
               'merchantAuthorizationProvided': False, 'confirmedPartnerProducts': 0,
-              'requiredGates': ['authorized-server-access-and-production-rebase',
+              'requiredGates': ['production-baseline-freshness-and-rollback-verification',
                                 'correct-miniapp-account-and-login', 'domain-privacy-filing-review-verification',
                                 'simulator-and-physical-device-validation', 'authoritative-audio-intro-audit',
                                 'merchant-authorization-and-real-products', 'final-owner-approval']}

@@ -38,6 +38,8 @@ def main():
         os.environ['KANGBO_PROJECT_ROOT'] = folder
         os.environ['BOOK_AFFILIATE_URL_TEMPLATE'] = ''
         for name in ('WECHAT_SHOP_APPID', 'WECHAT_SHOP_BUSINESS_TYPE', 'PAYMENT_ADMIN_TOKEN',
+                     'WECHAT_PAY_LIVE_ENABLED', 'WECHAT_PAY_PLATFORM_PUBLIC_KEY_ID', 'WECHAT_PAY_PLATFORM_PUBLIC_KEY_PATH',
+                     'WECHAT_PAY_CERT_SERIAL_NO', 'WECHAT_PAY_PRIVATE_KEY_PATH',
                      'WECHAT_MINIAPP_SECRET', 'WECHAT_PAY_MCHID', 'WECHAT_PAY_API_V3_KEY', 'DEEPSEEK_API_KEY'):
             os.environ.pop(name, None)
         sys.path.insert(0, str(source.parent))
@@ -45,6 +47,10 @@ def main():
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         assert Path(module.DB_PATH).is_relative_to(root)
+        module.PAYMENT_ENV_PATH = root / 'data/test-payment.env'
+        module.LEGACY_PAYMENT_ENV_PATH = root / 'data/test-legacy-payment.env'
+        module.PAYMENT_PRIVATE_KEY_PATH = root / 'data/test-private-key.pem'
+        module.PAYMENT_ADMIN_TOKEN = ''
         from fastapi.testclient import TestClient
         checks = []
         with TestClient(module.app) as client:
@@ -54,6 +60,9 @@ def main():
                 response = client.get(route)
                 assert response.status_code == expected, (route, response.status_code)
                 checks.append({'route': route, 'status': response.status_code})
+            diagnostic = client.get('/api/payment/diagnostics')
+            assert diagnostic.status_code == 403
+            checks.append({'route': '/api/payment/diagnostics', 'status': diagnostic.status_code})
             started = time.monotonic()
             shop = client.get('/api/shop/books?limit=500').json()
             elapsed = time.monotonic() - started
@@ -63,6 +72,20 @@ def main():
             assert shop['books'][0]['purchaseEntryType'] == 'search'
             checks.append({'check': 'search-not-product', 'passed': True, 'books': 500,
                            'localFixtureResponseSeconds': round(elapsed, 3)})
+            for route, payload, expected in [
+                ('/api/payment/wechat/notify', {}, 400),
+                ('/api/payment/create', {'plan': 'core_year'}, 401),
+                ('/api/practice/submit', {'lesson': 'lesson1.html', 'answers': {}}, 401),
+            ]:
+                response = client.post(route, json=payload)
+                assert response.status_code == expected, (route, response.status_code)
+                checks.append({'route': route, 'method': 'POST', 'status': response.status_code})
+            connection = module.get_db()
+            try:
+                assert connection.execute('SELECT COUNT(*) FROM payments').fetchone()[0] == 0
+                assert connection.execute('SELECT COUNT(*) FROM practice_attempts').fetchone()[0] == 0
+            finally:
+                connection.close()
         result = {'scope': 'actual-ASGI-with-disposable-fixtures', 'productionTouched': False,
                   'fixtureContentNotProductionCourses': True, 'checks': checks, 'passed': True}
     report.parent.mkdir(parents=True, exist_ok=True)
